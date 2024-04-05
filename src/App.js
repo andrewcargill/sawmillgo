@@ -9,6 +9,7 @@ import AddSawmillForm from "./components/sawmill/AddSawmillForm";
 import UserProfileForm from "./components/users/UserProfileForm";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import UserProfilesList from "./components/users/UserProfilesList";
 
 function App() {
   const [user, setUser] = useState(null); // State to hold user info
@@ -40,12 +41,16 @@ function App() {
                   {user.email}.
                 </p>
               </Grid>
-              <Grid item xs={6} bgcolor={'lightgray'}>
+              <Grid item xs={4} bgcolor={'lightgray'}>
                 <AddSawmillForm />
               </Grid>
-              <Grid item xs={6} bgcolor={'lightblue'}>
+              <Grid item xs={4} bgcolor={'lightblue'}>
                 <UserProfileForm />
               </Grid>
+              <Grid item xs={4} bgcolor={'lightblue'}>
+                <UserProfilesList />
+              </Grid>
+
             </>
           ) : (
             <p>Please sign in to see your profile information.</p>
