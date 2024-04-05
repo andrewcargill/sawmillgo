@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc, collection, query, getDocs } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { app } from '../../firebase-config';
 
 const UserProfileForm = () => {
@@ -9,6 +10,7 @@ const UserProfileForm = () => {
   const [role, setRole] = useState('guest'); // Default to 'guest'
   const [sawmillId, setSawmillId] = useState('');
   const [sawmills, setSawmills] = useState([]);
+  const [image, setImage] = useState(null);
 
   const auth = getAuth(app);
   const db = getFirestore(app);
@@ -43,35 +45,75 @@ const UserProfileForm = () => {
     fetchSawmills();
   }, [user, db]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Ensure there's a user before attempting to save the profile
-    if (!user) {
-        alert('No user is currently signed in.');
-        return;
+  const handleImageChange = (e) => {
+    if (e.target.files[0]) {
+      setImage(e.target.files[0]);
     }
+  };
 
-    const userProfile = {
-      userId: user.uid, // Capture the user UID here
-      username,
-      about,
-      role,
-      sawmillId,
-      // permissions, // Assuming you might reintroduce this later
-    };
 
-    setDoc(doc(db, 'users', user.uid), userProfile, { merge: true }) // Use merge to update existing doc or create a new one
-      .then(() => {
-        alert('Profile updated successfully!');
-      })
-      .catch((error) => {
-        console.error("Error updating profile: ", error);
-        alert('Error updating profile.');
-      });
-};
+  const handleSubmit = async (e) => {
+      e.preventDefault();
+      // Ensure there's a user before attempting to save the profile
+      if (!user) {
+          alert('No user is currently signed in.');
+          return;
+      }
+  
+      // Handle image upload if an image has been selected
+      if (image) {
+          const storage = getStorage(app);
+          // Create a storage reference - you can use the user's uid for a unique filename
+          const storageRef = ref(storage, `profileImages/${user.uid}/${image.name}`);
+          try {
+              const snapshot = await uploadBytes(storageRef, image);
+              const downloadURL = await getDownloadURL(snapshot.ref);
+              console.log('Uploaded a blob or file!', downloadURL);
+              
+              // Proceed to update the user's profile with the new image URL
+              const userProfile = {
+                  userId: user.uid,
+                  username,
+                  about,
+                  role,
+                  sawmillId,
+                  imageUrl: downloadURL, // Add the download URL to the user's profile
+              };
+  
+              await setDoc(doc(db, 'users', user.uid), userProfile, { merge: true });
+              alert('Profile updated successfully!');
+  
+          } catch (error) {
+              console.error("Error uploading image: ", error);
+              alert('Error updating profile.');
+              return;
+          }
+      } else {
+          // Proceed without image upload if no image is selected
+          const userProfile = {
+              userId: user.uid,
+              username,
+              about,
+              role,
+              sawmillId,
+              //imageUrl: previousImageUrl, // Optionally handle keeping the previous image URL if needed
+          };
+  
+          try {
+              await setDoc(doc(db, 'users', user.uid), userProfile, { merge: true });
+              alert('Profile updated successfully!');
+          } catch (error) {
+              console.error("Error updating profile: ", error);
+              alert('Error updating profile.');
+          }
+      }
+  };
+  
 
   return (
     <form onSubmit={handleSubmit}>
+           <h2>User Profile</h2>
+        <div>
       <label>
         Username:
         <input
@@ -80,6 +122,8 @@ const UserProfileForm = () => {
           onChange={(e) => setUsername(e.target.value)}
         />
       </label>
+      </div>
+        <div>
       <label>
         About:
         <textarea
@@ -87,6 +131,8 @@ const UserProfileForm = () => {
           onChange={(e) => setAbout(e.target.value)}
         />
       </label>
+        </div>
+        <div>
       <label>
         Role:
         <select value={role} onChange={(e) => setRole(e.target.value)}>
@@ -95,6 +141,14 @@ const UserProfileForm = () => {
           {/* Add other roles as needed */}
         </select>
       </label>
+        </div>
+        <div>
+      <label>
+        Image:
+        <input type="file" onChange={handleImageChange} />
+      </label>
+        </div>
+        <div>
       <label>
         Sawmill:
         <select value={sawmillId} onChange={(e) => setSawmillId(e.target.value)}>
@@ -104,7 +158,10 @@ const UserProfileForm = () => {
           ))}
         </select>
       </label>
+        </div>
+        <div>
       <button type="submit">Update Profile</button>
+        </div>
     </form>
   );
 };
