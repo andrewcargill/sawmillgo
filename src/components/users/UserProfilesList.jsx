@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { app } from '../../firebase-config'; // Ensure this is the correct path to your Firebase config
 
 const db = getFirestore(app);
@@ -7,14 +7,36 @@ const db = getFirestore(app);
 const UserProfilesList = () => {
     const [userProfiles, setUserProfiles] = useState([]);
 
+    const fetchSawmillName = async (sawmillId) => {
+        console.log(`Fetching sawmill with ID: ${sawmillId}`); // Confirm sawmillId
+        const docRef = doc(db, "sawmill", sawmillId); // Correct path to sawmill document
+        const docSnap = await getDoc(docRef);
+    
+        if (docSnap.exists()) {
+            console.log("Sawmill name:", docSnap.data().name); // Debugging
+            return docSnap.data().name; // Return the sawmill's name
+        } else {
+            console.log("No such sawmill!"); // Sawmill document doesn't exist
+            return "Unknown Sawmill"; // Fallback value
+        }
+    };
+
     useEffect(() => {
         const fetchUserProfiles = async () => {
             const querySnapshot = await getDocs(collection(db, "users"));
-            const profiles = querySnapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data(),
-            }));
+            const profiles = [];
+            for (const doc of querySnapshot.docs) {
+                const userData = doc.data();
+                // Fetch the sawmill name for each user
+                const sawmillName = await fetchSawmillName(userData.sawmillId);
+                profiles.push({
+                    id: doc.id,
+                    ...userData,
+                    sawmillName, // Add the fetched sawmill name to the user profile object
+                });
+            }
             setUserProfiles(profiles);
+            console.log('User profiles:', profiles);
         };
 
         fetchUserProfiles();
@@ -31,6 +53,7 @@ const UserProfilesList = () => {
                             <h3>{profile.username}</h3>
                             <p>About: {profile.about}</p>
                             <p>Role: {profile.role}</p>
+                            <p>Sawmill: {profile.sawmillName}</p>
                             {/* Display other profile information as needed */}
                         </div>
                     </li>
