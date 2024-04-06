@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid";
 import UserContext from "../Contexts/UserContext"; // Adjust the import path as needed
 import UserProfileForm from "../components/users/UserProfileForm";
 import UserProfilesList from "../components/users/UserProfilesList";
+import AddSawmillForm from "../components/sawmill/AddSawmillForm";
 
 const UserHomePage = () => {
   // Access user information from context
@@ -56,11 +57,9 @@ const UserHomePage = () => {
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          <UserProfileForm />
+          <AddSawmillForm />
         </Grid>
-        <Grid item xs={12}>
-          <UserProfilesList />
-        </Grid>
+       
       </Grid>
     </Grid>
   );

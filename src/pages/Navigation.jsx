@@ -31,16 +31,24 @@ const Navigation = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsAuth(!!user); // Set isAuth to true if user is signed in, else false
+      if (user) {
+        // User is logged in
+        setIsAuth(true);
+        const userData = localStorage.getItem("user");
+        if (userData) {
+          setLocalUser(JSON.parse(userData));
+        }
+      } else {
+        // User is logged out
+        setIsAuth(false);
+        setLocalUser(null); // Ensure local user state is cleared on logout
+        localStorage.removeItem("user"); // Optionally clear local storage here as well
+      }
     });
-
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      setLocalUser(JSON.parse(userData));
-    }
-    // Cleanup subscription
+  
     return () => unsubscribe();
-  }, []);
+  }, [auth, userProfile]);
+  
 
   const handleToggleMenu = () => {
     setAnchorElNav(!anchorElNav);

@@ -1,30 +1,36 @@
-
-
-const {onRequest} = require("firebase-functions/v2/https");
-const logger = require("firebase-functions/logger");
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
 admin.initializeApp();
 
-exports.updateSawmillNameInUserProfiles = functions.firestore
-    .document('sawmill/{sawmillId}')
-    .onUpdate(async (change, context) => {
-        const newValue = change.after.data();
-        const oldValue = change.before.data();
+exports.initializeSawmillSubcollections = functions.firestore
+    .document("sawmill/{sawmillId}")
+    .onCreate(async (snap, context) => {
+        const sawmillId = context.params.sawmillId;
+        const db = admin.firestore();
 
-        if (newValue.name !== oldValue.name) {
-            const sawmillId = context.params.sawmillId;
-            const db = admin.firestore();
-            const usersRef = db.collection('users');
-            const snapshot = await usersRef.where('sawmillId', '==', sawmillId).get();
+        // Example: Initialize a 'trees' subcollection with a default document
+        const defaultTree = {
+            date: "2023-04-01",
+            woodType: "Pine",
+            locationId: "Initial Location",
+            lumberjack: "UserUID",
+            image: "[url….to image]",
+            reason: "tree was too old",
+            age: "40-60",
+            status: "available",
+            logged: false
+        };
 
-            if (!snapshot.empty) {
-                let batch = db.batch();
-                snapshot.forEach(doc => {
-                    const userDocRef = usersRef.doc(doc.id);
-                    batch.update(userDocRef, { 'sawmillName': newValue.name });
-                });
-                await batch.commit();
-            }
-        }
+        // Example path: "sawmills/{sawmillId}/trees/{treeId}"
+        // You might want to create specific IDs for each sub-document or let Firestore generate them
+        await db.collection(`sawmill/${sawmillId}/trees`).add(defaultTree);
+
+        // Repeat the process for other subcollections ('logs', 'planks', etc.) as necessary
+        // Note: Creating an empty subcollection is not possible in Firestore as collections are schema-less
+        // and only exist when there's at least one document within them.
+        
+        // If you want to initialize subcollections without any documents, you can omit the document creation step.
+        // However, keep in mind these subcollections won't "exist" until a document is actually added to them.
+
+        return null; // Cloud Functions expect a return, use null for Firestore triggers.
     });
