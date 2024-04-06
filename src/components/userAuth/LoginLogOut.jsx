@@ -1,19 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { Button, CircularProgress, Grid } from '@mui/material';
 import CustomFormHeading from '../customForms/CustomFormHeading';
 import FormBoxMain from '../customForms/FormBoxMain';
 import CustomInput from '../customForms/CustomInput';
+import UserContext from '../../Contexts/UserContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState('');
+  const { login } = useContext(UserContext);
 
   const navigate = useNavigate(); // Use navigate to redirect after successful login
   const auth = getAuth();
+
 
   const submit = (e) => {
     e.preventDefault();
@@ -22,9 +25,12 @@ const Login = () => {
     
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed in 
+        const user = userCredential.user;
+        // Store the user's ID and email in the context
+        login({ id: user.uid, email: user.email });
         setLoading(false);
-        navigate('/home_secure'); // Navigate to your home page or dashboard
+       
+        navigate('/userhomepage');
       })
       .catch((error) => {
         setLoading(false);
@@ -70,18 +76,20 @@ const Login = () => {
 };
 
 const Logout = () => {
-    const navigate = useNavigate(); // Use navigate for redirection after logout
-    const auth = getAuth();
+    // Redirect handeled in Navigation.jsx //
+
+    // const navigate = useNavigate(); // Use navigate for redirection after logout
+    // const auth = getAuth();
   
-    useEffect(() => {
-      signOut(auth).then(() => {
-        // Sign-out successful.
-        navigate('/logout_success'); // Redirect to logout success or login page
-      }).catch((error) => {
-        // An error happened.
-        console.error('Logout error:', error);
-      });
-    }, [auth, navigate]);
+    // useEffect(() => {
+    //   signOut(auth).then(() => {
+    //     // Sign-out successful.
+    //     navigate('/loggedoutpage'); // Redirect to logout success or login page
+    //   }).catch((error) => {
+    //     // An error happened.
+    //     console.error('Logout error:', error);
+    //   });
+    // }, [auth, navigate]);
   
     return <div></div>;
   };

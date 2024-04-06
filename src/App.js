@@ -18,6 +18,8 @@ import HomePage from "./pages/HomePage";
 import PageContentContainer from "./components/customContainers/PageContentContainer";
 import AboutPage from "./pages/AboutPage";
 import { Login } from "./components/userAuth/LoginLogOut";
+import UserHomePage from "./pages/UserHomePage";
+import LoggedOutPage from "./pages/LoggedOutPage";
 
 function App() {
  
@@ -32,6 +34,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/userhomepage" element={<UserHomePage />} />
+        <Route path="/loggedoutpage" element={<LoggedOutPage />} />
 
       </Routes>
       </PageContentContainer>

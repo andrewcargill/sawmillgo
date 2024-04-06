@@ -5,13 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from '@emotion/react';
 import customTheme from './customTheme';
+import UserProvider from './Contexts/UserProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <UserProvider>
     <ThemeProvider theme={customTheme}>
     <App />
     </ThemeProvider>
+    </UserProvider>
   </React.StrictMode>
 );
 

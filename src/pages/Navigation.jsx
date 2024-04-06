@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppBar, Box, Toolbar, Typography, Button, IconButton, Avatar, Tooltip, Menu, MenuItem, Container } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
@@ -12,7 +12,8 @@ const Navigation = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const auth = getAuth();
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
     // Listen for auth state changes
     const unsubscribe = onAuthStateChanged(auth, user => {
@@ -46,6 +47,7 @@ const Navigation = () => {
   const handleLogout = () => {
     auth.signOut().then(() => {
       setIsAuth(false); // Update auth state on logout
+      navigate('/loggedoutpage');
       handleCloseUserMenu(); // Close user menu
     }).catch((error) => {
       console.error("Logout Error:", error);
