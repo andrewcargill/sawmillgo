@@ -20,6 +20,7 @@ import AboutPage from "./pages/AboutPage";
 import { Login } from "./components/userAuth/LoginLogOut";
 import UserHomePage from "./pages/UserHomePage";
 import LoggedOutPage from "./pages/LoggedOutPage";
+import UserProfilePage from "./pages/UserProfilePage";
 
 function App() {
  
@@ -34,8 +35,9 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/userhomepage" element={<UserHomePage />} />
+        <Route path="/home" element={<UserHomePage />} />
         <Route path="/loggedoutpage" element={<LoggedOutPage />} />
+        <Route path="/profile" element={<UserProfilePage/>} />
 
       </Routes>
       </PageContentContainer>

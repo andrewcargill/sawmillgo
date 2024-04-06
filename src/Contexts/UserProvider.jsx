@@ -11,6 +11,7 @@ const UserProvider = ({ children }) => {
 
     const logoutUser = () => {
         setUserProfile(null);
+        localStorage.removeItem('user');
     };
 
     return (

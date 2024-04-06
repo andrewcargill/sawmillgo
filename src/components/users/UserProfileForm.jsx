@@ -3,6 +3,7 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc, collection, query, getDocs } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { app } from '../../firebase-config';
+import { Grid } from '@mui/material';
 import UserContext from '../../Contexts/UserContext';
 
 const UserProfileForm = () => {
@@ -113,8 +114,9 @@ const UserProfileForm = () => {
   
 
   return (
+    <Grid item xs={12} >
     <form onSubmit={handleSubmit}>
-           <h2>User Profile</h2>
+           <h2>Update User Profile</h2>
         <div>
       <label>
         Username:
@@ -139,7 +141,9 @@ const UserProfileForm = () => {
         Role:
         <select value={role} onChange={(e) => setRole(e.target.value)}>
           <option value="guest">Guest</option>
+          <option value="operator">Operator</option>
           <option value="admin">Admin</option>
+          <option value="siteadmin">SiteAdmin</option>
           {/* Add other roles as needed */}
         </select>
       </label>
@@ -165,6 +169,7 @@ const UserProfileForm = () => {
       <button type="submit">Update Profile</button>
         </div>
     </form>
+    </Grid>
   );
 };
 

@@ -24,15 +24,20 @@ const Navigation = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const { userProfile, logoutUser } = useContext(UserContext);
+  const [localUser, setLocalUser] = useState(null);
 
   const auth = getAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Listen for auth state changes
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setIsAuth(!!user); // Set isAuth to true if user is signed in, else false
     });
+
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      setLocalUser(JSON.parse(userData));
+    }
     // Cleanup subscription
     return () => unsubscribe();
   }, []);
@@ -54,7 +59,7 @@ const Navigation = () => {
   };
 
   const pages = ["About"];
-  const sawmillPages = ["Home", "Profile", "Stock", "Orders", "Logout"];
+  const sawmillPages = ["home", "Stock", "Orders"];
   //   const settings = ['home_secure', 'Quick_Add', 'Trees', 'Logs', 'Planks', 'water_crud', 'Logout'];
 
   const handleLogout = () => {
@@ -64,7 +69,7 @@ const Navigation = () => {
         setIsAuth(false); // Update auth state on logout
         navigate("/loggedoutpage");
         handleCloseUserMenu(); // Close user menu
-        logoutUser(); // Clear user profile data
+        logoutUser();
       })
       .catch((error) => {
         console.error("Logout Error:", error);
@@ -104,7 +109,7 @@ const Navigation = () => {
               textTransform: "uppercase",
             }}
           >
-            <>{userProfile?.sawmillName || "SAWMILL GO"}</>
+            <>{localUser?.sawmillName || "SAWMILL GO"}</>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -181,7 +186,7 @@ const Navigation = () => {
               textTransform: "uppercase",
             }}
           >
-            <>{userProfile?.sawmillName || "SAWMILL GO"}</>
+            <>{localUser?.sawmillName || "SAWMILL GO"}</>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
@@ -202,6 +207,18 @@ const Navigation = () => {
                     {page}
                   </Button>
                 ))}
+                <Button
+                  component={Link}
+                  onClick={handleLogout}
+                  sx={{
+                    my: 2,
+                    color: "white",
+                    display: "block",
+                    textDecoration: "none",
+                  }}
+                >
+                  Logout
+                </Button>
               </>
             ) : (
               <>
@@ -229,7 +246,7 @@ const Navigation = () => {
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
                   alt="User Avatar"
-                  src={userProfile?.imageUrl || "path_to_default_image.jpg"}
+                  src={localUser?.imageUrl || "path_to_default_image.jpg"}
                 />
               </IconButton>
             </Tooltip>
@@ -240,14 +257,24 @@ const Navigation = () => {
               onClose={handleCloseUserMenu}
             >
               {isAuth ? (
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <Link
-                    style={{ textDecoration: "none", color: "inherit" }}
-                    onClick={handleLogout}
-                  >
-                    <Typography textAlign="center">Logout</Typography>
-                  </Link>
-                </MenuItem>
+                <>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Link
+                      to="/profile"
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <Typography textAlign="center">Profile</Typography>
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Link
+                      style={{ textDecoration: "none", color: "inherit" }}
+                      onClick={handleLogout}
+                    >
+                      <Typography textAlign="center">Logout</Typography>
+                    </Link>
+                  </MenuItem>
+                </>
               ) : (
                 <MenuItem onClick={handleCloseUserMenu}>
                   <Link

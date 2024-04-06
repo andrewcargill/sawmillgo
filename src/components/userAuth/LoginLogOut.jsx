@@ -84,9 +84,15 @@ const Login = () => {
       }
 
       setUserProfileInfo(userProfile); // Enriched with sawmill name
+      const dataToStore = {
+        sawmillName: userProfile.sawmillName,
+        imageUrl: userProfile.imageUrl,
+        username: userProfile.id,
+      };
+      localStorage.setItem('user', JSON.stringify(dataToStore));
       setLoading(false);
 
-      navigate("/userhomepage"); // Navigate after the userProfile is set
+      navigate("/home"); // Navigate after the userProfile is set
     } catch (error) {
       setLoading(false);
       setLoginError("Login failed. Please check your credentials.");
