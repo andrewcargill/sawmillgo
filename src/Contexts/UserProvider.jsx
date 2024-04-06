@@ -2,23 +2,19 @@ import React, { useState } from 'react';
 import UserContext from './UserContext';
 
 const UserProvider = ({ children }) => {
-    const [user, setUser] = useState({ id: null, email: null });
     const [userProfile, setUserProfile] = useState(null);
 
-    const login = (userData) => {
-        setUser(userData);
-    };
 
     const setUserProfileInfo = (profile) => {
         setUserProfile(profile);
     };
 
-    const logout = () => {
-        setUser({ id: null, email: null });
+    const logoutUser = () => {
+        setUserProfile(null);
     };
 
     return (
-        <UserContext.Provider value={{ user, userProfile, login, logout, setUserProfileInfo }}>
+        <UserContext.Provider value={{ userProfile, logoutUser, setUserProfileInfo }}>
             {children}
         </UserContext.Provider>
     );
