@@ -88,6 +88,8 @@ const Login = () => {
         sawmillName: userProfile.sawmillName,
         imageUrl: userProfile.imageUrl,
         username: userProfile.id,
+        displayName: userProfile.username,
+        sawmillId: userProfile.sawmillId,
       };
       localStorage.setItem('user', JSON.stringify(dataToStore));
       setLoading(false);
