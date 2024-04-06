@@ -3,9 +3,14 @@ import UserContext from './UserContext';
 
 const UserProvider = ({ children }) => {
     const [user, setUser] = useState({ id: null, email: null });
+    const [userProfile, setUserProfile] = useState(null);
 
     const login = (userData) => {
         setUser(userData);
+    };
+
+    const setUserProfileInfo = (profile) => {
+        setUserProfile(profile);
     };
 
     const logout = () => {
@@ -13,7 +18,7 @@ const UserProvider = ({ children }) => {
     };
 
     return (
-        <UserContext.Provider value={{ user, login, logout }}>
+        <UserContext.Provider value={{ user, userProfile, login, logout, setUserProfileInfo }}>
             {children}
         </UserContext.Provider>
     );

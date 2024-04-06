@@ -6,13 +6,20 @@ import CustomFormHeading from '../customForms/CustomFormHeading';
 import FormBoxMain from '../customForms/FormBoxMain';
 import CustomInput from '../customForms/CustomInput';
 import UserContext from '../../Contexts/UserContext';
+import { set } from 'firebase/database';
+import { doc, getDoc, getFirestore } from 'firebase/firestore';
+import { app } from '../../firebase-config';
+
+
+
+const db = getFirestore(app);
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState('');
-  const { login } = useContext(UserContext);
+  const { login, setUserProfileInfo } = useContext(UserContext);
 
   const navigate = useNavigate(); // Use navigate to redirect after successful login
   const auth = getAuth();
@@ -22,21 +29,38 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     setLoginError('');
+
+    const fetchUserProfile = async (userId) => {
+      const userProfileRef = doc(db, "users", userId); // Assuming 'users' is the collection containing user profiles
+      const userProfileSnap = await getDoc(userProfileRef);
+  
+      if (userProfileSnap.exists()) {
+          console.log("User profile data:", userProfileSnap.data());
+          return userProfileSnap.data();
+      } else {
+          console.log("No user profile found!");
+          return null;
+      }
+  };
     
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        // Store the user's ID and email in the context
-        login({ id: user.uid, email: user.email });
-        setLoading(false);
-       
-        navigate('/userhomepage');
-      })
-      .catch((error) => {
-        setLoading(false);
-        setLoginError('Login failed. Please check your credentials.');
-        console.error('Login error:', error);
-      });
+  signInWithEmailAndPassword(auth, email, password)
+  .then(async (userCredential) => { // Mark this function as async
+    const user = userCredential.user;
+    // Store the user's ID and email in the context
+    login({ id: user.uid, email: user.email });
+
+    // Await the userProfile before setting it in context
+    const userProfile = await fetchUserProfile(userCredential.user.uid);
+    setUserProfileInfo(userProfile);
+    setLoading(false);
+    
+    navigate('/userhomepage'); // Navigate after the userProfile is set
+  })
+  .catch((error) => {
+    setLoading(false);
+    setLoginError('Login failed. Please check your credentials.');
+    console.error('Login error:', error);
+  });
   };
 
   return (

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc, collection, query, getDocs } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { app } from '../../firebase-config';
+import UserContext from '../../Contexts/UserContext';
 
 const UserProfileForm = () => {
   const [username, setUsername] = useState('');
@@ -79,6 +80,7 @@ const UserProfileForm = () => {
                   sawmillId,
                   imageUrl: downloadURL, // Add the download URL to the user's profile
               };
+
   
               await setDoc(doc(db, 'users', user.uid), userProfile, { merge: true });
               alert('Profile updated successfully!');
