@@ -20,3 +20,18 @@ export const fetchLocationsForSawmill = async (db, sawmillId) => {
     throw new Error("Failed to fetch locations.");
   }
 };
+
+export const fetchProjectsForSawmill = async (db, sawmillId) => {
+    try {
+      const projectsQuery = query(collection(db, `sawmill/${sawmillId}/projects`));
+      const querySnapshot = await getDocs(projectsQuery);
+      const projects = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      return projects;
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+      throw new Error("Failed to fetch projects.");
+    }
+  };

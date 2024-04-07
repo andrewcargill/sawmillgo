@@ -3,7 +3,7 @@ import { getFirestore, collection, addDoc, query, getDocs, doc, getDoc } from "f
 import { app } from "../../../firebase-config";
 import { getAuth } from "firebase/auth";
 import ListEditTree from "./ListEditTrees"; // Make sure this is correctly imported
-import { fetchLocationsForSawmill } from "../../../utils/filestoreOperations";
+import { fetchLocationsForSawmill, fetchProjectsForSawmill } from "../../../utils/filestoreOperations";
 
 const AddTreeForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,10 +15,12 @@ const AddTreeForm = () => {
     reason: "",
     age: "",
     status: "available",
+    projectId: null,
     logged: false,
   });
   const [locations, setLocations] = useState([]); // State to hold fetched locations
-
+  const [projects, setProjects] = useState([]); // State to hold fetched projects
+  
   const db = getFirestore(app);
   const auth = getAuth(app);
   const currentUserUID = auth.currentUser ? auth.currentUser.uid : null;
@@ -41,6 +43,15 @@ const AddTreeForm = () => {
         })
         .catch(error => {
           alert(error.message);
+        });
+
+        fetchProjectsForSawmill(db, sawmillId)
+        .then(fetchedProjects => {
+          setProjects(fetchedProjects);
+        })
+        .catch(error => {
+          console.error("Error fetching projects:", error);
+          alert("Failed to fetch projects: " + error.message);
         });
     }
   
@@ -93,6 +104,7 @@ const AddTreeForm = () => {
         age: "",
         status: "available",
         logged: false,
+        projectId: null,
         lumberjack: currentUserUID,
       });
     } catch (error) {
@@ -210,6 +222,25 @@ const AddTreeForm = () => {
             {locations.map(location => (
               <option key={location.id} value={location.id}>
                 {location.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <br />
+
+        {/* Project ID Dropdown */}
+        <label>
+          Project:
+          <select
+            name="projectId"
+            value={treeData.projectId}
+            onChange={handleChange}
+       
+          >
+            <option value="">Select a Project</option>
+            {projects.map(project => (
+              <option key={project.id} value={project.id}>
+                {project.projectName}
               </option>
             ))}
           </select>

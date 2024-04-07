@@ -61,7 +61,7 @@ exports.initializeSawmillSubcollections = functions.firestore
         logged: false,
         latitude: 0.0,
         longitude: 0.0,
-        projectID: "Initial Project",
+        projectId: "Initial Project",
       });
 
       // Create an initial log document under the tree
