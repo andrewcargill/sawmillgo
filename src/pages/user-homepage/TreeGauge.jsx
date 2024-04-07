@@ -4,61 +4,53 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { app } from '../../firebase-config'; // Make sure this path is correct
+import { useNavigate } from "react-router-dom";
 
 const TreeGauge = () => {
-  const [treeCounts, setTreeCounts] = useState({ total: 0, logged: 0, notLogged: 0 });
+  const [trees, setTrees] = useState([]);
   const db = getFirestore(app);
 
-  useEffect(() => {
-    // Assuming the user's linked sawmill ID is stored in local storage or context
-    const userLocalStorage = JSON.parse(localStorage.getItem("user"));
-    const sawmillId = userLocalStorage?.sawmillId;
+  const navigate = useNavigate();
 
+  useEffect(() => {
     const fetchTrees = async () => {
+      const userLocalStorage = JSON.parse(localStorage.getItem("user"));
+      const sawmillId = userLocalStorage?.sawmillId;
+
       if (!sawmillId) {
         console.log("Sawmill ID not found.");
         return;
       }
 
-      // Adjusted to query the 'trees' sub-collection within a specific 'sawmill'
+      // Reference to the 'trees' sub-collection within a specific 'sawmill'
       const treesRef = collection(db, `sawmill/${sawmillId}/trees`);
-      const q = query(treesRef, where("logged", "==", true)); // Example: querying for logged trees
-      const querySnapshot = await getDocs(q);
-
-      let logged = 0;
-      let notLogged = 0;
-
-      querySnapshot.forEach((doc) => {
-        // Assuming 'logged' is a boolean field within each tree document
-        if (doc.data().logged) {
-          logged++;
-        } else {
-          notLogged++;
-        }
-      });
-
-      const total = logged + notLogged;
-
-      setTreeCounts({ total, logged, notLogged });
-      console.log("total: ", total, "logged: ", logged, "notLogged: ", notLogged);
-      console.log("sawmillId: ", sawmillId);
-      console.log("treesRef: ", treesRef);
+      try {
+        const querySnapshot = await getDocs(treesRef);
+        const treesList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setTrees(treesList);
+        console.log("Fetched trees: ", treesList);
+      } catch (error) {
+        console.error("Error fetching trees: ", error);
+      }
     };
 
     fetchTrees();
   }, []); // Dependency array is empty, so this runs once on component mount
 
+  const handleAddClick = () => {
+    navigate('/addtree');
+  };
+
   return (
     <Grid border={1} p={2} bgcolor={'primary.main'}>
       <Typography color="initial">Tree Gauge</Typography>
-      <Typography>Total Trees: {treeCounts.total}</Typography>
-      <Typography>Logged Trees: {treeCounts.logged}</Typography>
-      <Typography>Not Logged Trees: {treeCounts.notLogged}</Typography>
+      <Typography>Total Trees: {trees.length}</Typography>
       <Grid>
-        <Button variant="contained" color="primary">View More</Button>
+        <Button variant="contained" color="primary" onClick={handleAddClick}>Add</Button>
       </Grid>
     </Grid>
   );
 };
+
 
 export default TreeGauge;

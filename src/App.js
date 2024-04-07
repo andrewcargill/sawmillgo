@@ -21,6 +21,7 @@ import { Login } from "./components/userAuth/LoginLogOut";
 import UserHomePage from "./pages/UserHomePage";
 import LoggedOutPage from "./pages/LoggedOutPage";
 import UserProfilePage from "./pages/UserProfilePage";
+import AddTreeForm from "./components/components-for-dev/trees/AddTreeForm";
 
 function App() {
  
@@ -38,6 +39,8 @@ function App() {
         <Route path="/home" element={<UserHomePage />} />
         <Route path="/loggedoutpage" element={<LoggedOutPage />} />
         <Route path="/profile" element={<UserProfilePage/>} />
+
+        <Route path="/addtree" element={<AddTreeForm/>} />
 
       </Routes>
       </PageContentContainer>
