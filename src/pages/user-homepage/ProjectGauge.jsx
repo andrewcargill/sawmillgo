@@ -8,7 +8,7 @@ const ProjectGauge = () => {
 
   return (
     <Grid border={1} p={2} bgcolor={'primary.main'}>
-      <Typography color="initial">Location Gauge</Typography>
+      <Typography color="initial">Projects Gauge</Typography>
       <Grid>
         <Button variant="contained" color="primary">View More</Button>
       </Grid>
