@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, collectionGroup, where, query } from "firebase/firestore";
 import { app } from "../../../firebase-config";
 import { getAuth } from "firebase/auth";
 import ListEditTree from "./ListEditTrees";
@@ -21,38 +21,88 @@ const AddTreeForm = () => {
   const currentUserUID = auth.currentUser ? auth.currentUser.uid : null; // Gets the current user UID
 
   useEffect(() => {
-    // If there is a current user, set the lumberjack field to the user's UID
     if (currentUserUID) {
-      setTreeData((prevState) => ({
+      setTreeData(prevState => ({
         ...prevState,
         lumberjack: currentUserUID,
       }));
     }
   }, [currentUserUID]);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value, type, checked } = e.target;
-    setTreeData((prevState) => ({
+    setTreeData(prevState => ({
       ...prevState,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleSubmit = async (e) => {
+//   const generateUniqueRefId = async () => {
+//     const chars = ['E', 'F', 'H', 'L', 'N', 'T', 'V', 'X', 'Z', 'I'];
+//     let refId = "";
+//     let isUnique = false;
+
+//     while (!isUnique) {
+//       refId = "";
+//       for (let i = 0; i < 4; i++) {
+//         refId += chars[Math.floor(Math.random() * chars.length)];
+//       }
+
+//       const treesSnapshot = await getDocs(query(collectionGroup(db, 'trees'), where('refId', '==', refId)));
+//       const logsSnapshot = await getDocs(query(collectionGroup(db, 'logs'), where('refId', '==', refId)));
+//       const planksSnapshot = await getDocs(query(collectionGroup(db, 'planks'), where('refId', '==', refId)));
+
+
+//       if (treesSnapshot.empty && logsSnapshot.empty && planksSnapshot.empty) {
+//         isUnique = true;
+//       }
+//     }
+
+//     return refId;
+//   };
+
+const generateUniqueRefId = async (db) => {
+    const chars = ['E', 'F', 'H', 'L', 'N', 'T', 'V', 'X', 'Z', 'I'];
+    let isUnique = false;
+    let refId = "";
+
+    while (!isUnique) {
+        // Generate a 4-character RefId
+        refId = "";
+        for (let i = 0; i < 4; i++) {
+            refId += chars[Math.floor(Math.random() * chars.length)];
+        }
+
+        // Use the db parameter to perform the collectionGroup query
+        const treesQuery = query(collectionGroup(db, 'trees'), where('refId', '==', refId));
+        const treesSnapshot = await getDocs(treesQuery);
+
+        isUnique = treesSnapshot.empty; // If no documents are found, the refId is unique
+    }
+
+    return refId;
+};
+  
+
+const handleSubmit = async (e) => {
     e.preventDefault();
     const userLocalStorage = JSON.parse(localStorage.getItem("user"));
     const sawmillId = userLocalStorage?.sawmillId;
-
+  
     if (!sawmillId) {
       console.error("Sawmill ID is not available. Cannot add tree.");
       return;
     }
-
+  
     try {
-      const treesRef = collection(db, `sawmill/${sawmillId}/trees`);
-      await addDoc(treesRef, treeData);
-      alert("Tree added successfully!");
-      // Reset form but keep lumberjack as the current user
+      // Generate a unique refId for the tree, ensuring to pass `db`
+      const refId = await generateUniqueRefId(db);
+  
+      // Proceed to add the tree with the generated refId
+      await addDoc(collection(db, `sawmill/${sawmillId}/trees`), { ...treeData, refId, lumberjack: currentUserUID });
+      alert("Tree added successfully with RefId: " + refId);
+  
+      // Reset the form data
       setTreeData({
         woodType: "",
         date: "",
@@ -62,21 +112,16 @@ const AddTreeForm = () => {
         age: "",
         status: "available",
         logged: false,
+        // Ensure to keep the lumberjack info if necessary
         lumberjack: currentUserUID,
       });
     } catch (error) {
       console.error("Error adding tree: ", error);
-      alert("Failed to add tree. See console for details.");
-      console.log(
-        "Adding tree to sawmill ID:",
-        sawmillId,
-        "with data:",
-        treeData
-      );
-      console.error("Error adding tree: ", error);
       alert(`Failed to add tree. Error: ${error.message}`);
+      console.log(`${error.message}`);
     }
   };
+  
 
   return (
     <div>
