@@ -38,7 +38,7 @@ const TreeGauge = () => {
   }, []); // Dependency array is empty, so this runs once on component mount
 
   const handleAddClick = () => {
-    navigate('/addtree');
+    navigate('/trees');
   };
 
   return (
