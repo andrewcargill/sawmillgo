@@ -3,6 +3,7 @@ import { getFirestore, collection, addDoc, query, getDocs, doc, getDoc } from "f
 import { app } from "../../../firebase-config";
 import { getAuth } from "firebase/auth";
 import ListEditTree from "./ListEditTrees"; // Make sure this is correctly imported
+import { fetchLocationsForSawmill } from "../../../utils/filestoreOperations";
 
 const AddTreeForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +22,8 @@ const AddTreeForm = () => {
   const db = getFirestore(app);
   const auth = getAuth(app);
   const currentUserUID = auth.currentUser ? auth.currentUser.uid : null;
+  const userLocalStorage = JSON.parse(localStorage.getItem("user"));
+  const sawmillId = userLocalStorage?.sawmillId;
 
   // Fetch available locations
   useEffect(() => {
@@ -31,21 +34,17 @@ const AddTreeForm = () => {
       }));
     }
   
-    const fetchLocations = async () => {
-      const userLocalStorage = JSON.parse(localStorage.getItem("user"));
-      const sawmillId = userLocalStorage?.sawmillId;
-      if (sawmillId) {
-        const locationsQuery = query(collection(db, `sawmill/${sawmillId}/locations`));
-        const querySnapshot = await getDocs(locationsQuery);
-        const fetchedLocations = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setLocations(fetchedLocations);
-      }
-    };
+    if (sawmillId) {
+      fetchLocationsForSawmill(db, sawmillId)
+        .then(fetchedLocations => {
+          setLocations(fetchedLocations);
+        })
+        .catch(error => {
+          alert(error.message);
+        });
+    }
   
-    fetchLocations();
+
   }, [db, currentUserUID]);
 
 

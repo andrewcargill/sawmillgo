@@ -132,6 +132,11 @@ exports.initializeSawmillSubcollections = functions.firestore
         status: "active",
         createdBy: "UserUID",
         SawmillName: "Initial Sawmill",
+        date: "2023-04-01",
+        deadline: "2023-04-30",
+        projectInfo: "Initial Project Info",
+        notes: "Initial Project Notes",
+        image: "[url….to image]",
       });
     } catch (error) {
       console.error("Error initializing sawmill subcollections:", error);

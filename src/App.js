@@ -23,6 +23,7 @@ import LoggedOutPage from "./pages/LoggedOutPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import AddTreeForm from "./components/components-for-dev/trees/AddTreeForm";
 import LocationsPage from "./pages/sub-pages/LocationsPage";
+import ProjectsPage from "./pages/sub-pages/ProjectsPage";
 
 function App() {
  
@@ -39,10 +40,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<UserHomePage />} />
         <Route path="/loggedoutpage" element={<LoggedOutPage />} />
-        <Route path="/profile" element={<UserProfilePage/>} />
+        <Route path="/profile" element={<UserProfilePage />} />
 
-        <Route path="/addtree" element={<AddTreeForm/>} />
-        <Route path="/locations" element={<LocationsPage/>} />
+        <Route path="/addtree" element={<AddTreeForm />} />
+        <Route path="/locations" element={<LocationsPage />} />
+        <Route path="/projects" element={<ProjectsPage />} />
 
       </Routes>
       </PageContentContainer>
