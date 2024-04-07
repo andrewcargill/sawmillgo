@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getFirestore, collection, addDoc, getDocs, collectionGroup, where, query, getDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, collectionGroup, where, query } from "firebase/firestore";
 import { app } from "../../../firebase-config";
 import { getAuth } from "firebase/auth";
 import ListEditTree from "./ListEditTrees";
@@ -30,42 +30,89 @@ const AddTreeForm = () => {
   }, [currentUserUID]);
 
   const handleChange = e => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setTreeData(prevState => ({
       ...prevState,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleSubmit = async e => {
+
+
+// const generateUniqueRefId = async (db) => {
+//     const chars = ['E', 'F', 'H', 'L', 'N', 'T', 'V', 'X', 'Z', 'I'];
+//     let isUnique = false;
+//     let refId = "";
+
+//     while (!isUnique) {
+//         // Generate a 4-character RefId
+//         refId = "";
+//         for (let i = 0; i < 4; i++) {
+//             refId += chars[Math.floor(Math.random() * chars.length)];
+//         }
+
+//         // Use the db parameter to perform the collectionGroup query
+//         const treesQuery = query(collectionGroup(db, 'trees'), where('refId', '==', refId));
+//         const treesSnapshot = await getDocs(treesQuery);
+
+//         isUnique = treesSnapshot.empty; // If no documents are found, the refId is unique
+//     }
+
+//     return refId;
+// };
+
+const generateUniqueRefId = async (db) => {
+    const chars = ['E', 'F', 'H', 'L', 'N', 'T', 'V', 'X', 'Z', 'I'];
+    let isUnique = false;
+    let refId = "";
+
+    while (!isUnique) {
+        // Generate a 4-character RefId
+        refId = "";
+        for (let i = 0; i < 4; i++) {
+            refId += chars[Math.floor(Math.random() * chars.length)];
+        }
+
+        // Prepare queries for each collection group
+        const treesQuery = query(collectionGroup(db, 'trees'), where('refId', '==', refId));
+        const logsQuery = query(collectionGroup(db, 'logs'), where('refId', '==', refId));
+        const planksQuery = query(collectionGroup(db, 'planks'), where('refId', '==', refId));
+
+        // Execute queries
+        const [treesSnapshot, logsSnapshot, planksSnapshot] = await Promise.all([
+            getDocs(treesQuery),
+            getDocs(logsQuery),
+            getDocs(planksQuery)
+        ]);
+
+        // Check if refId is unique across all collections
+        isUnique = treesSnapshot.empty && logsSnapshot.empty && planksSnapshot.empty;
+    }
+
+    return refId;
+};
+
+  
+
+const handleSubmit = async (e) => {
     e.preventDefault();
     const userLocalStorage = JSON.parse(localStorage.getItem("user"));
     const sawmillId = userLocalStorage?.sawmillId;
-
+  
     if (!sawmillId) {
       console.error("Sawmill ID is not available. Cannot add tree.");
       return;
     }
-
+  
     try {
-      // Add the new tree to Firestore and get the reference to the newly created document
-      const docRef = await addDoc(collection(db, `sawmill/${sawmillId}/trees`), { ...treeData, lumberjack: currentUserUID });
-      
-      // Wait a brief moment to allow the cloud function to update the document with a refId
-      // This is a workaround and should ideally be replaced with a more robust solution like
-      // subscribing to document changes or using a confirmation mechanism
-      setTimeout(async () => {
-        // Fetch the updated document to get the refId added by the cloud function
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          alert(`Tree added successfully! RefId: ${docSnap.data().refId}`);
-          // Optionally display the refId in the UI for the user to mark the tree
-        } else {
-          console.log("No such document!");
-        }
-      }, 3000); // Adjust the timeout duration as needed
-
-      // Reset the form fields
+      // Generate a unique refId for the tree, ensuring to pass `db`
+      const refId = await generateUniqueRefId(db);
+  
+      // Proceed to add the tree with the generated refId
+      await addDoc(collection(db, `sawmill/${sawmillId}/trees`), { ...treeData, refId, lumberjack: currentUserUID });
+      alert("Tree added successfully with RefId: " + refId);
+  
+      // Reset the form data
       setTreeData({
         woodType: "",
         date: "",
@@ -75,14 +122,16 @@ const AddTreeForm = () => {
         age: "",
         status: "available",
         logged: false,
+        // Ensure to keep the lumberjack info if necessary
         lumberjack: currentUserUID,
       });
     } catch (error) {
       console.error("Error adding tree: ", error);
       alert(`Failed to add tree. Error: ${error.message}`);
+      console.log(`${error.message}`);
     }
   };
-
+  
 
   return (
     <div>
