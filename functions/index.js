@@ -61,7 +61,7 @@ exports.initializeSawmillSubcollections = functions.firestore
         logged: false,
         latitude: 0.0,
         longitude: 0.0,
-        projectId: "Initial Project",
+        projectId: null,
       });
 
       // Create an initial log document under the tree
@@ -75,7 +75,7 @@ exports.initializeSawmillSubcollections = functions.firestore
         status: "available",
         locationId: "Initial Location",
         planked: false,
-        projectID: "Initial Project",
+        projectID: null,
       });
 
       // Create an initial plank document under the log
@@ -98,7 +98,7 @@ exports.initializeSawmillSubcollections = functions.firestore
         general: false,
         status: "available",
         locationId: "Initial Location",
-        projectID: "Initial Project",
+        projectID: null,
         stockType: "normal-stock",
       });
 
