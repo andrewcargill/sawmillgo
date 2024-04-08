@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from "react";
 import {
   Modal,
-  Box,
+  Box, Typography,
 } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import TreeDetailsModal from "./TreeDetailsModal";
+import TreeEditModal from "./TreeEditModal";
+import AddEditTreeForm from "../components-for-dev/trees/AddEditTreeForm";
 
 function TreeListModal({ isOpen, onClose, treeDetails }) {
-
+    
     const [editMode, setEditMode] = useState(false);
 
     useEffect(() => {
         if (!isOpen) {
             setEditMode(false);
         }
+      
     }, [isOpen]);
 
     const handleEditClick = () => {
@@ -40,10 +43,12 @@ function TreeListModal({ isOpen, onClose, treeDetails }) {
         }}
       >
         {editMode ? (
-             'edit mode off'
+             <AddEditTreeForm treeDetails={treeDetails} /> 
+      
+           
         ) : (
             <TreeDetailsModal handleEditClick={handleEditClick} onClose={onClose} treeDetails={treeDetails}/>
-           
+       
         )}
       </Box>
     </Modal>
