@@ -14,6 +14,7 @@ import ListEditTree from "./ListEditTrees"; // Make sure this is correctly impor
 import {
   fetchLocationsForSawmill,
   fetchProjectsForSawmill,
+  fetchSpeciesForSawmill,
 } from "../../../utils/filestoreOperations";
 import {
   getStorage,
@@ -30,9 +31,11 @@ const AddTreeForm = () => {
   const [longitude, setLongitude] = useState("");
   const [latitude, setLatitude] = useState("");
   const [treeData, setTreeData] = useState({
-    woodType: "",
+    speciesId: "",
+    speciesName: "",
     date: "",
     locationId: "",
+    locationName: "",
     longitude: "",
     latitude: "",
     image: "",
@@ -40,10 +43,12 @@ const AddTreeForm = () => {
     age: "",
     status: "available",
     projectId: null,
+    projectName: "",
     logged: false,
   });
   const [locations, setLocations] = useState([]); // State to hold fetched locations
   const [projects, setProjects] = useState([]); // State to hold fetched projects
+  const [species, setSpecies] = useState([]); // State to hold fetched species
 
   const db = getFirestore(app);
   const auth = getAuth(app);
@@ -77,16 +82,58 @@ const AddTreeForm = () => {
           console.error("Error fetching projects:", error);
           alert("Failed to fetch projects: " + error.message);
         });
+
+      fetchSpeciesForSawmill(db, sawmillId)
+        .then((fetchedSpecies) => {
+          setSpecies(fetchedSpecies);
+        })
+        .catch((error) => {
+          console.error("Error fetching projects:", error);
+          alert("Failed to fetch projects: " + error.message);
+        });
     }
   }, [db, currentUserUID]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setTreeData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+  
+    if (name === 'locationId') {
+      // Find the selected location object based on the locationId
+      const selectedLocation = locations.find(location => location.id === value);
+  
+      // Update the state with both the locationId and locationName
+      setTreeData(prevState => ({
+        ...prevState,
+        locationId: selectedLocation ? selectedLocation.id : '',
+        locationName: selectedLocation ? selectedLocation.name : '',
+      }));
+    } else if (name === 'projectId') {
+      const selectedProject = projects.find(project => project.id === value);
+      setTreeData(prevState => ({
+        ...prevState,
+        projectId: selectedProject ? selectedProject.id : '',
+        projectName: selectedProject ? selectedProject.projectName : '',
+      }));
+    } else if (name === 'speciesId') {
+      // Find the selected species object based on the speciesId
+      const selectedSpecies = species.find(species => species.id === value);
+  
+      // Update the state with both the speciesId and speciesName
+      setTreeData(prevState => ({
+        ...prevState,
+        speciesId: selectedSpecies ? selectedSpecies.id : '',
+        speciesName: selectedSpecies ? selectedSpecies.name : '',
+      }));
+    } else {
+      // Handle other form fields as normal
+      setTreeData(prevState => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
+  
+  
 
   const handleImageChange = (e) => {
     if (e.target.files[0]) {
@@ -130,6 +177,7 @@ const AddTreeForm = () => {
         longitude: parseFloat(longitude),
         image: imageUrl,
         lumberjack: currentUserUID,
+        lumberjackName: userLocalStorage?.displayName,
       };
       const docRef = await addDoc(
         collection(db, `sawmill/${sawmillId}/trees`),
@@ -153,9 +201,11 @@ const AddTreeForm = () => {
 
       // Reset the form fields and image state
       setTreeData({
-        woodType: "",
         date: "",
         locationId: "",
+        locationName: "",
+        speciesId: "",
+        speciesName: "",
         image: "",
         reason: "",
         age: "",
@@ -164,6 +214,7 @@ const AddTreeForm = () => {
         latitude: "",
         logged: false,
         projectId: null,
+        projectName: "",
         lumberjack: currentUserUID,
       });
       setImage(null); // Reset the image state
@@ -214,21 +265,11 @@ const AddTreeForm = () => {
           Get Location
         </Button>
         <br />
-        <label>
-          Wood Type:
-          <input
-            type="text"
-            name="woodType"
-            value={treeData.woodType}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <br />
+  
 
         {/* Date Planted */}
         <label>
-          Date Planted:
+          Date Felled:
           <input
             type="date"
             name="date"
@@ -305,6 +346,23 @@ const AddTreeForm = () => {
             {locations.map((location) => (
               <option key={location.id} value={location.id}>
                 {location.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <br />
+        <label>
+          Species:
+          <select
+            name="speciesId"
+            value={treeData.speciesId}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select a Species</option>
+            {species.map((species) => (
+              <option key={species.id} value={species.id}>
+                {species.name}
               </option>
             ))}
           </select>

@@ -51,8 +51,10 @@ exports.initializeSawmillSubcollections = functions.firestore
       const treeRef = await db.collection(`sawmill/${sawmillId}/trees`).add({
         refId: "Initial Tree",
         date: "2023-04-01",
-        woodType: "Pine",
+        speciesId: "",
+        speciesName: "Pine",
         locationId: "Initial Location",
+        locationName: "Initial Location Name",
         lumberjack: "UserUID",
         image: "[url….to image]",
         reason: "tree was too old",
@@ -62,6 +64,7 @@ exports.initializeSawmillSubcollections = functions.firestore
         latitude: 0.0,
         longitude: 0.0,
         projectId: null,
+        projectName: null,
       });
 
       // Create an initial log document under the tree
@@ -123,6 +126,11 @@ exports.initializeSawmillSubcollections = functions.firestore
         toLocation: "Second Location",
         timestamp: "2023-04-01",
         operator: "UserUID",
+      });
+
+      await db.collection(`sawmill/${sawmillId}/species`).add({
+        name: "Initial Species",
+        description: "Initial Species Description",
       });
 
       await db.collection(`sawmill/${sawmillId}/projects`).add({

@@ -25,6 +25,7 @@ import AddTreeForm from "./components/components-for-dev/trees/AddTreeForm";
 import LocationsPage from "./pages/sub-pages/LocationsPage";
 import ProjectsPage from "./pages/sub-pages/ProjectsPage";
 import TreesPage from "./pages/sub-pages/TreesPage";
+import SpeciesPage from "./pages/sub-pages/SpeciesPage";
 
 function App() {
  
@@ -47,6 +48,7 @@ function App() {
         <Route path="/trees" element={<TreesPage />} />
         <Route path="/locations" element={<LocationsPage />} />
         <Route path="/projects" element={<ProjectsPage />} />
+        <Route path="/species" element={<SpeciesPage />} />
 
       </Routes>
       </PageContentContainer>

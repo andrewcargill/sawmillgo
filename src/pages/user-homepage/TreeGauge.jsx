@@ -46,7 +46,7 @@ const TreeGauge = () => {
       <Typography color="initial">Tree Gauge</Typography>
       <Typography>Total Trees: {trees.length}</Typography>
       <Grid>
-        <Button variant="contained" color="primary" onClick={handleAddClick}>View</Button>
+        <Button variant="contained" color="primary" onClick={handleAddClick}>View more</Button>
       </Grid>
     </Grid>
   );

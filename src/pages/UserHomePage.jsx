@@ -12,6 +12,7 @@ import WaterGauge from "./user-homepage/WaterGauge";
 import LocationGauge from "./user-homepage/LocationGauge";
 import MovementsGauge from "./user-homepage/Movements";
 import ProjectGauge from "./user-homepage/ProjectGauge";
+import SpeciesGauge from "./user-homepage/SpeicesGauge";
 
 const UserHomePage = () => {
   // Access user information from context
@@ -50,14 +51,17 @@ const [userInfo, setUserInfo] = useState(null);
           </Grid>
         </Grid>
         <Grid container item xs={12}>
-          <Grid item xs={4}>
+          <Grid item xs={3}>
             <LocationGauge />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={3}>
             <MovementsGauge />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={3}>
             <ProjectGauge />
+          </Grid>
+          <Grid item xs={3}>
+            <SpeciesGauge />
           </Grid>
        
         </Grid>

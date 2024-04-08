@@ -35,3 +35,18 @@ export const fetchProjectsForSawmill = async (db, sawmillId) => {
       throw new Error("Failed to fetch projects.");
     }
   };
+
+export const fetchSpeciesForSawmill = async (db, sawmillId) => {
+    try {
+      const speciesQuery = query(collection(db, `sawmill/${sawmillId}/species`));
+      const querySnapshot = await getDocs(speciesQuery);
+      const speices = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      return speices;
+    } catch (error) {
+      console.error("Error fetching species:", error);
+      throw new Error("Failed to fetch species.");
+    }
+  };

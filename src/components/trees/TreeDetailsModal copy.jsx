@@ -9,9 +9,26 @@ import {
 } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 
-function TreeDetailsModal({ treeDetails, onClose, handleEditClick }) {
+function TreeDetailsModal({ isOpen, onClose, treeDetails }) {
   return (
-   
+    <Modal
+      open={isOpen}
+      onClose={onClose}
+      aria-labelledby="tree-details-title"
+      aria-describedby="tree-details-description"
+    >
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: 400,
+          bgcolor: "background.paper",
+          boxShadow: 24,
+          p: 4,
+        }}
+      >
         <Grid>
           <Typography id="tree-details-title" variant="h6" component="h2">
             Tree Details
@@ -69,7 +86,7 @@ function TreeDetailsModal({ treeDetails, onClose, handleEditClick }) {
                   flexDirection={"row"}
                   justifyContent={"space-around"}
                 >
-                  <Button variant="contained" onClick={handleEditClick}>
+                  <Button variant="contained" onClick={onClose}>
                     Edit
                   </Button>
 
@@ -87,7 +104,8 @@ function TreeDetailsModal({ treeDetails, onClose, handleEditClick }) {
             <Typography>No tree selected.</Typography>
           )}
         </Grid>
-
+      </Box>
+    </Modal>
   );
 }
 

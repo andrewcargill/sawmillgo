@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import InputLabel from '@mui/material/InputLabel'
 import TreeDetailsModal from './TreeDetailsModal';
+import TreeListModal from './TreeListModal';
 
 
 
@@ -114,7 +115,7 @@ const ListAllTrees = () => {
               <h3>{tree.refId}</h3>
             </Grid>
             <Grid item>
-              <p>{tree.woodType}</p>
+              <p>{tree.speciesName}</p>
             </Grid>
           </Grid>
         ))
@@ -125,7 +126,7 @@ const ListAllTrees = () => {
       )}
 
     </Grid>
-    <TreeDetailsModal
+    <TreeListModal
     isOpen={isModalOpen}
     onClose={() => setIsModalOpen(false)}
     treeDetails={selectedTreeDetails}
