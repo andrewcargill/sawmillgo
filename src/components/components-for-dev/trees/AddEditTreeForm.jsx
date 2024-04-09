@@ -8,6 +8,7 @@ import {
   doc,
   getDoc,
   setDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { app } from "../../../firebase-config";
 import { getAuth } from "firebase/auth";
@@ -38,7 +39,7 @@ import { Table, TableBody, TableCell, TableRow, TableContainer } from "@mui/mate
 
 
 
-const AddEditTreeForm = ({ treeDetails, onClose }) => {
+const AddEditTreeForm = ({ treeDetails, onClose, handleEditClick }) => {
   const treeUid = treeDetails?.id;
   const [details, setDetails] = useState(treeDetails);
   const [isLoading, setIsLoading] = useState(false);
@@ -56,14 +57,33 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
   const userLocalStorage = JSON.parse(localStorage.getItem("user"));
   const sawmillId = userLocalStorage?.sawmillId;
 
+  const handleDelete = async () => {
+    // Use prompt to ask the user to input the refId
+    const userInput = window.prompt(`This action will delete ${treeData.refId}. Type the Ref ID to confirm.`);
+    
+    if (userInput === treeData.refId) {
+      try {
+        if (treeUid) {
+          await deleteDoc(doc(db, `sawmill/${sawmillId}/trees`, treeUid));
+          alert('Tree deleted successfully.');
+          onClose(); // Close the modal or redirect user
+        }
+      } catch (error) {
+        console.error("Error deleting tree: ", error);
+        alert(`Failed to delete tree. Error: ${error.message}`);
+      }
+    }
+  };
+
   // Fetch available locations
   useEffect(() => {
-    if (currentUserUID) {
-      setTreeData((prevState) => ({
-        ...prevState,
-        lumberjack: currentUserUID,
-      }));
-    }
+    // if (currentUserUID) {
+    //   setTreeData((prevState) => ({
+    //     ...prevState,
+    //     lumberjack: currentUserUID,
+    //   }));
+      
+    // }
 
     if (sawmillId) {
       fetchLocationsForSawmill(db, sawmillId)
@@ -93,14 +113,17 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
         });
     }
 
+    setLongitude(treeDetails.longitude);
+      setLatitude(treeDetails.latitude);
+
     const fetchTreeData = async () => {
-      if (!details) return;
+      if (!treeData) return;
 
       const docRef = doc(db, `sawmill/${sawmillId}/trees`, treeUid);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        setTreeData({ ...docSnap.data(), speciesId: "", speciesName: "" }); // Assuming you want to reset these for editing
+        setTreeData({ ...docSnap.data()}); // Assuming you want to reset these for editing
         // You might need to handle transformations here, e.g., converting Firestore Timestamps to strings
       } else {
         console.log("No such document!");
@@ -192,8 +215,8 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
         latitude: parseFloat(latitude),
         longitude: parseFloat(longitude),
         image: imageUrl, // Assume this is already set from image upload logic
-        lumberjack: currentUserUID,
-        lumberjackName: userLocalStorage?.displayName,
+        // lumberjack: currentUserUID,
+        // lumberjackName: userLocalStorage?.displayName,
       };
 
       if (treeUid) {
@@ -230,6 +253,9 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
       });
       setImage(""); // Reset image state
       setIsLoading(false); // Reset loading state
+      onClose(); // Close the modal after successful add/update
+      console.log('handleEditClick:', handleEditClick);
+       // Close the modal after successful add/update
     } catch (error) {
       console.error("Error saving tree: ", error);
       alert(`Failed to save tree. Error: ${error.message}`);
@@ -313,7 +339,7 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
           justifyContent={"flex-end"}
         >
           <img
-            src={treeDetails.image}
+            src={treeData.image}
             alt="Tree"
             style={{
               width: "90%",
@@ -489,8 +515,8 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
             SAVE
           </Button>
 
-          <Button variant="contained" color="warning" onClick="">
-            Delete
+          <Button variant="contained" color="warning" onClick={handleDelete}>
+            DELETE
           </Button>
 
           <IconButton aria-label="" onClick={onClose}>

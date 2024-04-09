@@ -43,7 +43,7 @@ function TreeListModal({ isOpen, onClose, treeDetails }) {
         }}
       >
         {editMode ? (
-             <AddEditTreeForm treeDetails={treeDetails} onClose={onClose} /> 
+             <AddEditTreeForm handleEditClick={handleEditClick} treeDetails={treeDetails} onClose={onClose} /> 
       
            
         ) : (
