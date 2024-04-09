@@ -57,6 +57,10 @@ const ListAllTrees = () => {
     setIsModalOpen(true);
   };
 
+  function refreshTreeList() {
+    fetchTrees();
+  }
+
   return (
     <Grid container spacing={2} border={1} p={2}>
       <Grid item xs={12}>
@@ -128,7 +132,13 @@ const ListAllTrees = () => {
     </Grid>
     <TreeListModal
     isOpen={isModalOpen}
-    onClose={() => setIsModalOpen(false)}
+    onClose={(edited) => {
+      setIsModalOpen(false);
+      if (edited) {
+        refreshTreeList();
+      }
+    }}
+    // onClose={() => setIsModalOpen(false)}
     treeDetails={selectedTreeDetails}
 />
     </Grid>

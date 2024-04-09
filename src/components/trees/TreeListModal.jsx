@@ -5,12 +5,12 @@ import {
 } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import TreeDetailsModal from "./TreeDetailsModal";
-import TreeEditModal from "./TreeEditModal";
 import AddEditTreeForm from "../components-for-dev/trees/AddEditTreeForm";
 
 function TreeListModal({ isOpen, onClose, treeDetails }) {
     
     const [editMode, setEditMode] = useState(false);
+  
 
     useEffect(() => {
         if (!isOpen) {
@@ -43,7 +43,7 @@ function TreeListModal({ isOpen, onClose, treeDetails }) {
         }}
       >
         {editMode ? (
-             <AddEditTreeForm treeDetails={treeDetails} /> 
+             <AddEditTreeForm treeDetails={treeDetails} onClose={onClose} /> 
       
            
         ) : (

@@ -22,9 +22,7 @@ function TreeDetailsModal({ treeDetails, onClose, handleEditClick }) {
               <Typography id="tree-details-description" sx={{ mt: 2 }}>
                 Ref ID: {treeDetails.refId}
               </Typography>
-              <Typography id="tree-details-description" sx={{ mt: 2 }}>
-                ID: {treeDetails.id}
-              </Typography>
+          
               <Typography>Project: {treeDetails.projectName}</Typography>
 
               <Typography>Location: {treeDetails.locationName}</Typography>

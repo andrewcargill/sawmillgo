@@ -24,10 +24,22 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { getGeolocation } from "../../../utils/geolocation";
-import Button from "@mui/material/Button";
+import {
+  Modal,
+  Box,
+  Typography,
+  Button,
+  Grid,
+  IconButton,
+} from "@mui/material";
+import CancelIcon from "@mui/icons-material/Cancel";
+import { Table, TableBody, TableCell, TableRow, TableContainer } from "@mui/material";
 
-const AddEditTreeForm = ( {treeDetails} ) => {
-const treeUid = treeDetails?.id;
+
+
+
+const AddEditTreeForm = ({ treeDetails, onClose }) => {
+  const treeUid = treeDetails?.id;
   const [details, setDetails] = useState(treeDetails);
   const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState("");
@@ -47,7 +59,6 @@ const treeUid = treeDetails?.id;
   // Fetch available locations
   useEffect(() => {
     if (currentUserUID) {
-    
       setTreeData((prevState) => ({
         ...prevState,
         lumberjack: currentUserUID,
@@ -84,7 +95,7 @@ const treeUid = treeDetails?.id;
 
     const fetchTreeData = async () => {
       if (!details) return;
-      
+
       const docRef = doc(db, `sawmill/${sawmillId}/trees`, treeUid);
       const docSnap = await getDoc(docRef);
 
@@ -97,49 +108,48 @@ const treeUid = treeDetails?.id;
     };
 
     fetchTreeData();
-    
   }, [db, currentUserUID, sawmillId, details]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-  
-    if (name === 'locationId') {
+
+    if (name === "locationId") {
       // Find the selected location object based on the locationId
-      const selectedLocation = locations.find(location => location.id === value);
-  
+      const selectedLocation = locations.find(
+        (location) => location.id === value
+      );
+
       // Update the state with both the locationId and locationName
-      setTreeData(prevState => ({
+      setTreeData((prevState) => ({
         ...prevState,
-        locationId: selectedLocation ? selectedLocation.id : '',
-        locationName: selectedLocation ? selectedLocation.name : '',
+        locationId: selectedLocation ? selectedLocation.id : "",
+        locationName: selectedLocation ? selectedLocation.name : "",
       }));
-    } else if (name === 'projectId') {
-      const selectedProject = projects.find(project => project.id === value);
-      setTreeData(prevState => ({
+    } else if (name === "projectId") {
+      const selectedProject = projects.find((project) => project.id === value);
+      setTreeData((prevState) => ({
         ...prevState,
-        projectId: selectedProject ? selectedProject.id : '',
-        projectName: selectedProject ? selectedProject.projectName : '',
+        projectId: selectedProject ? selectedProject.id : "",
+        projectName: selectedProject ? selectedProject.projectName : "",
       }));
-    } else if (name === 'speciesId') {
+    } else if (name === "speciesId") {
       // Find the selected species object based on the speciesId
-      const selectedSpecies = species.find(species => species.id === value);
-  
+      const selectedSpecies = species.find((species) => species.id === value);
+
       // Update the state with both the speciesId and speciesName
-      setTreeData(prevState => ({
+      setTreeData((prevState) => ({
         ...prevState,
-        speciesId: selectedSpecies ? selectedSpecies.id : '',
-        speciesName: selectedSpecies ? selectedSpecies.name : '',
+        speciesId: selectedSpecies ? selectedSpecies.id : "",
+        speciesName: selectedSpecies ? selectedSpecies.name : "",
       }));
     } else {
       // Handle other form fields as normal
-      setTreeData(prevState => ({
+      setTreeData((prevState) => ({
         ...prevState,
         [name]: value,
       }));
     }
   };
-  
-  
 
   const handleImageChange = (e) => {
     if (e.target.files[0]) {
@@ -185,7 +195,7 @@ const treeUid = treeDetails?.id;
         lumberjack: currentUserUID,
         lumberjackName: userLocalStorage?.displayName,
       };
-    
+
       if (treeUid) {
         console.log("Updating tree with UID: ", treeUid);
         // If treeUid is provided, we're updating an existing tree
@@ -194,10 +204,13 @@ const treeUid = treeDetails?.id;
         alert("Tree updated successfully!");
       } else {
         // If no treeUid, we're adding a new tree
-        const docRef = await addDoc(collection(db, `sawmill/${sawmillId}/trees`), treeWithImage);
+        const docRef = await addDoc(
+          collection(db, `sawmill/${sawmillId}/trees`),
+          treeWithImage
+        );
         alert("Tree added successfully! RefId: " + docRef.id);
       }
-    
+
       // Reset form to initial state after successful add/update
       setTreeData({
         speciesId: "",
@@ -239,161 +252,253 @@ const treeUid = treeDetails?.id;
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <h3>Add New Tree</h3>
-        <label>Longitude</label>
-        <input
-          type="text"
-          placeholder=""
-          value={latitude}
-          onChange={(e) => setLatitude(e.target.value)}
-        />
-        <br />
-        <label>Latitude</label>
-        <input
-          type="text"
-          placeholder=""
-          value={longitude}
-          onChange={(e) => setLongitude(e.target.value)}
-        />
-        <br />
-        <Button
-          variant="contained"
-          onClick={handleGetLocation}
+      <Grid>
+        <Typography id="tree-details-title" variant="h6" component="h2">
+          Tree Edit
+        </Typography>
+      </Grid>
+
+      <Grid container xs={12}>
+        <Grid item xs={8}>
+          <Grid>
+            <Grid>
+              <TableContainer>
+              <Table sx={{ border: "2px solid lightgrey" }}>
+                <TableBody>
+                  <TableRow>
+                    <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                      Ref ID:
+                    </TableCell>
+                    <TableCell sx={{ py: 0.5, px: 1 }}>
+                      {treeDetails.refId}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                      Status:
+                    </TableCell>
+                    <TableCell sx={{ py: 0.5, px: 1 }}>
+                      {treeDetails.status}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                      Lumberjack:
+                    </TableCell>
+                    <TableCell sx={{ py: 0.5, px: 1 }}>
+                      {treeDetails.lumberjackName}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                      Logged:
+                    </TableCell>
+                    <TableCell sx={{ py: 0.5, px: 1 }}>
+                      {treeDetails.logged ? "Yes" : "No"}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+              </TableContainer>
+            </Grid>
+          </Grid>
+         
+        </Grid>
+
+        <Grid
+          item
+          container
+          xs={4}
+          alignContent={"flex-start"}
+          justifyContent={"flex-end"}
         >
-          Get Location
-        </Button>
-        <br />
-  
-
-        {/* Date Planted */}
-        <label>
-          Date Felled:
-          <input
-            type="date"
-            name="date"
-            value={treeData.date}
-            onChange={handleChange}
-            required
+          <img
+            src={treeDetails.image}
+            alt="Tree"
+            style={{
+              width: "90%",
+              height: "auto",
+              objectFit: "contain",
+            }}
           />
-        </label>
-        <br />
+        </Grid>
 
-        {/* Location ID */}
+        <Grid p={1}>
+            <TableContainer>
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                    Project:
+                  </TableCell>
+                  <TableCell sx={{ py: 0.5, px: 1 }}>
+                    <select
+                      name="projectId"
+                      value={treeData.projectId}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select a Project</option>
+                      {projects.map((project) => (
+                        <option key={project.id} value={project.id}>
+                          {project.projectName}
+                        </option>
+                      ))}
+                    </select>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                    Location
+                  </TableCell>
+                  <TableCell sx={{ py: 0.5, px: 1 }}>
+                    <select
+                      name="locationId"
+                      value={treeData.locationId}
+                      onChange={handleChange}
+                      required
+                    >
+                      <option value="">Select a Location</option>
+                      {locations.map((location) => (
+                        <option key={location.id} value={location.id}>
+                          {location.name}
+                        </option>
+                      ))}
+                    </select>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                    Species
+                  </TableCell>
+                  <TableCell sx={{ py: 0.5, px: 1 }}>
+                    <select
+                      name="speciesId"
+                      value={treeData.speciesId}
+                      onChange={handleChange}
+                      required
+                    >
+                      <option value="">Select a Species</option>
+                      {species.map((species) => (
+                        <option key={species.id} value={species.id}>
+                          {species.name}
+                        </option>
+                      ))}
+                    </select>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                    Age
+                  </TableCell>
+                  <TableCell sx={{ py: 0.5, px: 1 }}>
+                    <input
+                      type="text"
+                      name="age"
+                      value={treeData.age}
+                      onChange={handleChange}
+                      required
+                    />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                    Date
+                  </TableCell>
+                  <TableCell sx={{ py: 0.5, px: 1 }}>
+                    <input
+                      type="date"
+                      name="date"
+                      value={treeData.date}
+                      onChange={handleChange}
+                      required
+                    />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                  Reason
+                </TableCell>
+                <TableCell sx={{ py: 0.5, px: 1 }}>
+      
+                  <textarea
+                    type="textfield"
+                    name="reason"
+                    value={treeData.reason}
+                    onChange={handleChange}
+                
+                  >
+                    {treeData.reason}
+                  </textarea>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                  Image
+                </TableCell>
+                <TableCell sx={{ py: 0.5, px: 1, whiteSpace: 'normal', wordBreak: 'break-word' }}>
+                  <input type="file" onChange={handleImageChange} />
+                </TableCell>
+              </TableRow>
+              </TableBody>
+              <TableRow>
+                <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                  Latitude
+                </TableCell>
+                <TableCell sx={{ py: 0.5, px: 1 }}>
+                <input
+                  type="text"
+                  placeholder=""
+                  value={longitude}
+                  onChange={(e) => setLongitude(e.target.value)}
+                />
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                  Longitude
+                </TableCell>
+                <TableCell sx={{ py: 0.5, px: 1 }}>
+                <input
+                  type="text"
+                  placeholder=""
+                  value={latitude}
+                  onChange={(e) => setLatitude(e.target.value)}
+                />
+                </TableCell>
+              </TableRow>
+            </Table>
+            </TableContainer>
+          </Grid>
+      
 
-        <br />
+       
+          <Grid xs={4}>
+            <Button variant="contained" onClick={handleGetLocation}>
+              Get Location
+            </Button>
+          </Grid>
+    
 
-        {/* Lumberjack (User UID) */}
-        <label>
-          Lumberjack (User UID):
-          <input
-            type="text"
-            name="lumberjack"
-            value={treeData.lumberjack}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <br />
+        <Grid
+          container
+          pt={4}
+          flexDirection={"row"}
+          justifyContent={"space-around"}
+        >
+          <Button variant="contained" onClick={handleSubmit}>
+            SAVE
+          </Button>
 
-        {/* Reason for Planting */}
-        <label>
-          Reason:
-          <input
-            type="text"
-            name="reason"
-            value={treeData.reason}
-            onChange={handleChange}
-          />
-        </label>
-        <br />
+          <Button variant="contained" color="warning" onClick="">
+            Delete
+          </Button>
 
-        {/* Age */}
-        <label>
-          Age:
-          <input
-            type="text"
-            name="age"
-            value={treeData.age}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <br />
+          <IconButton aria-label="" onClick={onClose}>
+            <CancelIcon />
+          </IconButton>
+        </Grid>
+      </Grid>
 
-        {/* Status */}
-        <label>
-          Status:
-          <select name="status" value={treeData.status} onChange={handleChange}>
-            <option value="available">Available</option>
-            <option value="reserved">Reserved</option>
-            <option value="sold">Sold</option>
-          </select>
-        </label>
-        <br />
-
-        {/* Location ID Dropdown */}
-        <label>
-          Location:
-          <select
-            name="locationId"
-            value={treeData.locationId}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select a Location</option>
-            {locations.map((location) => (
-              <option key={location.id} value={location.id}>
-                {location.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <br />
-        <label>
-          Species:
-          <select
-            name="speciesId"
-            value={treeData.speciesId}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select a Species</option>
-            {species.map((species) => (
-              <option key={species.id} value={species.id}>
-                {species.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <br />
-        {/* Image Upload */}
-        <label>
-          Image:
-          <input type="file" onChange={handleImageChange} />
-        </label>
-        <br />
-
-        {/* Project ID Dropdown */}
-        <label>
-          Project:
-          <select
-            name="projectId"
-            value={treeData.projectId}
-            onChange={handleChange}
-          >
-            <option value="">Select a Project</option>
-            {projects.map((project) => (
-              <option key={project.id} value={project.id}>
-                {project.projectName}
-              </option>
-            ))}
-          </select>
-        </label>
-        <br />
-        {isLoading && <p>Loading...</p>}
-        <button type="submit">Add Tree</button>
-      </form>
     </div>
   );
 };
