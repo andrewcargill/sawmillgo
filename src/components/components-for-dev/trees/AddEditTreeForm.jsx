@@ -34,10 +34,13 @@ import {
   IconButton,
 } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { Table, TableBody, TableCell, TableRow, TableContainer } from "@mui/material";
-
-
-
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  TableContainer,
+} from "@mui/material";
 
 const AddEditTreeForm = ({ treeDetails, onClose, handleEditClick }) => {
   const treeUid = treeDetails?.id;
@@ -59,13 +62,15 @@ const AddEditTreeForm = ({ treeDetails, onClose, handleEditClick }) => {
 
   const handleDelete = async () => {
     // Use prompt to ask the user to input the refId
-    const userInput = window.prompt(`This action will delete ${treeData.refId}. Type the Ref ID to confirm.`);
-    
+    const userInput = window.prompt(
+      `This action will delete ${treeData.refId}. Type the Ref ID to confirm.`
+    );
+
     if (userInput === treeData.refId) {
       try {
         if (treeUid) {
           await deleteDoc(doc(db, `sawmill/${sawmillId}/trees`, treeUid));
-          alert('Tree deleted successfully.');
+          alert("Tree deleted successfully.");
           onClose(); // Close the modal or redirect user
         }
       } catch (error) {
@@ -75,16 +80,7 @@ const AddEditTreeForm = ({ treeDetails, onClose, handleEditClick }) => {
     }
   };
 
-  // Fetch available locations
   useEffect(() => {
-    // if (currentUserUID) {
-    //   setTreeData((prevState) => ({
-    //     ...prevState,
-    //     lumberjack: currentUserUID,
-    //   }));
-      
-    // }
-
     if (sawmillId) {
       fetchLocationsForSawmill(db, sawmillId)
         .then((fetchedLocations) => {
@@ -114,7 +110,7 @@ const AddEditTreeForm = ({ treeDetails, onClose, handleEditClick }) => {
     }
 
     setLongitude(treeDetails.longitude);
-      setLatitude(treeDetails.latitude);
+    setLatitude(treeDetails.latitude);
 
     const fetchTreeData = async () => {
       if (!treeData) return;
@@ -123,8 +119,8 @@ const AddEditTreeForm = ({ treeDetails, onClose, handleEditClick }) => {
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        setTreeData({ ...docSnap.data()}); // Assuming you want to reset these for editing
-        // You might need to handle transformations here, e.g., converting Firestore Timestamps to strings
+        setTreeData({ ...docSnap.data() }); 
+      
       } else {
         console.log("No such document!");
       }
@@ -254,8 +250,8 @@ const AddEditTreeForm = ({ treeDetails, onClose, handleEditClick }) => {
       setImage(""); // Reset image state
       setIsLoading(false); // Reset loading state
       onClose(); // Close the modal after successful add/update
-      console.log('handleEditClick:', handleEditClick);
-       // Close the modal after successful add/update
+      console.log("handleEditClick:", handleEditClick);
+      // Close the modal after successful add/update
     } catch (error) {
       console.error("Error saving tree: ", error);
       alert(`Failed to save tree. Error: ${error.message}`);
@@ -289,46 +285,45 @@ const AddEditTreeForm = ({ treeDetails, onClose, handleEditClick }) => {
           <Grid>
             <Grid>
               <TableContainer>
-              <Table sx={{ border: "2px solid lightgrey" }}>
-                <TableBody>
-                  <TableRow>
-                    <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
-                      Ref ID:
-                    </TableCell>
-                    <TableCell sx={{ py: 0.5, px: 1 }}>
-                      {treeDetails.refId}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
-                      Status:
-                    </TableCell>
-                    <TableCell sx={{ py: 0.5, px: 1 }}>
-                      {treeDetails.status}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
-                      Lumberjack:
-                    </TableCell>
-                    <TableCell sx={{ py: 0.5, px: 1 }}>
-                      {treeDetails.lumberjackName}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
-                      Logged:
-                    </TableCell>
-                    <TableCell sx={{ py: 0.5, px: 1 }}>
-                      {treeDetails.logged ? "Yes" : "No"}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
+                <Table sx={{ border: "2px solid lightgrey" }}>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                        Ref ID:
+                      </TableCell>
+                      <TableCell sx={{ py: 0.5, px: 1 }}>
+                        {treeDetails.refId}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                        Status:
+                      </TableCell>
+                      <TableCell sx={{ py: 0.5, px: 1 }}>
+                        {treeDetails.status}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                        Lumberjack:
+                      </TableCell>
+                      <TableCell sx={{ py: 0.5, px: 1 }}>
+                        {treeDetails.lumberjackName}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                        Logged:
+                      </TableCell>
+                      <TableCell sx={{ py: 0.5, px: 1 }}>
+                        {treeDetails.logged ? "Yes" : "No"}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
               </TableContainer>
             </Grid>
           </Grid>
-         
         </Grid>
 
         <Grid
@@ -350,7 +345,7 @@ const AddEditTreeForm = ({ treeDetails, onClose, handleEditClick }) => {
         </Grid>
 
         <Grid p={1}>
-            <TableContainer>
+          <TableContainer>
             <Table>
               <TableBody>
                 <TableRow>
@@ -441,42 +436,47 @@ const AddEditTreeForm = ({ treeDetails, onClose, handleEditClick }) => {
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
-                  Reason
-                </TableCell>
-                <TableCell sx={{ py: 0.5, px: 1 }}>
-      
-                  <textarea
-                    type="textfield"
-                    name="reason"
-                    value={treeData.reason}
-                    onChange={handleChange}
-                
+                  <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                    Reason
+                  </TableCell>
+                  <TableCell sx={{ py: 0.5, px: 1 }}>
+                    <textarea
+                      type="textfield"
+                      name="reason"
+                      value={treeData.reason}
+                      onChange={handleChange}
+                    >
+                      {treeData.reason}
+                    </textarea>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                    Image
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      py: 0.5,
+                      px: 1,
+                      whiteSpace: "normal",
+                      wordBreak: "break-word",
+                    }}
                   >
-                    {treeData.reason}
-                  </textarea>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
-                  Image
-                </TableCell>
-                <TableCell sx={{ py: 0.5, px: 1, whiteSpace: 'normal', wordBreak: 'break-word' }}>
-                  <input type="file" onChange={handleImageChange} />
-                </TableCell>
-              </TableRow>
+                    <input type="file" onChange={handleImageChange} />
+                  </TableCell>
+                </TableRow>
               </TableBody>
               <TableRow>
                 <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
                   Latitude
                 </TableCell>
                 <TableCell sx={{ py: 0.5, px: 1 }}>
-                <input
-                  type="text"
-                  placeholder=""
-                  value={longitude}
-                  onChange={(e) => setLongitude(e.target.value)}
-                />
+                  <input
+                    type="text"
+                    placeholder=""
+                    value={longitude}
+                    onChange={(e) => setLongitude(e.target.value)}
+                  />
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -484,26 +484,23 @@ const AddEditTreeForm = ({ treeDetails, onClose, handleEditClick }) => {
                   Longitude
                 </TableCell>
                 <TableCell sx={{ py: 0.5, px: 1 }}>
-                <input
-                  type="text"
-                  placeholder=""
-                  value={latitude}
-                  onChange={(e) => setLatitude(e.target.value)}
-                />
+                  <input
+                    type="text"
+                    placeholder=""
+                    value={latitude}
+                    onChange={(e) => setLatitude(e.target.value)}
+                  />
                 </TableCell>
               </TableRow>
             </Table>
-            </TableContainer>
-          </Grid>
-      
+          </TableContainer>
+        </Grid>
 
-       
-          <Grid xs={4}>
-            <Button variant="contained" onClick={handleGetLocation}>
-              Get Location
-            </Button>
-          </Grid>
-    
+        <Grid xs={12}>
+          <Button variant="contained" color="white" fullWidth onClick={handleGetLocation}>
+            Get Location
+          </Button>
+        </Grid>
 
         <Grid
           container
@@ -524,7 +521,6 @@ const AddEditTreeForm = ({ treeDetails, onClose, handleEditClick }) => {
           </IconButton>
         </Grid>
       </Grid>
-
     </div>
   );
 };
