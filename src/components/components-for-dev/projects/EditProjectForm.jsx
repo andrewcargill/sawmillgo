@@ -1,26 +1,48 @@
 import React, { useState } from 'react';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { app } from '../../../firebase-config';
 import { useNavigate } from 'react-router-dom';
-import { getAuth } from 'firebase/auth';
 
-const AddProjectForm = () => {
+const EditProjectForm = () => {
+  const [projectId, setProjectId] = useState('');
   const [projectData, setProjectData] = useState({
     creatorId: '',
     customerName: '',
     projectName: '',
-    status: 'active',
+    status: '',
     projectInfo: '',
     notes: '',
     deadline: '',
     date: '',
   });
 
+  const [isProjectIdSubmitted, setIsProjectIdSubmitted] = useState(false);
   const db = getFirestore(app);
-  const auth = getAuth(app);
-  const currentUserUID = auth.currentUser ? auth.currentUser.uid : null;
-
   const navigate = useNavigate();
+  const userLocalStorage = JSON.parse(localStorage.getItem("user"));
+  const sawmillId = userLocalStorage?.sawmillId;
+
+  const handleProjectIdChange = (e) => {
+    setProjectId(e.target.value);
+  };
+
+  const handleProjectIdSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const docRef = doc(db, `sawmill/${sawmillId}/projects`, projectId);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setProjectData(docSnap.data());
+        setIsProjectIdSubmitted(true); // Allows the form to be shown after the project ID has been submitted
+      } else {
+        alert("No such project!");
+        setIsProjectIdSubmitted(false);
+      }
+    } catch (error) {
+      console.error("Error fetching project: ", error);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,36 +54,39 @@ const AddProjectForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const userLocalStorage = JSON.parse(localStorage.getItem("user"));
-    const sawmillId = userLocalStorage?.sawmillId;
-
-    if (!sawmillId || !currentUserUID) {
-      console.error("Sawmill ID or current user UID is not available. Cannot add project.");
-      return;
-    }
-
-    const newProjectData = {
-      ...projectData,
-      SawmillName: sawmillId,
-      createdBy: currentUserUID,
-      // Use current date as the creation date if not provided
-      date: projectData.date || new Date().toISOString().split('T')[0], 
-    };
 
     try {
-      await addDoc(collection(db, `sawmill/${sawmillId}/projects`), newProjectData);
-      alert('Project added successfully!');
-      navigate('/projects'); // Navigate to the projects list page or any other page
+      const projectRef = doc(db, `sawmill/${sawmillId}/projects`, projectId);
+      await updateDoc(projectRef, projectData);
+      alert('Project updated successfully!');
+      navigate('/projects'); // Navigate back to the projects list or dashboard
     } catch (error) {
-      console.error("Error adding project: ", error);
-      alert('Failed to add project. See console for details.');
+      console.error("Error updating project: ", error);
+      alert('Failed to update project. See console for details.');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Add New Project</h3>
-      {/* Fields for project attributes */}
+    <div>
+      {!isProjectIdSubmitted ? (
+        <form onSubmit={handleProjectIdSubmit}>
+          <label>
+            Project ID:
+            <input
+              type="text"
+              value={projectId}
+              onChange={handleProjectIdChange}
+              required
+            />
+          </label>
+          <button type="submit">Load Project</button>
+        </form>
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <h3>Edit Project</h3>
+          {/* Form fields for editing project */}
+          {/* ... */}
+           {/* Fields for project attributes */}
       <div>
         <label>Creator ID (Optional):
           <input
@@ -145,9 +170,11 @@ const AddProjectForm = () => {
           />
         </label>
       </div>
-      <button type="submit">Add Project</button>
-    </form>
+          <button type="submit">Update Project</button>
+        </form>
+      )}
+    </div>
   );
 };
 
-export default AddProjectForm;
+export default EditProjectForm;

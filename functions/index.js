@@ -2,6 +2,8 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp();
 
+
+
 async function generateUniqueRefId(db) {
   const chars = ['E', 'F', 'H', 'L', 'N', 'T', 'V', 'X', 'Z', 'I'];
   let isUnique = false;
@@ -24,6 +26,43 @@ async function generateUniqueRefId(db) {
 
   return refId;
 }
+
+exports.updateTreeStatusOnProjectChange = functions.firestore.document('sawmill/{sawmillId}/projects/{projectId}')
+    .onUpdate(async (change, context) => {
+        const db = admin.firestore();
+        const projectId = context.params.projectId;
+        const newProjectStatus = change.after.data().status;
+        let newTreeStatus;
+
+        // Determine the new tree status based on the project's status
+        if (['active', 'paused'].includes(newProjectStatus)) {
+            newTreeStatus = 'reserved';
+        } else if (['sold', 'with creator'].includes(newProjectStatus)) {
+            newTreeStatus = 'sold';
+        } else {
+            console.log(`Unknown project status: ${newProjectStatus}`);
+            return null;
+        }
+
+        // Update the status of all trees associated with this project
+        const treesQuerySnapshot = await db.collectionGroup('trees')
+            .where('projectId', '==', projectId)
+            .get();
+
+        if (treesQuerySnapshot.empty) {
+            console.log('No trees found for the project');
+            return null;
+        }
+
+        const batch = db.batch();
+        treesQuerySnapshot.forEach(doc => {
+            batch.update(doc.ref, { status: newTreeStatus });
+        });
+
+        await batch.commit();
+        console.log(`Updated all trees for project ${projectId} to status ${newTreeStatus}`);
+    });
+
 
 exports.addTree = functions.firestore.document('sawmill/{sawmillId}/trees/{treeId}')
     .onCreate(async (snap, context) => {

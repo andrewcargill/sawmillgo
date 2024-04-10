@@ -427,7 +427,7 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
                       value={treeData.projectId}
                       onChange={handleChange}
                     >
-                      <option value="">Select a Project</option>
+                      <option value="">No Project</option>
                       {projects.map((project) => (
                         <option key={project.id} value={project.id}>
                           {project.projectName}
