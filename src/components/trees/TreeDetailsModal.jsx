@@ -13,7 +13,7 @@ import { app } from "../../firebase-config";
 
 
 
-function TreeDetailsModal({ treeDetails, onClose, handleEditClick }) {
+function TreeDetailsModal({ treeDetails, onClose, setMode }) {
 
   const userLocalStorage = JSON.parse(localStorage.getItem("user"));
   const db = getFirestore(app);
@@ -39,6 +39,10 @@ function TreeDetailsModal({ treeDetails, onClose, handleEditClick }) {
       }
     }
   };
+
+  const handleEditButtonClick = () => {
+    setMode("edit");
+  }
   
 
 
@@ -99,7 +103,7 @@ function TreeDetailsModal({ treeDetails, onClose, handleEditClick }) {
               flexDirection={"row"}
               justifyContent={"space-around"}
             >
-              <Button variant="contained" onClick={handleEditClick}>
+              <Button variant="contained" onClick={handleEditButtonClick}>
                 Edit
               </Button>
 

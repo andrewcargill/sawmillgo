@@ -26,6 +26,7 @@ import { Add } from "@mui/icons-material";
 
 const ListAllTrees = () => {
   const [trees, setTrees] = useState([]);
+  const [modalMode, setModalMode] = useState('view');
   const [filter, setFilter] = useState("all");
   const [loggingFilter, setLoggingFilter] = useState("all");
   const [speciesFilter, setSpeciesFilter] = useState("all");
@@ -36,31 +37,6 @@ const ListAllTrees = () => {
   const [species, setSpecies] = useState([]);
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
-
-  // const fetchTrees = async () => {
-  //   const userLocalStorage = JSON.parse(localStorage.getItem("user"));
-  //   const sawmillId = userLocalStorage?.sawmillId;
-
-  //   if (!sawmillId) {
-  //     console.log("Sawmill ID not found. Cannot fetch trees.");
-  //     return;
-  //   }
-
-  //   let q = collection(db, `sawmill/${sawmillId}/trees`);
-
-  //   if (filter === "logged") {
-  //     q = query(q, where("logged", "==", true));
-  //   } else if (filter === "unlogged") {
-  //     q = query(q, where("logged", "==", false));
-  //   }
-
-  //   const snapshot = await getDocs(q);
-  //   const treesList = snapshot.docs.map((doc) => ({
-  //     id: doc.id,
-  //     ...doc.data(),
-  //   }));
-  //   setTrees(treesList);
-  // };
 
   const fetchTrees = async () => {
     if (!sawmillId) {
@@ -114,9 +90,21 @@ const ListAllTrees = () => {
     fetchTrees();
   }, [loggingFilter, speciesFilter, refIdFilter]); // Re-run fetchTrees when filter changes
 
+  // const handleTreeClick = (treeId) => {
+  //   const tree = trees.find((t) => t.id === treeId);
+  //   setSelectedTreeDetails(tree);
+  //   setIsModalOpen(true);
+  // };
+
   const handleTreeClick = (treeId) => {
     const tree = trees.find((t) => t.id === treeId);
     setSelectedTreeDetails(tree);
+    setModalMode('view'); // or 'edit' based on the condition you determine
+    setIsModalOpen(true);
+  };
+
+  const handleAddTreeClick = () => {
+    setModalMode('add');
     setIsModalOpen(true);
   };
 
@@ -136,6 +124,7 @@ const ListAllTrees = () => {
          <Button
            variant="outlined"
            color="primary"
+            onClick={handleAddTreeClick}
            startIcon={<AddIcon />}
            
          >
@@ -245,9 +234,12 @@ const ListAllTrees = () => {
           if (edited) {
             refreshTreeList();
           }
+
         }}
         // onClose={() => setIsModalOpen(false)}
         treeDetails={selectedTreeDetails}
+        mode={modalMode}
+        setMode={setModalMode}
       />
     </Grid>
   );

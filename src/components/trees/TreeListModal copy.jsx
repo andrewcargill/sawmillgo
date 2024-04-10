@@ -3,10 +3,11 @@ import {
   Modal,
   Box, Typography,
 } from "@mui/material";
+import CancelIcon from "@mui/icons-material/Cancel";
 import TreeDetailsModal from "./TreeDetailsModal";
 import AddEditTreeForm from "../components-for-dev/trees/AddEditTreeForm";
 
-function TreeListModal({ isOpen, onClose, treeDetails, mode, setMode }) {
+function TreeListModal({ isOpen, onClose, treeDetails }) {
     
     const [editMode, setEditMode] = useState(false);
   
@@ -41,20 +42,14 @@ function TreeListModal({ isOpen, onClose, treeDetails, mode, setMode }) {
           p: 4,
         }}
       >
-        {/* {editMode ? (
+        {editMode ? (
              <AddEditTreeForm handleEditClick={handleEditClick} treeDetails={treeDetails} onClose={onClose} /> 
       
            
         ) : (
             <TreeDetailsModal handleEditClick={handleEditClick} onClose={onClose} treeDetails={treeDetails}/>
        
-        )} */}
-                {mode === 'view' && <TreeDetailsModal setMode={setMode} treeDetails={treeDetails} onClose={onClose} />}
-                {mode === 'edit' && <AddEditTreeForm treeDetails={treeDetails} onClose={onClose} />}
-                {mode === 'add' && <AddEditTreeForm onClose={onClose} />}
-                {/* {mode === 'add' && <AddTreeForm onClose={onClose} />} */}
-
-
+        )}
       </Box>
     </Modal>
   );

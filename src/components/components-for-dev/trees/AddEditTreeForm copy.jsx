@@ -9,7 +9,6 @@ import {
   getDoc,
   setDoc,
   deleteDoc,
-  onSnapshot,
 } from "firebase/firestore";
 import { app } from "../../../firebase-config";
 import { getAuth } from "firebase/auth";
@@ -43,31 +42,14 @@ import {
   TableContainer,
 } from "@mui/material";
 
-const defaultTreeData = {
-  speciesId: "",
-  speciesName: "",
-  date: "",
-  locationId: "",
-  locationName: "",
-  longitude: "",
-  latitude: "",
-  image: "",
-  reason: "",
-  age: "",
-  status: "available",
-  projectId: "",
-  projectName: "",
-  logged: false,
-};
-
 const AddEditTreeForm = ({ treeDetails, onClose }) => {
   const treeUid = treeDetails?.id;
-
+  const [details, setDetails] = useState(treeDetails);
   const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState("");
-  const [longitude, setLongitude] = useState(treeDetails?.longitude || "");
-  const [latitude, setLatitude] = useState(treeDetails?.latitude ||"");
-  const [treeData, setTreeData] = useState(treeDetails || defaultTreeData);
+  const [longitude, setLongitude] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const [treeData, setTreeData] = useState(treeDetails);
   const [locations, setLocations] = useState([]); // State to hold fetched locations
   const [projects, setProjects] = useState([]); // State to hold fetched projects
   const [species, setSpecies] = useState([]); // State to hold fetched species
@@ -77,7 +59,6 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
   const currentUserUID = auth.currentUser ? auth.currentUser.uid : null;
   const userLocalStorage = JSON.parse(localStorage.getItem("user"));
   const sawmillId = userLocalStorage?.sawmillId;
-  const userName = userLocalStorage?.displayName;
 
   const handleDelete = async () => {
     // Use prompt to ask the user to input the refId
@@ -132,7 +113,7 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
     setLatitude(treeDetails?.latitude);
 
     const fetchTreeData = async () => {
-      if (!treeDetails) return;
+      if (!treeData) return;
 
       const docRef = doc(db, `sawmill/${sawmillId}/trees`, treeUid);
       const docSnap = await getDoc(docRef);
@@ -146,7 +127,7 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
     };
 
     fetchTreeData();
-  }, [db, currentUserUID, sawmillId]);
+  }, [db, currentUserUID, sawmillId, details]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -195,138 +176,87 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
     }
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setIsLoading(true);
-  //   const userLocalStorage = JSON.parse(localStorage.getItem("user"));
-  //   const sawmillId = userLocalStorage?.sawmillId;
-
-  //   if (!sawmillId) {
-  //     console.error("Sawmill ID is not available. Cannot add tree.");
-  //     alert("Sawmill ID is not available. Cannot add tree.");
-  //     setIsLoading(false);
-  //     return;
-  //   }
-
-  //   // Handle Image Upload if image is selected
-  //   let imageUrl = "";
-  //   if (image) {
-  //     const storage = getStorage();
-  //     const imageRef = storageRef(storage, `trees/${sawmillId}/${image.name}`);
-  //     try {
-  //       const snapshot = await uploadBytes(imageRef, image);
-  //       imageUrl = await getDownloadURL(snapshot.ref);
-  //     } catch (error) {
-  //       console.error("Error uploading image: ", error);
-  //       alert(`Failed to upload image. Error: ${error.message}`);
-  //       setIsLoading(false);
-  //       return; // Stop the function if image upload fails
-  //     }
-  //   }
-
-  //   try {
-  //     const treeWithImage = {
-  //       ...treeData,
-  //       latitude: parseFloat(latitude),
-  //       longitude: parseFloat(longitude),
-  //       image: imageUrl,
-  //     };
-
-  //     if (treeUid) {
-  //       console.log("Updating tree with UID: ", treeUid);
-  //       // If treeUid is provided, we're updating an existing tree
-  //       const treeRef = doc(db, `sawmill/${sawmillId}/trees`, treeUid);
-  //       await setDoc(treeRef, treeWithImage); // setDoc to overwrite or update the document
-  //       alert("Tree updated successfully!");
-  //     } else {
-  //       // If no treeUid, we're adding a new tree
-  //       const docRef = await addDoc(
-  //         collection(db, `sawmill/${sawmillId}/trees`),
-  //         treeWithImage
-  //       );
-  //       setTimeout(() => alert("Tree added successfully! RefId: " + docRef.refId), 5000);
-  //     }
-
-  //     // Reset form to initial state after successful add/update
-  //     setTreeData(defaultTreeData);
-  //     setImage(""); // Reset image state
-  //     setIsLoading(false); // Reset loading state
-  //     onClose(); // Close the modal after successful add/update
-  //     // Close the modal after successful add/update
-  //   } catch (error) {
-  //     console.error("Error saving tree: ", error);
-  //     alert(`Failed to save tree. Error: ${error.message}`);
-  //     setIsLoading(false); // Ensure loading state is reset even on failure
-  //   }
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
     const userLocalStorage = JSON.parse(localStorage.getItem("user"));
     const sawmillId = userLocalStorage?.sawmillId;
 
     if (!sawmillId) {
-        console.error("Sawmill ID is not available. Cannot add tree.");
-        alert("Sawmill ID is not available. Cannot add tree.");
-        setIsLoading(false);
-        return;
+      console.error("Sawmill ID is not available. Cannot add tree.");
+      alert("Sawmill ID is not available. Cannot add tree.");
+      setIsLoading(false);
+      return;
     }
 
+    // Handle Image Upload if image is selected
     let imageUrl = "";
     if (image) {
-        const storage = getStorage();
-        const imageRef = storageRef(storage, `trees/${sawmillId}/${image.name}`);
-        try {
-            const snapshot = await uploadBytes(imageRef, image);
-            imageUrl = await getDownloadURL(snapshot.ref);
-        } catch (error) {
-            console.error("Error uploading image: ", error);
-            alert(`Failed to upload image. Error: ${error.message}`);
-            setIsLoading(false);
-            return; // Stop the function if image upload fails
-        }
+      const storage = getStorage();
+      const imageRef = storageRef(storage, `trees/${sawmillId}/${image.name}`);
+      try {
+        const snapshot = await uploadBytes(imageRef, image);
+        imageUrl = await getDownloadURL(snapshot.ref);
+      } catch (error) {
+        console.error("Error uploading image: ", error);
+        alert(`Failed to upload image. Error: ${error.message}`);
+        setIsLoading(false);
+        return; // Stop the function if image upload fails
+      }
     }
 
-    const treeWithImage = {
+    try {
+      const treeWithImage = {
         ...treeData,
         latitude: parseFloat(latitude),
         longitude: parseFloat(longitude),
-        image: imageUrl,
-    };
+        image: imageUrl, // Assume this is already set from image upload logic
+        // lumberjack: currentUserUID,
+        // lumberjackName: userLocalStorage?.displayName,
+      };
 
-    try {
-        if (treeUid) {
-            const treeRef = doc(db, `sawmill/${sawmillId}/trees`, treeUid);
-            await setDoc(treeRef, treeWithImage);
-            alert("Tree updated successfully!");
-            onClose();
-        } else {
-            const docRef = await addDoc(collection(db, `sawmill/${sawmillId}/trees`), treeWithImage);
-            // Setup a one-time listener for the newly added document
-            const unsubscribe = onSnapshot(doc(db, `sawmill/${sawmillId}/trees`, docRef.id), (doc) => {
-                const data = doc.data();
-                if (data.refId) {
-                    // Once refId is present, display the alert
-                    alert(`Tree added successfully! RefId: ${data.refId}`);
-                    unsubscribe(); // Detach the listener
-                    onClose(); // Proceed to close the modal or cleanup
-                }
-            });
-        }
+      if (treeUid) {
+        console.log("Updating tree with UID: ", treeUid);
+        // If treeUid is provided, we're updating an existing tree
+        const treeRef = doc(db, `sawmill/${sawmillId}/trees`, treeUid);
+        await setDoc(treeRef, treeWithImage); // setDoc to overwrite or update the document
+        alert("Tree updated successfully!");
+      } else {
+        // If no treeUid, we're adding a new tree
+        const docRef = await addDoc(
+          collection(db, `sawmill/${sawmillId}/trees`),
+          treeWithImage
+        );
+        alert("Tree added successfully! RefId: " + docRef.id);
+      }
 
-        // Reset form to initial state after successful add/update
-        setTreeData(defaultTreeData);
-        setImage("");
-        setIsLoading(false);
+      // Reset form to initial state after successful add/update
+      setTreeData({
+        speciesId: "",
+        speciesName: "",
+        date: "",
+        locationId: "",
+        locationName: "",
+        longitude: "",
+        latitude: "",
+        image: "",
+        reason: "",
+        age: "",
+        status: "available",
+        projectId: null,
+        projectName: "",
+        logged: false,
+      });
+      setImage(""); // Reset image state
+      setIsLoading(false); // Reset loading state
+      onClose(); // Close the modal after successful add/update
+      // Close the modal after successful add/update
     } catch (error) {
-        console.error("Error saving tree: ", error);
-        alert(`Failed to save tree. Error: ${error.message}`);
-        setIsLoading(false);
+      console.error("Error saving tree: ", error);
+      alert(`Failed to save tree. Error: ${error.message}`);
+      setIsLoading(false); // Ensure loading state is reset even on failure
     }
-};
-
+  };
 
   const handleLocationSuccess = (latitude, longitude) => {
     setLatitude(latitude);
@@ -377,7 +307,7 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
                         Lumberjack:
                       </TableCell>
                       <TableCell sx={{ py: 0.5, px: 1 }}>
-                     {treeDetails ? treeDetails?.lumberjackName : userName }   
+                        {treeDetails?.lumberjackName}
                       </TableCell>
                     </TableRow>
                     <TableRow>
@@ -578,15 +508,12 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
           justifyContent={"space-around"}
         >
           <Button variant="contained" onClick={handleSubmit}>
-            {treeDetails ? "update" : "save"}
+            SAVE
           </Button>
 
-          {treeDetails?.id && (
-  <Button variant="contained" color="warning" onClick={handleDelete}>
-    DELETE
-  </Button>
-)}
-
+          <Button variant="contained" color="warning" onClick={handleDelete}>
+            DELETE
+          </Button>
 
           <IconButton aria-label="" onClick={onClose}>
             <CancelIcon />
