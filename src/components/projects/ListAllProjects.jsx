@@ -8,6 +8,9 @@ import {
 } from "firebase/firestore";
 import { app } from "../../firebase-config";
 import { Grid } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import AddIcon from "@mui/icons-material/Add";
 import ProjectListModal from "./ProjectListModal";
 
 const ListAllProjects = () => {
@@ -65,13 +68,34 @@ const ListAllProjects = () => {
     setSelectedProjectDetails(project);
     setModalMode(mode);
     setIsModalOpen(true);
+
+};
+
+const handleAddTreeClick = () => {
+  setModalMode('add');
+  setIsModalOpen(true);
 };
 
   return (
     <div>
       <Grid container>
-        <Grid item xs={12}>
-          <h2>Project List</h2>
+        <Grid container item xs={12}>
+        <Grid xs={10} container item justifyContent={'start'}>
+          <Typography variant="h4" color="initial">
+            Projects
+          </Typography>
+        </Grid>
+        <Grid xs={2}>
+         <Button
+           variant="outlined"
+           color="primary"
+            onClick={handleAddTreeClick}
+           startIcon={<AddIcon />}
+           
+         >
+           add
+         </Button>
+         </Grid>
         </Grid>
         <Grid container>
           <Grid item xs={3}>

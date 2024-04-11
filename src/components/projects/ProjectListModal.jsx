@@ -3,6 +3,8 @@ import {
   Modal,
   Box,
 } from "@mui/material";
+import ProjectDetailsModal from "./ProjectDetailsModal";
+import ProjectAddEditModal from "./ProjectAddEditModal";
 // import ProjectDetailsModal from "./ProjectDetailsModal"; // Assuming this is for viewing project details
 // import AddEditProjectForm from "../components-for-dev/projects/AddEditProjectForm"; // Adjust the import path as needed
 
@@ -34,9 +36,10 @@ function ProjectListModal({ isOpen, onClose, projectDetails, mode, setMode }) {
                 }}
             >
               Project List Modal 
-                {/* {mode === 'view' && <ProjectDetailsModal setMode={setMode} projectDetails={projectDetails} onClose={onClose} />}
-                {mode === 'edit' && <AddEditProjectForm projectDetails={projectDetails} onClose={onClose} />}
-                {mode === 'add' && <AddEditProjectForm onClose={onClose} />} */}
+        
+                {mode === 'view' && <ProjectDetailsModal setMode={setMode} projectDetails={projectDetails} onClose={onClose} />}
+                {mode === 'edit' && <ProjectAddEditModal projectDetails={projectDetails} onClose={onClose} />}
+                {mode === 'add' && <ProjectAddEditModal onClose={onClose} />}
             </Box>
         </Modal>
     );
