@@ -27,9 +27,9 @@ import { Add } from "@mui/icons-material";
 const ListAllTrees = () => {
   const [trees, setTrees] = useState([]);
   const [modalMode, setModalMode] = useState('view');
-  const [filter, setFilter] = useState("all");
   const [loggingFilter, setLoggingFilter] = useState("all");
   const [speciesFilter, setSpeciesFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("available");
   const [refIdFilter, setRefIdFilter] = useState("");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,7 +38,7 @@ const ListAllTrees = () => {
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
 
-  const fetchTrees = async () => {
+  const fetchTrees = async (statusFilter) => {
     if (!sawmillId) {
       console.log("Sawmill ID not found. Cannot fetch trees.");
       return;
@@ -48,6 +48,10 @@ const ListAllTrees = () => {
 
     let conditions = []; // Array to hold query conditions
     // Add condition for logging status
+
+    if (statusFilter) {
+      conditions.push(where("status", "==", statusFilter));
+    }
 
     if (refIdFilter.trim()) {
       // Filter by refId if it is provided
@@ -87,8 +91,8 @@ const ListAllTrees = () => {
   }, []);
 
   useEffect(() => {
-    fetchTrees();
-  }, [loggingFilter, speciesFilter, refIdFilter]); // Re-run fetchTrees when filter changes
+    fetchTrees(statusFilter);
+  }, [loggingFilter, speciesFilter, refIdFilter, statusFilter]); // Re-run fetchTrees when filter changes
 
   // const handleTreeClick = (treeId) => {
   //   const tree = trees.find((t) => t.id === treeId);
@@ -109,7 +113,7 @@ const ListAllTrees = () => {
   };
 
   function refreshTreeList() {
-    fetchTrees();
+    fetchTrees(statusFilter);
   }
 
   return (
@@ -132,19 +136,27 @@ const ListAllTrees = () => {
          </Button>
         </Grid>
       </Grid>
-      <Grid item xs={4}>
-        <FormControl fullWidth>
-          <TextField
+      <Grid item xs={3}>
+      <FormControl fullWidth>
+          <InputLabel id="status-filter-select-label">
+            Availability
+          </InputLabel>
+          <Select
             size="small"
-            label="Tree ID"
-            variant="outlined"
-            value={refIdFilter}
-            onChange={(e) => setRefIdFilter(e.target.value.toUpperCase())}
-            helperText="Enter a Ref ID to filter by specific tree"
-          />
+            labelId="status-filter-select-label"
+            id="status-filter-select"
+            value={statusFilter}
+            label="avaliability"
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <MenuItem value="available">Available</MenuItem>
+            <MenuItem value="reserved">Reserved</MenuItem>
+            <MenuItem value="sold">Sold</MenuItem>
+          </Select>
         </FormControl>
       </Grid>
-      <Grid item xs={4}>
+      
+      <Grid item xs={3}>
         <FormControl fullWidth>
           <InputLabel id="logging-filter-select-label">
             Logging Status
@@ -163,7 +175,7 @@ const ListAllTrees = () => {
           </Select>
         </FormControl>
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={3}>
         <FormControl fullWidth>
           <InputLabel id="species-filter-select-label">Species</InputLabel>
           <Select
@@ -181,6 +193,18 @@ const ListAllTrees = () => {
               </MenuItem>
             ))}
           </Select>
+        </FormControl>
+      </Grid>
+      <Grid item xs={3}>
+        <FormControl fullWidth>
+          <TextField
+            size="small"
+            label="Tree ID"
+            variant="outlined"
+            value={refIdFilter}
+            onChange={(e) => setRefIdFilter(e.target.value.toUpperCase())}
+            helperText="Enter a Ref ID to filter by specific tree"
+          />
         </FormControl>
       </Grid>
       <Grid
