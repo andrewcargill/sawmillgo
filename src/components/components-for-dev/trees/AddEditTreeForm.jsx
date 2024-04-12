@@ -36,12 +36,14 @@ import {
 } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import {
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableRow,
   TableContainer,
 } from "@mui/material";
+import Chip from "@mui/material/Chip";
 
 const defaultTreeData = {
   speciesId: "",
@@ -66,7 +68,7 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState("");
   const [longitude, setLongitude] = useState(treeDetails?.longitude || "");
-  const [latitude, setLatitude] = useState(treeDetails?.latitude ||"");
+  const [latitude, setLatitude] = useState(treeDetails?.latitude || "");
   const [treeData, setTreeData] = useState(treeDetails || defaultTreeData);
   const [locations, setLocations] = useState([]); // State to hold fetched locations
   const [projects, setProjects] = useState([]); // State to hold fetched projects
@@ -138,8 +140,7 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        setTreeData({ ...docSnap.data() }); 
-      
+        setTreeData({ ...docSnap.data() });
       } else {
         console.log("No such document!");
       }
@@ -260,12 +261,83 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
   //   }
   // };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setIsLoading(true);
+
+  //   const userLocalStorage = JSON.parse(localStorage.getItem("user"));
+  //   const sawmillId = userLocalStorage?.sawmillId;
+
+  //   if (!sawmillId) {
+  //     console.error("Sawmill ID is not available. Cannot add tree.");
+  //     alert("Sawmill ID is not available. Cannot add tree.");
+  //     setIsLoading(false);
+  //     return;
+  //   }
+
+  //   let imageUrl = "";
+  //   if (image) {
+  //     const storage = getStorage();
+  //     const imageRef = storageRef(storage, `trees/${sawmillId}/${image.name}`);
+  //     try {
+  //       const snapshot = await uploadBytes(imageRef, image);
+  //       imageUrl = await getDownloadURL(snapshot.ref);
+  //     } catch (error) {
+  //       console.error("Error uploading image: ", error);
+  //       alert(`Failed to upload image. Error: ${error.message}`);
+  //       setIsLoading(false);
+  //       return; // Stop the function if image upload fails
+  //     }
+  //   }
+
+  //   const treeWithImage = {
+  //     ...treeData,
+  //     latitude: parseFloat(latitude),
+  //     longitude: parseFloat(longitude),
+  //     image: imageUrl,
+  //   };
+
+  //   try {
+  //     if (treeUid) {
+  //       //Updating an existing tree
+  //       const treeRef = doc(db, `sawmill/${sawmillId}/trees`, treeUid);
+  //       await setDoc(treeRef, treeWithImage);
+  //       alert("Tree updated successfully!");
+  //       onClose();
+  //     } else {
+  //       const docRef = await addDoc(
+  //         collection(db, `sawmill/${sawmillId}/trees`),
+  //         treeWithImage
+  //       );
+  //       // Setup a one-time listener for the newly added document
+  //       const unsubscribe = onSnapshot(
+  //         doc(db, `sawmill/${sawmillId}/trees`, docRef.id),
+  //         (doc) => {
+  //           const data = doc.data();
+  //           if (data.refId) {
+  //             // Once refId is present, display the alert
+  //             alert(`Tree added successfully! RefId: ${data.refId}`);
+  //             unsubscribe(); // Detach the listener
+  //             onClose(); // Proceed to close the modal or cleanup
+  //           }
+  //         }
+  //       );
+  //     }
+
+  //     // Reset form to initial state after successful add/update
+  //     setTreeData(defaultTreeData);
+  //     setImage("");
+  //     setIsLoading(false);
+  //   } catch (error) {
+  //     console.error("Error saving tree: ", error);
+  //     alert(`Failed to save tree. Error: ${error.message}`);
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
-    const userLocalStorage = JSON.parse(localStorage.getItem("user"));
-    const sawmillId = userLocalStorage?.sawmillId;
 
     if (!sawmillId) {
         console.error("Sawmill ID is not available. Cannot add tree.");
@@ -289,7 +361,7 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
         }
     }
 
-    const treeWithImage = {
+    const treeDataWithImage = {
         ...treeData,
         latitude: parseFloat(latitude),
         longitude: parseFloat(longitude),
@@ -298,22 +370,33 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
 
     try {
         if (treeUid) {
+            // Updating an existing tree
             const treeRef = doc(db, `sawmill/${sawmillId}/trees`, treeUid);
-            await setDoc(treeRef, treeWithImage);
+            await setDoc(treeRef, treeDataWithImage);
             alert("Tree updated successfully!");
             onClose();
         } else {
-            const docRef = await addDoc(collection(db, `sawmill/${sawmillId}/trees`), treeWithImage);
+            // Adding a new tree
+            const newTreeData = {
+                ...treeDataWithImage,
+                lumberjack: currentUserUID,  // Add the current user's UID as lumberjack
+                lumberjackName: userName     // Add the current user's name as lumberjackName
+            };
+            const docRef = await addDoc(collection(db, `sawmill/${sawmillId}/trees`), newTreeData);
+
             // Setup a one-time listener for the newly added document
-            const unsubscribe = onSnapshot(doc(db, `sawmill/${sawmillId}/trees`, docRef.id), (doc) => {
-                const data = doc.data();
-                if (data.refId) {
-                    // Once refId is present, display the alert
-                    alert(`Tree added successfully! RefId: ${data.refId}`);
-                    unsubscribe(); // Detach the listener
-                    onClose(); // Proceed to close the modal or cleanup
+            const unsubscribe = onSnapshot(
+                doc(db, `sawmill/${sawmillId}/trees`, docRef.id),
+                (doc) => {
+                    const data = doc.data();
+                    if (data.refId) {
+                        // Once refId is present, display the alert
+                        alert(`Tree added successfully! RefId: ${data.refId}`);
+                        unsubscribe(); // Detach the listener
+                        onClose(); // Proceed to close the modal or cleanup
+                    }
                 }
-            });
+            );
         }
 
         // Reset form to initial state after successful add/update
@@ -342,11 +425,56 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
   };
 
   return (
-    <div>
-      <Grid>
-        <Typography id="tree-details-title" variant="h6" component="h2">
-          Tree Edit
-        </Typography>
+    <Grid container>
+      <Grid container item xs={12} mb={2}>
+        <Grid item xs={8}>
+        { treeDetails ?  ( 
+          <Typography
+            id="tree-details-title"
+            variant="h6"
+            component="h2"
+            color={"primary"}
+            style={{ textTransform: "capitalize" }}
+          >
+          Ref ID: {treeDetails?.refId} 
+          </Typography>
+          ) :  (
+            <Typography
+            id="tree-details-title"
+            variant="h6"
+            component="h2"
+            color={"primary"}
+            style={{ textTransform: "capitalize" }}
+          >
+          Add New Tree
+          </Typography>
+          )}
+        </Grid>
+        <Grid container item xs={4} justifyContent={"end"}>
+          {treeDetails ? (
+
+          <Grid pb={1}>
+            <Chip
+              size="small"
+              color="secondary"
+              style={{ textTransform: "capitalize" }}
+              label={treeDetails?.status}
+            />
+          </Grid>
+              ) : null}
+           {treeDetails ? (  
+          <Grid>
+            <Chip
+              size="small"
+              variant="outlined"
+              color="primary"
+              style={{ textTransform: "capitalize" }}
+              label={treeDetails?.logged ? "Logged" : "Not Logged"}
+            />
+          </Grid>
+          ) : null}
+      
+        </Grid>
       </Grid>
 
       <Grid container xs={12}>
@@ -354,40 +482,18 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
           <Grid>
             <Grid>
               <TableContainer>
-                <Table sx={{ border: "2px solid lightgrey" }}>
+                <Table>
                   <TableBody>
-                    <TableRow>
-                      <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
-                        Ref ID:
-                      </TableCell>
-                      <TableCell sx={{ py: 0.5, px: 1 }}>
-                        {treeDetails?.refId}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
-                        Status:
-                      </TableCell>
-                      <TableCell sx={{ py: 0.5, px: 1 }}>
-                        {treeDetails?.status}
-                      </TableCell>
-                    </TableRow>
+                    
                     <TableRow>
                       <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
                         Lumberjack:
                       </TableCell>
                       <TableCell sx={{ py: 0.5, px: 1 }}>
-                     {treeDetails ? treeDetails?.lumberjackName : userName }   
+                        {treeDetails ? treeDetails?.lumberjackName : userName}
                       </TableCell>
                     </TableRow>
-                    <TableRow>
-                      <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
-                        Logged:
-                      </TableCell>
-                      <TableCell sx={{ py: 0.5, px: 1 }}>
-                        {treeDetails?.logged ? "Yes" : "No"}
-                      </TableCell>
-                    </TableRow>
+                   
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -413,9 +519,9 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
           />
         </Grid>
 
-        <Grid p={1}>
-          <TableContainer>
-            <Table>
+        <Grid container pt={2} pb={1}>
+          
+            <Table component={Paper}>
               <TableBody>
                 <TableRow>
                   <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
@@ -424,7 +530,7 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
                   <TableCell sx={{ py: 0.5, px: 1 }}>
                     <select
                       name="projectId"
-                      value={treeData.projectId}
+                      value={treeData?.projectId}
                       onChange={handleChange}
                     >
                       <option value="">No Project</option>
@@ -562,11 +668,16 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
                 </TableCell>
               </TableRow>
             </Table>
-          </TableContainer>
+          
         </Grid>
 
         <Grid xs={12}>
-          <Button variant="contained" color="white" fullWidth onClick={handleGetLocation}>
+          <Button
+            variant="contained"
+            color="white"
+            fullWidth
+            onClick={handleGetLocation}
+          >
             Get Location
           </Button>
         </Grid>
@@ -582,18 +693,17 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
           </Button>
 
           {treeDetails?.id && (
-  <Button variant="contained" color="warning" onClick={handleDelete}>
-    DELETE
-  </Button>
-)}
-
+            <Button variant="contained" color="warning" onClick={handleDelete}>
+              DELETE
+            </Button>
+          )}
 
           <IconButton aria-label="" onClick={onClose}>
             <CancelIcon />
           </IconButton>
         </Grid>
       </Grid>
-    </div>
+    </Grid>
   );
 };
 

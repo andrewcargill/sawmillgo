@@ -23,10 +23,9 @@ import TreeListModal from "./TreeListModal";
 import { fetchSpeciesForSawmill } from "../../utils/filestoreOperations";
 import { Add } from "@mui/icons-material";
 
-
 const ListAllTrees = () => {
   const [trees, setTrees] = useState([]);
-  const [modalMode, setModalMode] = useState('view');
+  const [modalMode, setModalMode] = useState("view");
   const [loggingFilter, setLoggingFilter] = useState("all");
   const [speciesFilter, setSpeciesFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("available");
@@ -103,12 +102,12 @@ const ListAllTrees = () => {
   const handleTreeClick = (treeId) => {
     const tree = trees.find((t) => t.id === treeId);
     setSelectedTreeDetails(tree);
-    setModalMode('view'); // or 'edit' based on the condition you determine
+    setModalMode("view"); // or 'edit' based on the condition you determine
     setIsModalOpen(true);
   };
 
   const handleAddTreeClick = () => {
-    setModalMode('add');
+    setModalMode("add");
     setIsModalOpen(true);
   };
 
@@ -117,30 +116,27 @@ const ListAllTrees = () => {
   }
 
   return (
-    <Grid container spacing={2} border={1} p={2}>
+    <Grid container spacing={2} p={2}>
       <Grid container item xs={12}>
-        <Grid xs={10} container item justifyContent={'start'}>
+        <Grid xs={6} sm={10} container item justifyContent={"start"}>
           <Typography variant="h4" color="initial">
             Trees
           </Typography>
         </Grid>
-        <Grid xs={2}>
-         <Button
-           variant="outlined"
-           color="primary"
+        <Grid container item xs={6} sm={2} justifyContent={"end"}>
+          <Button
+            variant="outlined"
+            color="primary"
             onClick={handleAddTreeClick}
-           startIcon={<AddIcon />}
-           
-         >
-           add
-         </Button>
+            startIcon={<AddIcon />}
+          >
+            add
+          </Button>
         </Grid>
       </Grid>
-      <Grid item xs={3}>
-      <FormControl fullWidth>
-          <InputLabel id="status-filter-select-label">
-            Availability
-          </InputLabel>
+      <Grid item xs={6} md={3}>
+        <FormControl fullWidth>
+          <InputLabel id="status-filter-select-label">Availability</InputLabel>
           <Select
             size="small"
             labelId="status-filter-select-label"
@@ -155,8 +151,8 @@ const ListAllTrees = () => {
           </Select>
         </FormControl>
       </Grid>
-      
-      <Grid item xs={3}>
+
+      <Grid item xs={6} md={3}>
         <FormControl fullWidth>
           <InputLabel id="logging-filter-select-label">
             Logging Status
@@ -175,7 +171,7 @@ const ListAllTrees = () => {
           </Select>
         </FormControl>
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={6} md={3}>
         <FormControl fullWidth>
           <InputLabel id="species-filter-select-label">Species</InputLabel>
           <Select
@@ -195,7 +191,7 @@ const ListAllTrees = () => {
           </Select>
         </FormControl>
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={6} md={3}>
         <FormControl fullWidth>
           <TextField
             size="small"
@@ -203,7 +199,7 @@ const ListAllTrees = () => {
             variant="outlined"
             value={refIdFilter}
             onChange={(e) => setRefIdFilter(e.target.value.toUpperCase())}
-            helperText="Enter a Ref ID to filter by specific tree"
+            // helperText="Enter a Ref ID to filter by specific tree"
           />
         </FormControl>
       </Grid>
@@ -218,7 +214,7 @@ const ListAllTrees = () => {
               className="item-select"
               item
               container
-              xs={5}
+              xs={3}
               sm={2}
               lg={2}
               key={tree.id}
@@ -258,7 +254,6 @@ const ListAllTrees = () => {
           if (edited) {
             refreshTreeList();
           }
-
         }}
         // onClose={() => setIsModalOpen(false)}
         treeDetails={selectedTreeDetails}

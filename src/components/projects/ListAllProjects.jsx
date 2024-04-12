@@ -80,12 +80,12 @@ const handleAddTreeClick = () => {
     <div>
       <Grid container>
         <Grid container item xs={12}>
-        <Grid xs={10} container item justifyContent={'start'}>
+        <Grid xs={6} sm={10} container item justifyContent={"start"}>
           <Typography variant="h4" color="initial">
             Projects
           </Typography>
         </Grid>
-        <Grid xs={2}>
+        <Grid container item xs={6} sm={2} justifyContent={"end"}>
          <Button
            variant="outlined"
            color="primary"

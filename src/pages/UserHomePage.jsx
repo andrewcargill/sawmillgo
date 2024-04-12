@@ -36,31 +36,31 @@ const [userInfo, setUserInfo] = useState(null);
       </Typography>
  
       <Grid container spacing={1}>
-        <Grid container item xs={12}>
-          <Grid item xs={3}>
+        <Grid container item xs={12} spacing={1}>
+          <Grid item xs={6} md={3}>
             <TreeGauge />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={6} md={3}>
             <LogGauge />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={6} md={3}>
             <PlankGauge />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={6} md={3}>
             <WaterGauge />
           </Grid>
         </Grid>
-        <Grid container item xs={12}>
-          <Grid item xs={3}>
+        <Grid container item xs={12} spacing={1}>
+        <Grid item xs={6} md={3}>
             <LocationGauge />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={6} md={3}>
             <MovementsGauge />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={6} md={3}>
             <ProjectGauge />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={6} md={3}>
             <SpeciesGauge />
           </Grid>
        

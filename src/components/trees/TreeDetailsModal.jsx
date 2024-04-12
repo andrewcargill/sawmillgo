@@ -8,13 +8,11 @@ import {
   IconButton,
 } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
+import Chip from "@mui/material/Chip";
 import { deleteDoc, doc, getFirestore } from "firebase/firestore";
 import { app } from "../../firebase-config";
 
-
-
 function TreeDetailsModal({ treeDetails, onClose, setMode }) {
-
   const userLocalStorage = JSON.parse(localStorage.getItem("user"));
   const db = getFirestore(app);
   const sawmillId = userLocalStorage?.sawmillId;
@@ -42,12 +40,33 @@ function TreeDetailsModal({ treeDetails, onClose, setMode }) {
 
   const handleEditButtonClick = () => {
     setMode("edit");
-  }
-  
-
+  };
 
   return (
     <Grid>
+      <Grid container>
+        <Grid container item xs={12} mb={2}>
+          <Grid item xs={8}>
+            <Typography
+              id="tree-details-title"
+              variant="h6"
+              component="h2"
+              color={"primary"}
+              style={{ textTransform: "capitalize" }}
+            >
+               Ref ID: {treeDetails.refId}
+            </Typography>
+          </Grid>
+          <Grid container item xs={4} justifyContent={"end"}>
+            <Chip
+              size="small"
+              color="secondary"
+              style={{ textTransform: "capitalize" }}
+              label={treeDetails.status}
+            />
+          </Grid>
+        </Grid>
+      </Grid>
       <Typography id="tree-details-title" variant="h6" component="h2">
         Tree Details
       </Typography>
@@ -58,7 +77,7 @@ function TreeDetailsModal({ treeDetails, onClose, setMode }) {
               <Typography id="tree-details-description" sx={{ mt: 2 }}>
                 Ref ID: {treeDetails.refId}
               </Typography>
-          
+
               <Typography>Project: {treeDetails.projectName}</Typography>
 
               <Typography>Location: {treeDetails.locationName}</Typography>
@@ -107,7 +126,11 @@ function TreeDetailsModal({ treeDetails, onClose, setMode }) {
                 Edit
               </Button>
 
-              <Button variant="contained" color="warning" onClick={handleDelete}>
+              <Button
+                variant="contained"
+                color="warning"
+                onClick={handleDelete}
+              >
                 Delete
               </Button>
 

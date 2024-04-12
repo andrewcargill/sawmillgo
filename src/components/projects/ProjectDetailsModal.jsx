@@ -144,7 +144,7 @@ function ProjectDetailsModal({ projectDetails, onClose, setMode }) {
             component="h2"
             style={{ textTransform: "capitalize" }}
           >
-            allocated stock
+            allocated stock (placeholder)
           </Typography>
           </Grid>
           <Table>

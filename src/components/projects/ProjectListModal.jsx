@@ -19,16 +19,21 @@ function ProjectListModal({ isOpen, onClose, projectDetails, mode, setMode }) {
       aria-labelledby="project-details-title"
       aria-describedby="project-details-description"
     >
+  
       <Box
         sx={{
           position: "absolute",
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: 400,
+          width: { xs: '90%', sm: 500 },
           bgcolor: "background.paper",
           boxShadow: 24,
           p: 4,
+          maxHeight: { xs: '80vh', sm: '90vh' }, // Adjusted max height
+      overflowY: 'auto', // Ensures scrollability
+      display: 'flex',
+      flexDirection: 'column'
         }}
       >
         {mode === "view" && (
