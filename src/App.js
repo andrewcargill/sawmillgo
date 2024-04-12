@@ -26,6 +26,8 @@ import LocationsPage from "./pages/sub-pages/LocationsPage";
 import ProjectsPage from "./pages/sub-pages/ProjectsPage";
 import TreesPage from "./pages/sub-pages/TreesPage";
 import SpeciesPage from "./pages/sub-pages/SpeciesPage";
+import LogsPage from "./pages/sub-pages/LogsPage";
+import LogDetails from "./pages/sub-pages/logs-pages/LogDetails";
 
 function App() {
  
@@ -46,6 +48,8 @@ function App() {
 
         <Route path="/addtree" element={<AddTreeForm />} />
         <Route path="/trees" element={<TreesPage />} />
+        <Route path="/logs" element={<LogsPage />} />
+        <Route path="/log/:logId" element={<LogDetails />} />
         <Route path="/locations" element={<LocationsPage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/species" element={<SpeciesPage />} />

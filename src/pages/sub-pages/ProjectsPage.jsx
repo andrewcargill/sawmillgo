@@ -8,12 +8,11 @@ import ListAllProjects from "../../components/projects/ListAllProjects";
 const ProjectsPage = () => {
   return (
     <>
-      <Grid p={2}>
-        <Typography color="initial">Projects Page</Typography>
+      
         <Grid p={1}>
           <ListAllProjects />
         </Grid>
-      </Grid>
+
     </>
   );
 };

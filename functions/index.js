@@ -254,6 +254,7 @@ exports.initializeSawmillSubcollections = functions.firestore
         treeId: "treeRef.id",
         refId: "Initial Log",
         date: "2023-04-01",
+        species: "Pine",
         diameter: 10,
         length: 10,
         operator: "UserUID",
