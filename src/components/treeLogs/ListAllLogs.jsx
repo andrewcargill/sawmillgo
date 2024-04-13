@@ -40,8 +40,7 @@ const ListAllLogs = () => {
   }, [sawmillId]); // Fetch logs when component mounts and sawmillId changes
 
   const handleAddLogClick = () => {
-    setModalMode("add");
-    setIsModalOpen(true);
+    navigate("/addlog");
   };
 
   const refreshLogList = () => {
