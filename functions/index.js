@@ -260,8 +260,11 @@ exports.initializeSawmillSubcollections = functions.firestore
         operator: "UserUID",
         status: "available",
         locationId: "Initial Location",
+        locationName: "Initial Location Name",
         planked: false,
         projectID: null,
+        projectName: null,
+        verified: false,
       });
 
       // Create an initial plank document under the log
