@@ -42,8 +42,11 @@ const LogFromTree = ({ formData, setFormData, setShowForm }) => {
     }
   };
 
-  const handleInputChange = (event) => {
-    fetchTreeData(event.target.value);
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      fetchTreeData(event.target.value);
+      event.preventDefault(); // Optionally prevent the default action to avoid form submission or other unwanted side effects
+    }
   };
  
   return (
@@ -51,16 +54,17 @@ const LogFromTree = ({ formData, setFormData, setShowForm }) => {
 
     <Grid container spacing={2} style={{ marginTop: "20px", backgroundColor: "#e3f2fd" }}>
         {showTreeId ? (
-      'Log for Tree ID XXTR'
+            <Grid item xs={12}>
+            <Typography variant="h6">TREE: XXTR - PINE</Typography>
+            </Grid>
+   
         ):(
             <Grid item xs={12}>
             <Typography variant="h6">Enter Tree ID</Typography>
             <TextField
               label="Tree ID"
               variant="outlined"
-              
-              onChange={handleInputChange}
-          
+              onKeyPress={handleKeyPress}  // Use the onKeyPress event
               fullWidth
             />
           </Grid>

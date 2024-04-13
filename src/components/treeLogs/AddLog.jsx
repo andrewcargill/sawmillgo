@@ -80,7 +80,7 @@ const [formData, setFormData] = useState({
       {!showTreeInput && (
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h6">Log from tree?</Typography>
+            <Typography variant="h6">Is this log from a registered tree?</Typography>
             <Button
               variant="contained"
               color="primary"
