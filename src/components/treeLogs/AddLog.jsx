@@ -1,19 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   Typography,
   Button,
   TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import LogWithoutTree from "./sub-conponents/LogWithoutTree"; // ensure correct path
 import { set } from "firebase/database";
 import LogFromTree from "./sub-conponents/LogFromTree";
-
+import {
+  fetchLocationsForSawmill,
+  fetchProjectsForSawmill,
+  fetchSpeciesForSawmill,
+} from "../../utils/filestoreOperations";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  query,
+  getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  onSnapshot,
+} from "firebase/firestore";
+import { app } from "../../firebase-config";
+import { getAuth } from "firebase/auth";
 
 const AddLog = () => {
   const [treeId, setTreeId] = useState("");
@@ -22,9 +39,17 @@ const AddLog = () => {
   const [showForm, setShowForm] = useState(false);
   const [TreeData, setTreeData] = useState(null);
   const [projects, setProjects] = useState([]);
-const [locations, setLocations] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [species, setSpecies] = useState([]);
 
-const [formData, setFormData] = useState({
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const currentUserUID = auth.currentUser ? auth.currentUser.uid : null;
+  const userLocalStorage = JSON.parse(localStorage.getItem("user"));
+  const sawmillId = userLocalStorage?.sawmillId;
+  const userName = userLocalStorage?.displayName;
+
+  const [formData, setFormData] = useState({
     date: "",
     lumberjackUid: "",
     lumberjackName: "",
@@ -33,26 +58,53 @@ const [formData, setFormData] = useState({
     projectName: "",
     locationId: "",
     locationName: "",
-    species: "",
+    speciesName: "",
+    speciesId: "",
     diameter: "",
     length: "",
     status: "available",
     verified: false,
   });
 
+  //UseEffect
+  // Fetch projects from the propject database
+  // Fetch locations from the locations database
 
-    //UseEffect
-    // Fetch projects from the propject database
-    // Fetch locations from the locations database 
+  useEffect(() => {
+    if (sawmillId) {
+      fetchLocationsForSawmill(db, sawmillId)
+        .then((fetchedLocations) => {
+          setLocations(fetchedLocations);
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
 
+      fetchProjectsForSawmill(db, sawmillId)
+        .then((fetchedProjects) => {
+          setProjects(fetchedProjects);
+        })
+        .catch((error) => {
+          console.error("Error fetching projects:", error);
+          alert("Failed to fetch projects: " + error.message);
+        });
 
-    //handleSubmit
-    // Add lumberjackUid to the formData
-    // Add lumberJackNAme to the formData
-    // Add treeData.treeId to the formData
-    // save formData to the database 
+      fetchSpeciesForSawmill(db, sawmillId)
+        .then((fetchedSpecies) => {
+          setSpecies(fetchedSpecies);
+        })
+        .catch((error) => {
+          console.error("Error fetching projects:", error);
+          alert("Failed to fetch projects: " + error.message);
+        });
+    }
+  }, [sawmillId]);
 
-
+  //handleSubmit
+  // Add lumberjackUid to the formData
+  // Add lumberJackNAme to the formData
+  // Add treeData.treeId to the formData
+  // save formData to the database
 
   const handleWithoutTreeClick = () => {
     setWithTree(false);
@@ -80,7 +132,9 @@ const [formData, setFormData] = useState({
       {!showTreeInput && (
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h6">Is this log from a registered tree?</Typography>
+            <Typography variant="h6">
+              Is this log from a registered tree?
+            </Typography>
             <Button
               variant="contained"
               color="primary"
@@ -100,14 +154,18 @@ const [formData, setFormData] = useState({
       )}
 
       {showTreeInput && (
-      <>
-      {withTree ? (
-        <LogFromTree setShowForm={setShowForm} formData={formData} setFormData={setFormData} />
-      ) : (
-        "Since there is no parent tree to confirm the origin of this log, it has been assigned an unverified rating."
-      )}
+        <>
+          {withTree ? (
+            <LogFromTree
+              setShowForm={setShowForm}
+              formData={formData}
+              setFormData={setFormData}
+            />
+          ) : (
+            "Since there is no parent tree to confirm the origin of this log, it has been assigned an unverified rating."
+          )}
         </>
-        )}
+      )}
 
       {showForm && (
         <Grid container spacing={2} style={{ marginTop: "20px" }}>
@@ -123,14 +181,67 @@ const [formData, setFormData] = useState({
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField label="Species" variant="outlined" fullWidth />
+            <FormControl fullWidth>
+              <InputLabel id="species-label">Species</InputLabel>
+              <Select
+                labelId="species-label"
+                id="speciesId"
+                value={formData?.speciesId}
+                label="species"
+                onChange=''
+              >
+                {species.map((specie) => (
+                  <MenuItem key={specie.id} value={specie.id}>
+                    {specie.name}
+                  </MenuItem>
+                ))}
+             
+              </Select>
+            </FormControl>
+          </Grid>
+        
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth>
+              <InputLabel id="project-label">Project</InputLabel>
+              <Select
+                labelId="project-label"
+                id="projectId"
+                value={formData?.projectId}
+                label="Project"
+                onChange=''
+              >
+                {projects.map((project) => (
+                  <MenuItem key={project.id} value={project.id}>
+                    {project.projectName}
+                  </MenuItem>
+                ))}
+             
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField label="Project" variant="outlined" fullWidth />
+            <FormControl fullWidth>
+              <InputLabel id="location-label">Location</InputLabel>
+              <Select
+                labelId="location-label"
+                id="locationId"
+                value={formData?.locationId}
+                label="location"
+                onChange=''
+              >
+                {locations.map((location) => (
+                  <MenuItem key={location.id} value={location.id}>
+                    {location.name}
+                  </MenuItem>
+                ))}
+             
+              </Select>
+            </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField label="Location" variant="outlined" fullWidth />
-          </Grid>
+    
+      
+   
+        
           <Grid item xs={12} sm={6}>
             <TextField
               label="Diameter"
