@@ -37,6 +37,7 @@ const AddLog = () => {
   const [projects, setProjects] = useState([]);
   const [locations, setLocations] = useState([]);
   const [species, setSpecies] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const db = getFirestore(app);
   const auth = getAuth(app);
@@ -89,14 +90,59 @@ const AddLog = () => {
           console.error("Error fetching projects:", error);
           alert("Failed to fetch projects: " + error.message);
         });
+
+        console.log("projects", projects)
     }
   }, [sawmillId]);
 
-  //handleSubmit
-  // Add lumberjackUid to the formData
-  // Add lumberJackNAme to the formData
-  // Add treeData.treeId to the formData
-  // save formData to the database
+  useEffect(() => {
+    console.log("formData", formData);
+  }, [formData]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    // Basic validation example
+    if (!sawmillId || !formData.date || !formData.projectId || !formData.locationId || !formData.speciesId) {
+        console.error("All required fields must be filled.");
+        alert("Please fill all required fields.");
+        setIsLoading(false);
+        return;
+    }
+
+    try {
+        const docRef = await addDoc(collection(db, `sawmill/${sawmillId}/logs`), formData);
+        console.log("Document written with ID: ", docRef.id);
+        alert("Log added successfully");
+
+        // Resetting form data
+        setFormData({
+            date: "",
+            lumberjackUid: currentUserUID,
+            lumberjackName: userName,
+            treeId: "",
+            projectId: "",
+            projectName: "",
+            locationId: "",
+            locationName: "",
+            speciesName: "",
+            speciesId: "",
+            diameter: "",
+            length: "",
+            status: "available",
+            verified: false,
+        });
+    } catch (error) {
+        console.error("Error adding document: ", error);
+        alert("Failed to add log: " + error.message);
+    }
+
+    setIsLoading(false);
+};
+
+
+
 
   const handleWithoutTreeClick = () => {
     setWithTree(false);
@@ -123,13 +169,11 @@ const AddLog = () => {
             locationName: selectedLocation ? selectedLocation.name : "",
         }));
     } else if (name === "projectId") {
-        // Find the selected project object based on the projectId
         const selectedProject = projects.find((project) => project.id === value);
-        // Update the formData state with both the projectId and projectName
         setFormData((prevFormData) => ({
             ...prevFormData,
             projectId: selectedProject ? selectedProject.id : "",
-            projectName: selectedProject ? selectedProject.name : "",
+            projectName: selectedProject ? selectedProject.projectName : "",
         }));
     } else if (name === "speciesId") {
         // Find the selected species object based on the speciesId
@@ -223,6 +267,7 @@ const AddLog = () => {
                 value={formData.speciesId}
                 label="species"
                 onChange={handleInputUpdate}
+                
               >
                 {species.map((specie) => (
                   <MenuItem key={specie.id} value={specie.id}>
@@ -275,18 +320,20 @@ const AddLog = () => {
 
           <Grid item xs={12} sm={6}>
             <TextField
-              label="Diameter"
+              label="Diameter (cm)"
               type="number"
               name="diameter"
               value={formData.diameter}
               variant="outlined"
+              onChange={handleInputUpdate}
               fullWidth
               required
+              helperText="Diameter at the narrowest point"
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              label="Length"
+              label="Length (cm)"
               type="number"
               name="length"
               variant="outlined"
@@ -297,7 +344,7 @@ const AddLog = () => {
             />
           </Grid>
           <Grid item xs={12} sm={12}>
-            <Button fullWidth variant="contained" color="primary">
+            <Button onClick={handleSubmit} fullWidth variant="contained" color="primary">
               Submit
             </Button>
           </Grid>

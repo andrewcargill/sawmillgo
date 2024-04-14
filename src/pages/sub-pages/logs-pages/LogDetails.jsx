@@ -30,19 +30,22 @@ const LogDetails = () => {
       {logDetails ? (
         <div>
           <h1>Log Details</h1>
-          <p>Species: -Pine-</p>
-          <p>lumberjack Name: -{logDetails.operator}</p>
+          <p>Species: {logDetails.speciesName}</p>
+          <p>lumberjack Name: {logDetails.lumberjackName}</p>
           <p>Diameter: {logDetails.diameter}</p>
           <p>Length: {logDetails.length}</p>
           <p>Date: {logDetails.date}</p>
           <p>Planked: {logDetails.planked ? 'Yes': 'No' }</p>
           <p>Status: {logDetails.status}</p>
           <br />
+          {logDetails.treeId && (
+            <>
           <p>If certified:</p>
           <p>Tree Id: {logDetails.treeId}</p>
-          <p>Lumberjack: -John Smith</p>
-          <p>Felled: 2023-04-01</p>
-        
+          <p> (p/h)Lumberjack: John Smith</p>
+          <p>(p/h)Felled: 2023-04-01</p>
+          </>
+          )}
         
 
 
