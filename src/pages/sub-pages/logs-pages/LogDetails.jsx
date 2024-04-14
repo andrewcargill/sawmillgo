@@ -30,6 +30,7 @@ const LogDetails = () => {
       {logDetails ? (
         <div>
           <h1>Log Details</h1>
+          <p>Verified: {logDetails.verified ? 'Yes': 'No'}</p>
           <p>Species: {logDetails.speciesName}</p>
           <p>lumberjack Name: {logDetails.lumberjackName}</p>
           <p>Diameter: {logDetails.diameter}</p>
