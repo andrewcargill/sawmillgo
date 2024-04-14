@@ -91,8 +91,6 @@ const AddLog = () => {
           console.error("Error fetching projects:", error);
           alert("Failed to fetch projects: " + error.message);
         });
-
-        console.log("projects", projects)
     }
   }, [sawmillId]);
 

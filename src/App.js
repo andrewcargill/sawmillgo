@@ -29,6 +29,7 @@ import SpeciesPage from "./pages/sub-pages/SpeciesPage";
 import LogsPage from "./pages/sub-pages/LogsPage";
 import LogDetails from "./pages/sub-pages/logs-pages/LogDetails";
 import AddLog from "./components/treeLogs/AddLog";
+import EditLog from "./components/treeLogs/EditLog";
 
 function App() {
  
@@ -51,6 +52,7 @@ function App() {
         <Route path="/trees" element={<TreesPage />} />
         <Route path="/logs" element={<LogsPage />} />
         <Route path="/log/:logId" element={<LogDetails />} />
+        <Route path="/editlog/:logId" element={<EditLog />} />
         <Route path="/addlog" element={<AddLog />} />
         <Route path="/locations" element={<LocationsPage />} />
         <Route path="/projects" element={<ProjectsPage />} />

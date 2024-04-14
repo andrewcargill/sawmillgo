@@ -59,6 +59,10 @@ const LogDetails = () => {
     setOpen(true);
   };
 
+  const handleEditClick = () => {
+    navigate(`/editlog/${logId}`);
+  };
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -87,10 +91,19 @@ const LogDetails = () => {
               <p>(p/h)Felled: 2023-04-01</p>
             </>
           )}
-          <Grid spacing={1} p={1}>
+          <Grid container spacing={2} p={1} >
+            <Grid item xs={12}>
             <Button variant="contained" onClick={handleClickOpen} fullWidth>
               Delete
             </Button>
+            </Grid>
+            
+            <Grid item xs={12}>
+            <Button variant="contained" color="secondary" onClick={handleEditClick} fullWidth>
+              Edit
+            </Button>
+            </Grid>
+           
           </Grid>
 
           <Dialog open={open} onClose={handleClose}>
