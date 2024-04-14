@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-} from "firebase/firestore";
+import { getFirestore, collection, getDocs, query, orderBy } from "firebase/firestore";
 import { app } from "../../firebase-config"; // Correct the import path as necessary
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
@@ -13,8 +9,8 @@ import { useNavigate } from "react-router-dom";
 
 const ListAllLogs = () => {
   const [logs, setLogs] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);  // Assuming modal state management
-  const [modalMode, setModalMode] = useState('view'); // Default mode
+  const [isModalOpen, setIsModalOpen] = useState(false); // Assuming modal state management
+  const [modalMode, setModalMode] = useState("view"); // Default mode
 
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
@@ -26,7 +22,16 @@ const ListAllLogs = () => {
       return;
     }
 
-    let q = collection(db, `sawmill/${sawmillId}/logs`);
+    // let q = collection(db, `sawmill/${sawmillId}/logs`);
+    // const snapshot = await getDocs(q);
+    // const logsList = snapshot.docs.map((doc) => ({
+    //   id: doc.id,
+    //   ...doc.data(),
+
+    let q = query(
+      collection(db, `sawmill/${sawmillId}/logs`),
+      orderBy("createdAt", "desc")
+    );
     const snapshot = await getDocs(q);
     const logsList = snapshot.docs.map((doc) => ({
       id: doc.id,
@@ -51,7 +56,7 @@ const ListAllLogs = () => {
     return () => {
       navigate(`/log/${logId}`);
     };
-  }
+  };
 
   return (
     <Grid container spacing={2} p={2}>
@@ -72,7 +77,10 @@ const ListAllLogs = () => {
           </Button>
         </Grid>
       </Grid>
-      
+      <Grid item xs={12}>
+       last added log: {logs.length > 0 ? logs[0].refId : "No logs available"}
+      </Grid>
+
       <Grid
         container
         sx={{ justifyContent: { xs: "center", sm: "flex-start" } }}
@@ -100,13 +108,13 @@ const ListAllLogs = () => {
                 alignItems: "center",
                 cursor: "pointer",
               }}
-              onClick={handleLogClick(log.id)} 
+              onClick={handleLogClick(log.id)}
             >
               <Grid item>
                 <h3>{log.refId}</h3>
               </Grid>
               <Grid item>
-                <p>(PH)Pine</p>
+                <p>{log.speciesName}</p>
               </Grid>
             </Grid>
           ))

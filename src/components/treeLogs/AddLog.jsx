@@ -30,6 +30,7 @@ import {
 import { app } from "../../firebase-config";
 import { getAuth } from "firebase/auth";
 
+
 const AddLog = () => {
   const [withTree, setWithTree] = useState(false);
   const [showTreeInput, setShowTreeInput] = useState(false);
@@ -114,7 +115,7 @@ const AddLog = () => {
     try {
         const docRef = await addDoc(collection(db, `sawmill/${sawmillId}/logs`), formData);
         console.log("Document written with ID: ", docRef.id);
-        alert("Log added successfully");
+        // alert("Log added successfully");
 
         // Resetting form data
         setFormData({
@@ -133,6 +134,20 @@ const AddLog = () => {
             status: "available",
             verified: false,
         });
+
+        const unsubscribe = onSnapshot(
+          doc(db, `sawmill/${sawmillId}/logs`, docRef.id),
+          (doc) => {
+              const data = doc.data();
+              if (data.refId) {
+                  // Once refId is present, display the alert
+                  alert(`Log added successfully! RefId: ${data.refId}`);
+                  unsubscribe(); // Detach the listener
+                  setIsLoading(false);
+              }
+          }
+      );
+
     } catch (error) {
         console.error("Error adding document: ", error);
         alert("Failed to add log: " + error.message);

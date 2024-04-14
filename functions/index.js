@@ -200,7 +200,7 @@ exports.addTree = functions.firestore
     }
   });
 
-  exports.addLog = functions.firestore
+exports.addLog = functions.firestore
   .document("sawmill/{sawmillId}/logs/{logId}")
   .onCreate(async (snap, context) => {
     const db = admin.firestore();
@@ -210,9 +210,12 @@ exports.addTree = functions.firestore
     const projectId = logData.projectId;
 
     try {
-      // Generate a unique RefId for the log
+      // Generate a unique RefId for the log and set the createdAt timestamp
       const refId = await generateUniqueRefId(db);
-      let updates = { refId };
+      let updates = {
+        refId: refId,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(), // Adding createdAt timestamp
+      };
 
       // If a projectId is specified, fetch the project to determine the log's status
       if (projectId) {
@@ -233,9 +236,9 @@ exports.addTree = functions.firestore
 
         // Determine the new log status based on the project's status
         if (["active", "paused"].includes(projectData.status)) {
-          newLogStatus = "reserved";  // Consider appropriate status names for logs
+          newLogStatus = "reserved";
         } else if (["sold", "with creator"].includes(projectData.status)) {
-          newLogStatus = "sold";  // Adjust as necessary for log context
+          newLogStatus = "sold";
         } else {
           console.log(`Unknown project status: ${projectData.status}`);
           return null;
@@ -244,7 +247,7 @@ exports.addTree = functions.firestore
         updates["status"] = newLogStatus;
       }
 
-      // Update the log document with the new RefId and, if applicable, the new status
+      // Update the log document with the new RefId, createdAt timestamp, and, if applicable, the new status
       await db
         .collection("sawmill")
         .doc(sawmillId)
@@ -252,14 +255,12 @@ exports.addTree = functions.firestore
         .doc(logId)
         .update(updates);
       console.log(
-        `Assigned unique RefId ${refId} to log ${logId} in sawmill ${sawmillId} with status ${updates.status}.`
+        `Assigned unique RefId ${refId} and createdAt timestamp to log ${logId} in sawmill ${sawmillId}. Status: ${updates.status}`
       );
     } catch (error) {
       console.error("Error processing log:", error);
     }
   });
-
-
 
 exports.initializeSawmillSubcollections = functions.firestore
   .document("sawmill/{sawmillId}")
