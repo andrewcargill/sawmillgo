@@ -9,8 +9,6 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import LogWithoutTree from "./sub-conponents/LogWithoutTree"; // ensure correct path
-import { set } from "firebase/database";
 import LogFromTree from "./sub-conponents/LogFromTree";
 import {
   fetchLocationsForSawmill,
@@ -33,11 +31,9 @@ import { app } from "../../firebase-config";
 import { getAuth } from "firebase/auth";
 
 const AddLog = () => {
-  const [treeId, setTreeId] = useState("");
   const [withTree, setWithTree] = useState(false);
   const [showTreeInput, setShowTreeInput] = useState(false);
   const [showForm, setShowForm] = useState(false);
-  const [TreeData, setTreeData] = useState(null);
   const [projects, setProjects] = useState([]);
   const [locations, setLocations] = useState([]);
   const [species, setSpecies] = useState([]);
@@ -51,8 +47,8 @@ const AddLog = () => {
 
   const [formData, setFormData] = useState({
     date: "",
-    lumberjackUid: "",
-    lumberjackName: "",
+    lumberjackUid: currentUserUID,
+    lumberjackName: userName,
     treeId: "",
     projectId: "",
     projectName: "",
@@ -65,10 +61,6 @@ const AddLog = () => {
     status: "available",
     verified: false,
   });
-
-  //UseEffect
-  // Fetch projects from the propject database
-  // Fetch locations from the locations database
 
   useEffect(() => {
     if (sawmillId) {
@@ -117,11 +109,48 @@ const AddLog = () => {
     setShowTreeInput(true);
   };
 
-  const handleInputChange = (event) => {
-    setTreeId(event.target.value);
-  };
+  const handleInputUpdate = (event) => {
+    const { name, value } = event.target;
+    console.log(formData)
 
-  console.log(typeof setShowForm);
+    if (name === "locationId") {
+        // Find the selected location object based on the locationId
+        const selectedLocation = locations.find((location) => location.id === value);
+        // Update the formData state with both the locationId and locationName
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            locationId: selectedLocation ? selectedLocation.id : "",
+            locationName: selectedLocation ? selectedLocation.name : "",
+        }));
+    } else if (name === "projectId") {
+        // Find the selected project object based on the projectId
+        const selectedProject = projects.find((project) => project.id === value);
+        // Update the formData state with both the projectId and projectName
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            projectId: selectedProject ? selectedProject.id : "",
+            projectName: selectedProject ? selectedProject.name : "",
+        }));
+    } else if (name === "speciesId") {
+        // Find the selected species object based on the speciesId
+        const selectedSpecies = species.find((species) => species.id === value);
+        // Update the formData state with both the speciesId and speciesName
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            speciesId: selectedSpecies ? selectedSpecies.id : "",
+            speciesName: selectedSpecies ? selectedSpecies.name : "",
+        }));
+    } else {
+        // For all other inputs, just update the value directly
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [name]: value
+        }));
+    }
+};
+
+
+
 
   return (
     <div style={{ padding: "20px" }}>
@@ -176,8 +205,12 @@ const AddLog = () => {
             <TextField
               label="Date"
               type="date"
+              name="date"
               InputLabelProps={{ shrink: true }}
+              value={formData.date}
+              onChange={handleInputUpdate}
               fullWidth
+              required
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -186,36 +219,36 @@ const AddLog = () => {
               <Select
                 labelId="species-label"
                 id="speciesId"
-                value={formData?.speciesId}
+                name="speciesId"
+                value={formData.speciesId}
                 label="species"
-                onChange=''
+                onChange={handleInputUpdate}
               >
                 {species.map((specie) => (
                   <MenuItem key={specie.id} value={specie.id}>
                     {specie.name}
                   </MenuItem>
                 ))}
-             
               </Select>
             </FormControl>
           </Grid>
-        
+
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
               <InputLabel id="project-label">Project</InputLabel>
               <Select
                 labelId="project-label"
                 id="projectId"
-                value={formData?.projectId}
+                name="projectId"
+                value={formData.projectId}
                 label="Project"
-                onChange=''
+                onChange={handleInputUpdate}
               >
                 {projects.map((project) => (
                   <MenuItem key={project.id} value={project.id}>
                     {project.projectName}
                   </MenuItem>
                 ))}
-             
               </Select>
             </FormControl>
           </Grid>
@@ -225,37 +258,42 @@ const AddLog = () => {
               <Select
                 labelId="location-label"
                 id="locationId"
+                name="locationId"
                 value={formData?.locationId}
                 label="location"
-                onChange=''
+                onChange={handleInputUpdate}
+                required
               >
                 {locations.map((location) => (
                   <MenuItem key={location.id} value={location.id}>
                     {location.name}
                   </MenuItem>
                 ))}
-             
               </Select>
             </FormControl>
           </Grid>
-    
-      
-   
-        
+
           <Grid item xs={12} sm={6}>
             <TextField
               label="Diameter"
               type="number"
+              name="diameter"
+              value={formData.diameter}
               variant="outlined"
               fullWidth
+              required
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               label="Length"
               type="number"
+              name="length"
               variant="outlined"
+              value={formData.length}
+              onChange={handleInputUpdate}
               fullWidth
+              required
             />
           </Grid>
           <Grid item xs={12} sm={12}>
