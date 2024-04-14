@@ -30,6 +30,7 @@ const LogDetails = () => {
       {logDetails ? (
         <div>
           <h1>Log Details</h1>
+          <p>Log Id: {logDetails.refId}</p>
           <p>Verified: {logDetails.verified ? 'Yes': 'No'}</p>
           <p>Species: {logDetails.speciesName}</p>
           <p>lumberjack Name: {logDetails.lumberjackName}</p>
@@ -38,6 +39,7 @@ const LogDetails = () => {
           <p>Date: {logDetails.date}</p>
           <p>Planked: {logDetails.planked ? 'Yes': 'No' }</p>
           <p>Status: {logDetails.status}</p>
+          <p>Project: {logDetails.projectName}</p>
           <br />
           {logDetails.treeId && (
             <>
