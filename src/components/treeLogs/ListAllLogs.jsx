@@ -99,7 +99,8 @@ const ListAllLogs = () => {
               m={1}
               bgcolor={"white.main"}
               style={{
-                border: `2px solid orange`,
+        
+                border: log.verified ? "4px solid green" : "2px solid lightgrey",
                 borderRadius: "5px",
                 padding: "12px",
                 display: "flex",

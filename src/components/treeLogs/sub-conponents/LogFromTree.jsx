@@ -58,6 +58,7 @@ const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
     const updatedFormData = {
       ...formData,
       treeId: treeData.refId,
+      verified: true,
       speciesId: treeData.speciesId,
       speciesName: treeData.speciesName,
       projectId: treeData.projectId || "",

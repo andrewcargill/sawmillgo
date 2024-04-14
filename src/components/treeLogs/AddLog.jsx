@@ -93,9 +93,6 @@ const AddLog = () => {
     }
   }, [sawmillId]);
 
-  useEffect(() => {
-    console.log("formData", formData);
-  }, [formData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -296,7 +293,7 @@ const AddLog = () => {
             </Grid>
           )}
 
-          {formData.projectId == "" && (
+     
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <InputLabel id="project-label">Project</InputLabel>
@@ -316,7 +313,7 @@ const AddLog = () => {
                 </Select>
               </FormControl>
             </Grid>
-          )}
+      
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
               <InputLabel id="location-label">Location</InputLabel>
