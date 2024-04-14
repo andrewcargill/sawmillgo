@@ -30,7 +30,6 @@ import {
 import { app } from "../../firebase-config";
 import { getAuth } from "firebase/auth";
 
-
 const AddLog = () => {
   const [withTree, setWithTree] = useState(false);
   const [showTreeInput, setShowTreeInput] = useState(false);
@@ -103,59 +102,64 @@ const AddLog = () => {
     setIsLoading(true);
 
     // Basic validation example
-    if (!sawmillId || !formData.date || !formData.projectId || !formData.locationId || !formData.speciesId) {
-        console.error("All required fields must be filled.");
-        alert("Please fill all required fields.");
-        setIsLoading(false);
-        return;
+    if (
+      !sawmillId ||
+      !formData.date ||
+      !formData.projectId ||
+      !formData.locationId ||
+      !formData.speciesId
+    ) {
+      console.error("All required fields must be filled.");
+      alert("Please fill all required fields.");
+      setIsLoading(false);
+      return;
     }
 
     try {
-        const docRef = await addDoc(collection(db, `sawmill/${sawmillId}/logs`), formData);
-        console.log("Document written with ID: ", docRef.id);
-        // alert("Log added successfully");
-
-        // Resetting form data
-        setFormData({
-            date: "",
-            lumberjackUid: currentUserUID,
-            lumberjackName: userName,
-            treeId: "",
-            projectId: "",
-            projectName: "",
-            locationId: "",
-            locationName: "",
-            speciesName: "",
-            speciesId: "",
-            diameter: "",
-            length: "",
-            status: "available",
-            verified: false,
-        });
-
-        const unsubscribe = onSnapshot(
-          doc(db, `sawmill/${sawmillId}/logs`, docRef.id),
-          (doc) => {
-              const data = doc.data();
-              if (data.refId) {
-                  // Once refId is present, display the alert
-                  alert(`Log added successfully! RefId: ${data.refId}`);
-                  unsubscribe(); // Detach the listener
-                  setIsLoading(false);
-              }
-          }
+      const docRef = await addDoc(
+        collection(db, `sawmill/${sawmillId}/logs`),
+        formData
       );
+      console.log("Document written with ID: ", docRef.id);
+      // alert("Log added successfully");
 
+      // Resetting form data
+      setFormData({
+        date: "",
+        lumberjackUid: currentUserUID,
+        lumberjackName: userName,
+        treeId: "",
+        projectId: "",
+        projectName: "",
+        locationId: "",
+        locationName: "",
+        speciesName: "",
+        speciesId: "",
+        diameter: "",
+        length: "",
+        status: "available",
+        verified: false,
+      });
+
+      const unsubscribe = onSnapshot(
+        doc(db, `sawmill/${sawmillId}/logs`, docRef.id),
+        (doc) => {
+          const data = doc.data();
+          if (data.refId) {
+            // Once refId is present, display the alert
+            alert(`Log added successfully! RefId: ${data.refId}`);
+            unsubscribe(); // Detach the listener
+            setIsLoading(false);
+          }
+        }
+      );
     } catch (error) {
-        console.error("Error adding document: ", error);
-        alert("Failed to add log: " + error.message);
+      console.error("Error adding document: ", error);
+      alert("Failed to add log: " + error.message);
     }
 
     setIsLoading(false);
-};
-
-
-
+  };
 
   const handleWithoutTreeClick = () => {
     setWithTree(false);
@@ -170,44 +174,43 @@ const AddLog = () => {
 
   const handleInputUpdate = (event) => {
     const { name, value } = event.target;
-    console.log(formData)
+    console.log(formData);
 
     if (name === "locationId") {
-        // Find the selected location object based on the locationId
-        const selectedLocation = locations.find((location) => location.id === value);
-        // Update the formData state with both the locationId and locationName
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            locationId: selectedLocation ? selectedLocation.id : "",
-            locationName: selectedLocation ? selectedLocation.name : "",
-        }));
+      // Find the selected location object based on the locationId
+      const selectedLocation = locations.find(
+        (location) => location.id === value
+      );
+      // Update the formData state with both the locationId and locationName
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        locationId: selectedLocation ? selectedLocation.id : "",
+        locationName: selectedLocation ? selectedLocation.name : "",
+      }));
     } else if (name === "projectId") {
-        const selectedProject = projects.find((project) => project.id === value);
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            projectId: selectedProject ? selectedProject.id : "",
-            projectName: selectedProject ? selectedProject.projectName : "",
-        }));
+      const selectedProject = projects.find((project) => project.id === value);
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        projectId: selectedProject ? selectedProject.id : "",
+        projectName: selectedProject ? selectedProject.projectName : "",
+      }));
     } else if (name === "speciesId") {
-        // Find the selected species object based on the speciesId
-        const selectedSpecies = species.find((species) => species.id === value);
-        // Update the formData state with both the speciesId and speciesName
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            speciesId: selectedSpecies ? selectedSpecies.id : "",
-            speciesName: selectedSpecies ? selectedSpecies.name : "",
-        }));
+      // Find the selected species object based on the speciesId
+      const selectedSpecies = species.find((species) => species.id === value);
+      // Update the formData state with both the speciesId and speciesName
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        speciesId: selectedSpecies ? selectedSpecies.id : "",
+        speciesName: selectedSpecies ? selectedSpecies.name : "",
+      }));
     } else {
-        // For all other inputs, just update the value directly
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            [name]: value
-        }));
+      // For all other inputs, just update the value directly
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
     }
-};
-
-
-
+  };
 
   return (
     <div style={{ padding: "20px" }}>
@@ -270,46 +273,50 @@ const AddLog = () => {
               required
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel id="species-label">Species</InputLabel>
-              <Select
-                labelId="species-label"
-                id="speciesId"
-                name="speciesId"
-                value={formData.speciesId}
-                label="species"
-                onChange={handleInputUpdate}
-                
-              >
-                {species.map((specie) => (
-                  <MenuItem key={specie.id} value={specie.id}>
-                    {specie.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
 
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel id="project-label">Project</InputLabel>
-              <Select
-                labelId="project-label"
-                id="projectId"
-                name="projectId"
-                value={formData.projectId}
-                label="Project"
-                onChange={handleInputUpdate}
-              >
-                {projects.map((project) => (
-                  <MenuItem key={project.id} value={project.id}>
-                    {project.projectName}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
+          {formData.treeId == "" && (
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel id="species-label">Species</InputLabel>
+                <Select
+                  labelId="species-label"
+                  id="speciesId"
+                  name="speciesId"
+                  value={formData.speciesId}
+                  label="species"
+                  onChange={handleInputUpdate}
+                >
+                  {species.map((specie) => (
+                    <MenuItem key={specie.id} value={specie.id}>
+                      {specie.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          )}
+
+          {formData.projectId == "" && (
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel id="project-label">Project</InputLabel>
+                <Select
+                  labelId="project-label"
+                  id="projectId"
+                  name="projectId"
+                  value={formData.projectId}
+                  label="Project"
+                  onChange={handleInputUpdate}
+                >
+                  {projects.map((project) => (
+                    <MenuItem key={project.id} value={project.id}>
+                      {project.projectName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          )}
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
               <InputLabel id="location-label">Location</InputLabel>
@@ -341,7 +348,6 @@ const AddLog = () => {
               onChange={handleInputUpdate}
               fullWidth
               required
-              helperText="Diameter at the narrowest point"
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -357,7 +363,12 @@ const AddLog = () => {
             />
           </Grid>
           <Grid item xs={12} sm={12}>
-            <Button onClick={handleSubmit} fullWidth variant="contained" color="primary">
+            <Button
+              onClick={handleSubmit}
+              fullWidth
+              variant="contained"
+              color="primary"
+            >
               Submit
             </Button>
           </Grid>

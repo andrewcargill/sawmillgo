@@ -180,6 +180,7 @@ const ListAllTrees = () => {
             id="species-filter-select"
             value={speciesFilter}
             label="Species"
+          
             onChange={(e) => setSpeciesFilter(e.target.value)}
           >
             <MenuItem value="all">All</MenuItem>

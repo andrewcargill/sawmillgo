@@ -10,38 +10,85 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
+import { doc, getDoc, getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { app } from "../../../firebase-config";
+
+
+
+
+
 
 const LogFromTree = ({ formData, setFormData, setShowForm }) => {
+
+  const db = getFirestore(app);
+const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
+
   const [projectDialogOpen, setProjectDialogOpen] = useState(false);
 
   const [showTreeId, setShowTreeId] = useState(false);
 
-  const fetchTreeData = (treeId) => {
-    // Placeholder for fetching tree data
-    // Fetch the tree data using the treeId
-    // No Tree - aleart user to enter correct tree ID
 
-    // If tree. Save tree.refId to treeData.treeId / save tree.species to treeData.species
-    // If tree has projectId  store tree.projectId to treeData.projectId and tree.projectName to treedata.projectName
+  const fetchTreeData = async (treeRefId) => {
+    const treesCollection = collection(db, `sawmill/${sawmillId}/trees`);
+    const q = query(treesCollection, where("refId", "==", treeRefId.trim())); 
 
-    const fetchedData = { projectName: "Alpha Project", projectId: "123" };
-    setFormData({ ...formData, treeId, ...fetchedData });
-    setProjectDialogOpen(true);
+    try {
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+            const treeSnap = querySnapshot.docs[0]; // assuming the refId is unique and you want the first match
+            const treeData = treeSnap.data();
+            updateFormDataWithTreeData(treeData, treeSnap.id); // passing the document ID
+            console.log("Searching for Tree ID:", treeRefId);
+        } else {
+            alert("No tree found with that refId.");
+            console.log("Searching for Tree ID:", treeRefId);
+            console.log('sawmillId:', sawmillId)
+        }
+    } catch (error) {
+        console.error("Failed to fetch tree data:", error);
+        alert("Error fetching tree data.");
+    }
+};
+
+  
+  
+
+  const updateFormDataWithTreeData = (treeData, treeId) => {
+    // Construct the new form data object
+    const updatedFormData = {
+      ...formData,
+      treeId: treeData.refId,
+      speciesId: treeData.speciesId,
+      speciesName: treeData.speciesName,
+      projectId: treeData.projectId || "",
+      projectName: treeData.projectName || "",
+    };
+  
+    setFormData(updatedFormData); // Update formData state directly
+  
+    // Determine whether to show the project dialog
+    if (treeData.projectId) {
+      setProjectDialogOpen(true);  // Confirm addition to project
+    } else {
+      setShowForm(true); // Proceed without project dialog
+    }
   };
+  
+  
 
   const handleDialogClose = (agree) => {
     setShowForm(true);
     setShowTreeId(true);
     setProjectDialogOpen(false);
     if (!agree) {
-      setFormData({ ...formData, projectId: "", projectName: "" }); // Reset project details if disagreed
+      setFormData({ ...formData, projectId: "", projectName: "" });
     }
   };
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       fetchTreeData(event.target.value);
-      event.preventDefault(); // Optionally prevent the default action to avoid form submission or other unwanted side effects
+      event.preventDefault(); 
     }
   };
 
