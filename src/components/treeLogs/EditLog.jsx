@@ -92,48 +92,63 @@ const EditLog = () => {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+   <Grid container>
       <Typography variant="h4" gutterBottom>Edit Log: {log?.refId }</Typography>
       {log ? (
         <Grid container spacing={2}>
+          <Grid xs={12} sm={6} item>
           <TextField
+            fullWidth
             label="Date"
             type="date"
             name="date"
-            fullWidth
+   
             value={log.date || ""}
             onChange={handleInputChange}
             required
           />
+          </Grid>
+          <Grid xs={12} sm={6} item>
           <TextField
+            fullWidth
             label="Diameter (cm)"
             type="number"
             name="diameter"
-            fullWidth
+        
             value={log.diameter || ""}
             onChange={handleInputChange}
             required
           />
+          </Grid>
+          <Grid xs={12} sm={6} item>
           <TextField
+            fullWidth
             label="Length (cm)"
             type="number"
             name="length"
-            fullWidth
+      
             value={log.length || ""}
             onChange={handleInputChange}
             required
           />
+          </Grid>
+          
           {renderSelect("speciesId", "Species", species, handleSpeciesChange, log.speciesId)}
+         
           {renderSelect("projectId", "Project", projects, handleProjectChange, log.projectId)}
+         
           {renderSelect("locationId", "Location", locations, handleLocationChange, log.locationId)}
+     
+          <Grid xs={12} item>
           <Button variant="contained" color="primary" onClick={handleSubmit} fullWidth>
             Update Log
           </Button>
+          </Grid>
         </Grid>
       ) : (
         <p>Loading log details...</p>
       )}
-    </div>
+</Grid>
   );
 };
 

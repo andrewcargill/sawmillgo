@@ -30,7 +30,7 @@ const [userInfo, setUserInfo] = useState(null);
 
 
   return (
-    <Grid container bgcolor={"lightblue"} padding={2}>
+    <Grid container padding={2}>
       <Typography variant="h4" gutterBottom>
         Welcome {userInfo ? userInfo.displayName : "Not Available"}
       </Typography>
