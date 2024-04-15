@@ -70,6 +70,9 @@ const AddLocationForm = () => {
             <option value="Storage">Storage</option>
             <option value="Drying">Drying</option>
             <option value="Forest">Forest</option>
+     
+            <option value="Sawmill">Sawmill</option>
+            <option value="Creator">Creator</option>
           </select>
         </label>
       </div>
