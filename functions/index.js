@@ -262,6 +262,69 @@ exports.addLog = functions.firestore
     }
   });
 
+  exports.addPlank = functions.firestore
+  .document("sawmill/{sawmillId}/planks/{plankId}")
+  .onCreate(async (snap, context) => {
+    const db = admin.firestore();
+    const sawmillId = context.params.sawmillId;
+    const plankId = context.params.plankId;
+    const plankData = snap.data();
+    const projectId = plankData.projectId;
+
+    try {
+      // Generate a unique RefId for the plank and set the createdAt timestamp
+      const refId = await generateUniqueRefId(db);
+      let updates = {
+        refId: refId,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(), // Adding createdAt timestamp
+      };
+
+      // If a projectId is specified, fetch the project to determine the plank's status
+      if (projectId) {
+        const projectRef = db
+          .collection("sawmill")
+          .doc(sawmillId)
+          .collection("projects")
+          .doc(projectId);
+        const projectSnap = await projectRef.get();
+
+        if (!projectSnap.exists) {
+          console.log(`Project with ID ${projectId} does not exist.`);
+          return null;
+        }
+
+        const projectData = projectSnap.data();
+        let newPlankStatus;
+
+        // Determine the new plank status based on the project's status
+        if (["active", "paused"].includes(projectData.status)) {
+          newPlankStatus = "reserved";
+        } else if (["sold", "with creator"].includes(projectData.status)) {
+          newPlankStatus = "sold";
+        } else {
+          console.log(`Unknown project status: ${projectData.status}`);
+          return null;
+        }
+
+        updates["status"] = newPlankStatus;
+      }
+
+      // Update the plank document with the new RefId, createdAt timestamp, and, if applicable, the new status
+      await db
+        .collection("sawmill")
+        .doc(sawmillId)
+        .collection("planks")
+        .doc(plankId)
+        .update(updates);
+      console.log(
+        `Assigned unique RefId ${refId} and createdAt timestamp to plank ${plankId} in sawmill ${sawmillId}. Status: ${updates.status}`
+      );
+    } catch (error) {
+      console.error("Error processing plank:", error);
+    }
+  });
+
+
 exports.initializeSawmillSubcollections = functions.firestore
   .document("sawmill/{sawmillId}")
   .onCreate(async (snap, context) => {

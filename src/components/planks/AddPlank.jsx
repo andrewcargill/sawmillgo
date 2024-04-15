@@ -19,15 +19,15 @@ import {
 import { getFirestore, addDoc, collection } from "firebase/firestore";
 import { app } from "../../firebase-config";
 import { getAuth } from "firebase/auth";
+import PlankFromLog from "./sub-components/PlankFromLog";
 
 const AddPlank = () => {
-    const [withLog, setWithLog] = useState(false);
-    const [showLogInput, setShowLogInput] = useState(false);
-  const [hasParentLog, setHasParentLog] = useState(false);
+  const [withLog, setWithLog] = useState(false);
+  const [showLogInput, setShowLogInput] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const [projects, setProjects] = useState([]);
   const [locations, setLocations] = useState([]);
   const [species, setSpecies] = useState([]);
-
 
   const db = getFirestore(app);
   const auth = getAuth(app);
@@ -56,58 +56,86 @@ const AddPlank = () => {
     projectName: "",
     speciesId: "",
     speciesName: "",
-    logRefId: "",
+    logId: "",
     status: "available",
     verified: false,
     grade: "",
   });
 
-
   useEffect(() => {
     if (sawmillId) {
-      fetchLocationsForSawmill(db, sawmillId).then(setLocations).catch(console.error);
-      fetchProjectsForSawmill(db, sawmillId).then(setProjects).catch(console.error);
-      fetchSpeciesForSawmill(db, sawmillId).then(setSpecies).catch(console.error);
+      fetchLocationsForSawmill(db, sawmillId)
+        .then(setLocations)
+        .catch(console.error);
+      fetchProjectsForSawmill(db, sawmillId)
+        .then(setProjects)
+        .catch(console.error);
+      fetchSpeciesForSawmill(db, sawmillId)
+        .then(setSpecies)
+        .catch(console.error);
     }
   }, [db, sawmillId]);
 
   useEffect(() => {
     console.log("Form data:", formData);
-    }, [formData]); 
+  }, [formData]);
 
-    const handleChange = (event) => {
-        const { name, value, checked, type } = event.target;
-        const actualValue = type === 'checkbox' ? checked : value;
-    
-        // Special handling for dropdowns with related name fields
-        if (name === "locationId" || name === "speciesId" || name === "projectId") {
-          const list = name === "locationId" ? locations : name === "speciesId" ? species : projects;
-          const item = list.find(item => item.id === value);
-          const itemNameField = name === "projectId" ? 'projectName' : 'name';  // Use projectName for projects
-    
-          setFormData(prev => ({
-            ...prev,
-            [name]: value,
-            [`${name.slice(0, -2)}Name`]: item ? item[itemNameField] : ''
-          }));
-        } else {
-          setFormData(prev => ({ ...prev, [name]: actualValue }));
-        }
-      };
-    
-   
+  const handleChange = (event) => {
+    const { name, value, checked, type } = event.target;
+    const actualValue = type === "checkbox" ? checked : value;
+
+    // Special handling for dropdowns with related name fields
+    if (name === "locationId" || name === "speciesId" || name === "projectId") {
+      const list =
+        name === "locationId"
+          ? locations
+          : name === "speciesId"
+          ? species
+          : projects;
+      const item = list.find((item) => item.id === value);
+      const itemNameField = name === "projectId" ? "projectName" : "name"; // Use projectName for projects
+
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+        [`${name.slice(0, -2)}Name`]: item ? item[itemNameField] : "",
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: actualValue }));
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const docRef = await addDoc(collection(db, `sawmill/${sawmillId}/planks`), formData);
+      const docRef = await addDoc(
+        collection(db, `sawmill/${sawmillId}/planks`),
+        formData
+      );
       alert(`Plank added successfully with ID: ${docRef.id}`);
       // Reset form data
-      setFormData(prev => ({ ...prev,
-        date: "", length: "", width: "", depth: "", thickness: "", grade: "",
-        image1: "", image2: "", notes: "", furniture: false, construction: false,
-        liveEdge: false, general: false, locationId: "", locationName: "",
-        projectId: "", projectName: "", speciesId: "", speciesName: "", logRefId: ""
+      setFormData((prev) => ({
+        ...prev,
+        date: "",
+        length: "",
+        width: "",
+        depth: "",
+        thickness: "",
+        grade: "",
+        image1: "",
+        image2: "",
+        notes: "",
+        furniture: false,
+        construction: false,
+        liveEdge: false,
+        general: false,
+        locationId: "",
+        locationName: "",
+        projectId: "",
+        projectName: "",
+        speciesId: "",
+        speciesName: "",
+        logId: "",
       }));
     } catch (error) {
       console.error("Error adding plank:", error);
@@ -115,94 +143,126 @@ const AddPlank = () => {
     }
   };
 
-  return (
-    <Grid container spacing={2} padding={2}>
-      <Typography variant="h4" gutterBottom>Add New Plank</Typography>
-      <Grid item xs={12}>
-        <Button variant="contained" onClick={() => setHasParentLog(false)}>Add Standalone Plank</Button>
-        <Button variant="contained" color="primary" onClick={() => setHasParentLog(true)}>Add Plank with Parent Log</Button>
-      </Grid>
+  const handleWithoutLogClick = () => {
+    setWithLog(false);
+    setShowForm(true);
+    setShowLogInput(true);
+  };
 
-      {hasParentLog && (
-        <Grid item xs={12}>
-          <TextField
-            label="Log Ref ID"
-            name="logRefId"
-            value={formData.logRefId}
-            onChange={handleChange}
-            fullWidth
-            required
-          />
-        </Grid>
+  const handleWithLogClick = () => {
+    setWithLog(true);
+    setShowLogInput(true);
+  };
+
+  return (
+    <div style={{ padding: "20px" }}>
+      <Typography variant="h4" gutterBottom>
+        Add Plank
+      </Typography>
+
+      {!showLogInput && (
+        <>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant="h6">
+                Is this plank from a registered tree?
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleWithLogClick}
+              >
+                Yes
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleWithoutLogClick}
+              >
+                No
+              </Button>
+            </Grid>
+          </Grid>
+        </>
       )}
 
-<Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel id="species-label">Species</InputLabel>
-                <Select
-                  labelId="species-label"
-                  id="speciesId"
-                  name="speciesId"
-                  value={formData.speciesId}
-                  label="species"
-                  onChange={handleChange}
-                >
-                  {species.map((specie) => (
-                    <MenuItem key={specie.id} value={specie.id}>
-                      {specie.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+      {showLogInput && (
+        <>
+          {withLog ? (
+            <PlankFromLog
+              formData={formData}
+              setFormData={setFormData}
+              setShowForm={setShowForm}
+            />
+          ) : (
+            "Since there is no parent tree to confirm the origin of this plank, it has been assigned an unverified rating."
+          )}
+        </>
+      )}
 
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel id="project-label">Project</InputLabel>
-                <Select
-                  labelId="project-label"
-                  id="projectId"
-                  name="projectId"
-                  value={formData.projectId}
-                  label="Project"
-                  onChange={handleChange}
-                >
-                  {projects.map((project) => (
-                    <MenuItem key={project.id} value={project.id}>
-                      {project.projectName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+      {showForm && (
+        <>
+         {formData.LogId == "" && (
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth>
+              <InputLabel id="species-label">Species</InputLabel>
+              <Select
+                labelId="species-label"
+                id="speciesId"
+                name="speciesId"
+                value={formData.speciesId}
+                label="species"
+                onChange={handleChange}
+              >
+                {species.map((specie) => (
+                  <MenuItem key={specie.id} value={specie.id}>
+                    {specie.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+            )}
 
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel id="grade-label">Grade</InputLabel>
-                <Select
-                  labelId="grade-label"
-                  id="grade"
-                  name="grade"
-                  value={formData.grade}
-                  label="Grade"
-                  onChange={handleChange}
-                >
-                  
-                    <MenuItem value="1">
-                      1
-                    </MenuItem>
-                    <MenuItem value="2">
-                      2
-                    </MenuItem>
-                    <MenuItem value="3">
-                      3
-                    </MenuItem>
-               
-                </Select>
-              </FormControl>
-            </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth>
+              <InputLabel id="project-label">Project</InputLabel>
+              <Select
+                labelId="project-label"
+                id="projectId"
+                name="projectId"
+                value={formData.projectId}
+                label="Project"
+                onChange={handleChange}
+              >
+                {projects.map((project) => (
+                  <MenuItem key={project.id} value={project.id}>
+                    {project.projectName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
 
-            <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth>
+              <InputLabel id="grade-label">Grade</InputLabel>
+              <Select
+                labelId="grade-label"
+                id="grade"
+                name="grade"
+                value={formData.grade}
+                label="Grade"
+                onChange={handleChange}
+              >
+                <MenuItem value="1">1</MenuItem>
+                <MenuItem value="2">2</MenuItem>
+                <MenuItem value="3">3</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
               <InputLabel id="location-label">Location</InputLabel>
               <Select
@@ -273,50 +333,73 @@ const AddPlank = () => {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-      <TextField
-        fullWidth
-        label='notes'
-        type='text'
-        name='notes'
-        value={formData.notes}
-        onChange={handleChange}
-        multiline={true}
-        rows={4}
-      />
-    </Grid>
-          <CheckboxGrid name="furniture" label="Furniture" checked={formData.furniture} onChange={handleChange} />
-          <CheckboxGrid name="construction" label="Construction" checked={formData.construction} onChange={handleChange} />
-          <CheckboxGrid name="liveEdge" label="Live Edge" checked={formData.liveEdge} onChange={handleChange} />
-          <CheckboxGrid name="general" label="General" checked={formData.general} onChange={handleChange} />
+            <TextField
+              fullWidth
+              label="notes"
+              type="text"
+              name="notes"
+              value={formData.notes}
+              onChange={handleChange}
+              multiline={true}
+              rows={4}
+            />
+          </Grid>
+          <CheckboxGrid
+            name="furniture"
+            label="Furniture"
+            checked={formData.furniture}
+            onChange={handleChange}
+          />
+          <CheckboxGrid
+            name="construction"
+            label="Construction"
+            checked={formData.construction}
+            onChange={handleChange}
+          />
+          <CheckboxGrid
+            name="liveEdge"
+            label="Live Edge"
+            checked={formData.liveEdge}
+            onChange={handleChange}
+          />
+          <CheckboxGrid
+            name="general"
+            label="General"
+            checked={formData.general}
+            onChange={handleChange}
+          />
 
-        
-          
-    
+          {/** Repeat similar fields for length, width, depth, thickness, etc. */}
+          {/** Include species, location, and project selects as in the original example */}
+          {/** Include checkboxes for furniture, construction, liveEdge, and general */}
 
-
-
-      {/** Repeat similar fields for length, width, depth, thickness, etc. */}
-      {/** Include species, location, and project selects as in the original example */}
-      {/** Include checkboxes for furniture, construction, liveEdge, and general */}
-
-      <Grid item xs={12}>
-        <Button variant="contained" color="primary" onClick={handleSubmit} fullWidth>
-          Submit
-        </Button>
-      </Grid>
-    </Grid>
+          <Grid item xs={12}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+              fullWidth
+            >
+              Submit
+            </Button>
+          </Grid>
+        </>
+      )}
+    </div>
   );
 };
 
 function CheckboxGrid({ name, label, checked, onChange }) {
-    return (
-      <Grid item xs={6} sm={3}>
-        <FormControlLabel
-          control={<Checkbox name={name} checked={!!checked} onChange={onChange} />}
-          label={label}
-        />
-      </Grid>
-    );
-  }
+  return (
+    <Grid item xs={6} sm={3}>
+      <FormControlLabel
+        control={
+          <Checkbox name={name} checked={!!checked} onChange={onChange} />
+        }
+        label={label}
+      />
+    </Grid>
+  );
+}
 
 export default AddPlank;
