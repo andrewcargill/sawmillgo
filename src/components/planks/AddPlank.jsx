@@ -112,7 +112,7 @@ const AddPlank = () => {
         collection(db, `sawmill/${sawmillId}/planks`),
         formData
       );
-      alert(`Plank added successfully with ID: ${docRef.id}`);
+      alert(`Plank added successfully with ID: ${docRef.refId}`);
       // Reset form data
       setFormData((prev) => ({
         ...prev,
