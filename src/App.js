@@ -31,6 +31,8 @@ import LogDetails from "./pages/sub-pages/logs-pages/LogDetails";
 import AddLog from "./components/treeLogs/AddLog";
 import EditLog from "./components/treeLogs/EditLog";
 import PlanksPage from "./pages/sub-pages/PlanksPage";
+import PlankDetails from "./pages/sub-pages/planks-pages/PlankDetails";
+import EditPlank from "./components/planks/EditPlank";
 
 function App() {
  
@@ -56,6 +58,8 @@ function App() {
         <Route path="/editlog/:logId" element={<EditLog />} />
         <Route path="/addlog" element={<AddLog />} />
         <Route path="/planks" element={<PlanksPage />} />
+        <Route path="/plank/:plankId" element={<PlankDetails />} />
+        <Route path="/editplank/:plankId" element={<EditPlank />} />
         <Route path="/locations" element={<LocationsPage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/species" element={<SpeciesPage />} />

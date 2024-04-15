@@ -8,52 +8,46 @@ import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 
 const ListAllPlanks = () => {
-  const [logs, setLogs] = useState([]);
+  const [planks, setPlanks] = useState([]);
 
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
   const navigate = useNavigate();
 
-  const fetchLogs = async () => {
+  const fetchPlanks = async () => {
     if (!sawmillId) {
-      console.log("Sawmill ID not found. Cannot fetch logs.");
+      console.log("Sawmill ID not found. Cannot fetch planks.");
       return;
     }
-
-    // let q = collection(db, `sawmill/${sawmillId}/logs`);
-    // const snapshot = await getDocs(q);
-    // const logsList = snapshot.docs.map((doc) => ({
-    //   id: doc.id,
-    //   ...doc.data(),
 
     let q = query(
       collection(db, `sawmill/${sawmillId}/planks`),
       // orderBy("createdAt", "desc")
     );
     const snapshot = await getDocs(q);
-    const logsList = snapshot.docs.map((doc) => ({
+    const planksList = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
-    setLogs(logsList);
-    console.log("Fetched planks: ", logsList);
+    setPlanks(planksList);
+    console.log("Fetched planks: ", planksList);
   };
 
   useEffect(() => {
-    fetchLogs();
-  }, [sawmillId]); // Fetch logs when component mounts and sawmillId changes
+    fetchPlanks();
+  }, [sawmillId]); // Fetch planks when component mounts and sawmillId changes
 
-  const handleAddLogClick = () => {
-    navigate("/addlog");
+  const handleAddPlankClick = () => {
+    navigate("/addplank");
   };
 
-  const refreshLogList = () => {
-    fetchLogs();
+  const refreshPlankList = () => {
+    fetchPlanks();
   };
 
-  const handleLogClick = (logId) => {
+  const handlePlankClick = (plankId) => {
     return () => {
-      navigate(`/log/${logId}`);
+      navigate(`/plank/${plankId}`);
     };
   };
 
@@ -69,15 +63,15 @@ const ListAllPlanks = () => {
           <Button
             variant="outlined"
             color="primary"
-            onClick={handleAddLogClick}
+            onClick={handleAddPlankClick}
             startIcon={<AddIcon />}
           >
-            add
+            Add
           </Button>
         </Grid>
       </Grid>
       <Grid item xs={12}>
-       last added log: {logs.length > 0 ? logs[0].refId : "No logs available"}
+        Last added plank: {planks.length > 0 ? planks[0].refId : "No planks available"}
       </Grid>
 
       <Grid
@@ -85,8 +79,8 @@ const ListAllPlanks = () => {
         sx={{ justifyContent: { xs: "center", sm: "flex-start" } }}
         alignContent={"center"}
       >
-        {logs.length > 0 ? (
-          logs.map((log) => (
+        {planks.length > 0 ? (
+          planks.map((plank) => (
             <Grid
               className="item-select"
               item
@@ -94,12 +88,11 @@ const ListAllPlanks = () => {
               xs={3}
               sm={2}
               lg={2}
-              key={log.id}
+              key={plank.id}
               m={1}
               bgcolor={"white.main"}
               style={{
-        
-                border: log.verified ? "4px solid green" : "2px solid lightgrey",
+                border: plank.verified ? "4px solid green" : "2px solid lightgrey",
                 borderRadius: "5px",
                 padding: "12px",
                 display: "flex",
@@ -108,19 +101,19 @@ const ListAllPlanks = () => {
                 alignItems: "center",
                 cursor: "pointer",
               }}
-              onClick={handleLogClick(log.id)}
+              onClick={handlePlankClick(plank.id)}
             >
               <Grid item>
-                <h3>{log.refId}</h3>
+                <h3>{plank.refId}</h3>
               </Grid>
               <Grid item>
-                <p>{log.date}</p>
+                <p>{plank.date}</p>
               </Grid>
             </Grid>
           ))
         ) : (
           <Grid item xs={12}>
-            <Typography variant="body1">No logs found.</Typography>
+            <Typography variant="body1">No planks found.</Typography>
           </Grid>
         )}
       </Grid>

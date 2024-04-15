@@ -326,8 +326,9 @@ exports.initializeSawmillSubcollections = functions.firestore
         liveEdge: false,
         general: false,
         status: "available",
+        speciesId: null,
         locationId: "Initial Location",
-        projectID: null,
+        projectId: null,
         stockType: "normal-stock",
       });
 

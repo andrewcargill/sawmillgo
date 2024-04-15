@@ -16,43 +16,43 @@ import {
 const PlankDetails = () => {
   const [open, setOpen] = useState(false);
   const [deleteInput, setDeleteInput] = useState("");
-  const [logDetails, setLogDetails] = useState(null);
-  const { logId } = useParams();
+  const [plankDetails, setPlankDetails] = useState(null);
+  const { plankId } = useParams();
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
 
   const navigate = useNavigate();
 
-  const returnToAllLogs = () => {
-    navigate("/logs");
+  const returnToAllPlanks = () => {
+    navigate("/planks");
   };
 
   useEffect(() => {
-    const fetchLogDetails = async () => {
-      const docRef = doc(db, `sawmill/${sawmillId}/logs`, logId); // Ensure you have the correct path and possibly sawmillId
+    const fetchPlankDetails = async () => {
+      const docRef = doc(db, `sawmill/${sawmillId}/planks`, plankId); // Ensure you have the correct path and possibly sawmillId
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        setLogDetails(docSnap.data());
+        setPlankDetails(docSnap.data());
       } else {
         console.log("No such document!");
       }
     };
 
-    fetchLogDetails();
-  }, [logId]);
+    fetchPlankDetails();
+  }, [plankId]);
 
   const handleDelete = async () => {
-    if (deleteInput === logDetails.refId) {
-      await deleteDoc(doc(db, `sawmill/${sawmillId}/logs`, logId));
-      alert("Log deleted successfully");
+    if (deleteInput === plankDetails.refId) {
+      await deleteDoc(doc(db, `sawmill/${sawmillId}/planks`, plankId));
+      alert("Plank deleted successfully");
       // Redirect or perform additional actions as necessary
-      setLogDetails(null); // Clear the details if staying on the same page
+      setPlankDetails(null); // Clear the details if staying on the same page
     } else {
       alert("Incorrect RefId. Please try again.");
     }
     setOpen(false); // Close the dialog after attempt
-    returnToAllLogs();
+    returnToAllPlanks();
   };
 
   const handleClickOpen = () => {
@@ -60,7 +60,7 @@ const PlankDetails = () => {
   };
 
   const handleEditClick = () => {
-    navigate(`/editlog/${logId}`);
+    navigate(`/editplank/${plankId}`);
   };
 
   const handleClose = () => {
@@ -69,28 +69,24 @@ const PlankDetails = () => {
 
   return (
     <div>
-      {logDetails ? (
+      {plankDetails ? (
         <div>
-          <h1>Log Details</h1>
-          <p>Log Id: {logDetails.refId}</p>
-          <p>Verified: {logDetails.verified ? "Yes" : "No"}</p>
-          <p>Species: {logDetails.speciesName}</p>
-          <p>lumberjack Name: {logDetails.lumberjackName}</p>
-          <p>Diameter: {logDetails.diameter}</p>
-          <p>Length: {logDetails.length}</p>
-          <p>Date: {logDetails.date}</p>
-          <p>Planked: {logDetails.planked ? "Yes" : "No"}</p>
-          <p>Status: {logDetails.status}</p>
-          <p>Project: {logDetails.projectName}</p>
+          <h1>Plank Details</h1>
+          <p>Plank Id: {plankDetails.refId}</p>
+          <p>Verified: {plankDetails.verified ? "Yes" : "No"}</p>
+          <p>Operator: {plankDetails.operator}</p>
+          <p>Date: {plankDetails.date}</p>
+          <p>Length: {plankDetails.length}</p>
+          <p>Width: {plankDetails.width}</p>
+          <p>Thickness: {plankDetails.thickness}</p>
+          <p>Grade: {plankDetails.grade}</p>
+          <p>Notes: {plankDetails.notes}</p>
+          <p>Project: {plankDetails.projectName}</p>
+
+          <p>Location: {plankDetails.locationName}</p>
+          <p>Status: {plankDetails.status}</p>
+          <p>Species: {plankDetails.speciesName}</p>
           <br />
-          {logDetails.treeId && (
-            <>
-              <p>If certified:</p>
-              <p>Tree Id: {logDetails.treeId}</p>
-              <p> (p/h)Lumberjack: John Smith</p>
-              <p>(p/h)Felled: 2023-04-01</p>
-            </>
-          )}
           <Grid container spacing={2} p={1} >
             <Grid item xs={12}>
             <Button variant="contained" onClick={handleClickOpen} fullWidth>
@@ -107,16 +103,16 @@ const PlankDetails = () => {
           </Grid>
 
           <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Delete Log</DialogTitle>
+            <DialogTitle>Delete Plank</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                Please enter the Log ID to confirm:
+                Please enter the Plank ID to confirm:
               </DialogContentText>
               <TextField
                 autoFocus
                 margin="dense"
                 id="name"
-                label={logDetails.refId}
+                label="Plank RefId"
                 type="text"
                 fullWidth
                 variant="standard"
@@ -129,7 +125,7 @@ const PlankDetails = () => {
             </DialogActions>
           </Dialog>
 
-          {/* Add more fields as needed */}
+          {/* Additional fields and logic can be added as needed */}
         </div>
       ) : (
         <p>Loading...</p>
