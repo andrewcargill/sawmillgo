@@ -33,7 +33,7 @@ const AddPlank = () => {
   const auth = getAuth(app);
   const currentUserUID = auth.currentUser ? auth.currentUser.uid : null;
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
-  const userName = JSON.parse(localStorage.getItem("user"))?.dislayName;
+  const userName = JSON.parse(localStorage.getItem("user"))?.displayName;
 
   const [formData, setFormData] = useState({
     operatorUID: currentUserUID,
@@ -42,7 +42,6 @@ const AddPlank = () => {
     length: "",
     width: "",
     depth: "",
-    thickness: "",
     grade: "",
     image1: "",
     image2: "",
@@ -60,6 +59,7 @@ const AddPlank = () => {
     logRefId: "",
     status: "available",
     verified: false,
+    grade: "",
   });
 
 
@@ -71,23 +71,31 @@ const AddPlank = () => {
     }
   }, [db, sawmillId]);
 
-  const handleChange = (event) => {
-    const { name, value, checked, type } = event.target;
-    const actualValue = type === 'checkbox' ? checked : value;
+  useEffect(() => {
+    console.log("Form data:", formData);
+    }, [formData]); 
+
+    const handleChange = (event) => {
+        const { name, value, checked, type } = event.target;
+        const actualValue = type === 'checkbox' ? checked : value;
     
-    if (['locationId', 'projectId', 'speciesId'].includes(name)) {
-      // Handles updating related name when selecting from dropdown
-      const selectedItem = (name === 'locationId' ? locations : name === 'projectId' ? projects : species)
-        .find(item => item.id === value);
-      setFormData(prev => ({
-        ...prev,
-        [name]: value,
-        [`${name.slice(0, -2)}Name`]: selectedItem ? selectedItem.name : ''
-      }));
-    } else {
-      setFormData(prev => ({ ...prev, [name]: actualValue }));
-    }
-  };
+        // Special handling for dropdowns with related name fields
+        if (name === "locationId" || name === "speciesId" || name === "projectId") {
+          const list = name === "locationId" ? locations : name === "speciesId" ? species : projects;
+          const item = list.find(item => item.id === value);
+          const itemNameField = name === "projectId" ? 'projectName' : 'name';  // Use projectName for projects
+    
+          setFormData(prev => ({
+            ...prev,
+            [name]: value,
+            [`${name.slice(0, -2)}Name`]: item ? item[itemNameField] : ''
+          }));
+        } else {
+          setFormData(prev => ({ ...prev, [name]: actualValue }));
+        }
+      };
+    
+   
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -169,6 +177,32 @@ const AddPlank = () => {
             </Grid>
 
             <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel id="grade-label">Grade</InputLabel>
+                <Select
+                  labelId="grade-label"
+                  id="grade"
+                  name="grade"
+                  value={formData.grade}
+                  label="Grade"
+                  onChange={handleChange}
+                >
+                  
+                    <MenuItem value="1">
+                      1
+                    </MenuItem>
+                    <MenuItem value="2">
+                      2
+                    </MenuItem>
+                    <MenuItem value="3">
+                      3
+                    </MenuItem>
+               
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
               <InputLabel id="location-label">Location</InputLabel>
               <Select
@@ -238,12 +272,25 @@ const AddPlank = () => {
               required
             />
           </Grid>
+          <Grid item xs={12} sm={6}>
+      <TextField
+        fullWidth
+        label='notes'
+        type='text'
+        name='notes'
+        value={formData.notes}
+        onChange={handleChange}
+        multiline={true}
+        rows={4}
+      />
+    </Grid>
           <CheckboxGrid name="furniture" label="Furniture" checked={formData.furniture} onChange={handleChange} />
           <CheckboxGrid name="construction" label="Construction" checked={formData.construction} onChange={handleChange} />
           <CheckboxGrid name="liveEdge" label="Live Edge" checked={formData.liveEdge} onChange={handleChange} />
           <CheckboxGrid name="general" label="General" checked={formData.general} onChange={handleChange} />
 
-
+        
+          
     
 
 
@@ -263,7 +310,7 @@ const AddPlank = () => {
 
 function CheckboxGrid({ name, label, checked, onChange }) {
     return (
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={6} sm={3}>
         <FormControlLabel
           control={<Checkbox name={name} checked={!!checked} onChange={onChange} />}
           label={label}

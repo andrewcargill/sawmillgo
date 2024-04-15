@@ -78,7 +78,7 @@ const PlankDetails = () => {
           <p>Date: {plankDetails.date}</p>
           <p>Length: {plankDetails.length}</p>
           <p>Width: {plankDetails.width}</p>
-          <p>Thickness: {plankDetails.thickness}</p>
+          <p>Depth: {plankDetails.depth}</p>
           <p>Grade: {plankDetails.grade}</p>
           <p>Notes: {plankDetails.notes}</p>
           <p>Project: {plankDetails.projectName}</p>

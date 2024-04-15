@@ -316,7 +316,6 @@ exports.initializeSawmillSubcollections = functions.firestore
         length: 10,
         width: 10,
         depth: 1,
-        thickness: 1,
         grade: "1",
         image1: "[url….to image]",
         image2: "[url….to image]",
