@@ -33,6 +33,7 @@ import EditLog from "./components/treeLogs/EditLog";
 import PlanksPage from "./pages/sub-pages/PlanksPage";
 import PlankDetails from "./pages/sub-pages/planks-pages/PlankDetails";
 import EditPlank from "./components/planks/EditPlank";
+import AddPlank from "./components/planks/AddPlank";
 
 function App() {
  
@@ -60,6 +61,7 @@ function App() {
         <Route path="/planks" element={<PlanksPage />} />
         <Route path="/plank/:plankId" element={<PlankDetails />} />
         <Route path="/editplank/:plankId" element={<EditPlank />} />
+        <Route path="/addplank" element={<AddPlank />} />
         <Route path="/locations" element={<LocationsPage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/species" element={<SpeciesPage />} />
