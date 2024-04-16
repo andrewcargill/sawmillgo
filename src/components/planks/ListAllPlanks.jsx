@@ -16,7 +16,7 @@ import { Table, TableHead, TableRow, TableCell, TableContainer, Paper, TableBody
 
 const ListAllPlanks = () => {
   const [planks, setPlanks] = useState([]);
-  const [dynamicView, setDynamicView] = useState('dynamic');
+  const [dynamicView, setDynamicView] = useState('list');
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
   const navigate = useNavigate();
