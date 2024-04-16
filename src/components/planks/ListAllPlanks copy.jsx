@@ -6,13 +6,9 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
-import PlankListContent from "./sub-components/PlankListContent";
-import GridOnIcon from '@mui/icons-material/GridOn';
-import GridOffIcon from '@mui/icons-material/GridOff';
 
 const ListAllPlanks = () => {
   const [planks, setPlanks] = useState([]);
-  const [dynamicView, setDynamicView] = useState(false);
 
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
@@ -53,11 +49,6 @@ const ListAllPlanks = () => {
     };
   };
 
-  const handleDynamicViewClick = () => {
-    setDynamicView((prev) => !prev);
-  }
-
-
   return (
     <Grid container spacing={2} p={2}>
       <Grid container item xs={12}>
@@ -67,14 +58,6 @@ const ListAllPlanks = () => {
           </Typography>
         </Grid>
         <Grid container item xs={6} sm={2} justifyContent={"end"}>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={handleDynamicViewClick}
-          
-          >
-            {dynamicView ? <GridOffIcon /> : <GridOnIcon />}
-          </Button>
           <Button
             variant="outlined"
             color="primary"
@@ -96,17 +79,7 @@ const ListAllPlanks = () => {
       >
         {planks.length > 0 ? (
           planks.map((plank) => (
-
-            dynamicView ? (
-
             <Grid
-              key={plank.id}
-              onClick={handlePlankClick(plank.id)}
-            >
-           <PlankListContent data={plank} />
-            </Grid>
-            ) : (
-              <Grid
               className="item-select"
               item
               container
@@ -132,11 +105,11 @@ const ListAllPlanks = () => {
                 <h3>{plank.refId}</h3>
               </Grid>
               <Grid item>
-                <p>{plank.speciesName}</p>
+                <p>{plank.date}</p>
               </Grid>
             </Grid>
-            )
           ))
+       
         ) : (
           <Grid item xs={12}>
             <Typography variant="body1">No planks found.</Typography>

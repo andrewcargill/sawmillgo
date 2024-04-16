@@ -93,7 +93,7 @@ const EditPlank = () => {
           <TextFieldGrid name="length" label="Length (cm)" value={plank.length} onChange={handleInputChange} />
           <TextFieldGrid name="width" label="Width (cm)" value={plank.width} onChange={handleInputChange} />
           <TextFieldGrid name="depth" label="Depth (cm)" value={plank.depth} onChange={handleInputChange} />
-          <TextFieldGrid name="thickness" label="Thickness (mm)" value={plank.thickness} onChange={handleInputChange} />
+    
           <TextFieldGrid name="grade" label="Grade" value={plank.grade} onChange={handleInputChange} />
           <TextFieldGrid name="notes" label="Notes" value={plank.notes} onChange={handleInputChange} multiline />
           {renderSelect("locationId", "Location", locations, event => handleSelectChange(event, locations), plank.locationId)}
