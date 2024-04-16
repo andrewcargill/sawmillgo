@@ -202,7 +202,7 @@ const AddPlank = () => {
 
       {showForm && (
         <>
-         {formData.LogId == "" && (
+         {formData.logId == "" && (
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
               <InputLabel id="species-label">Species</InputLabel>
