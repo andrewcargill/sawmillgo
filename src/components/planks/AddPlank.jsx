@@ -16,7 +16,7 @@ import {
   fetchProjectsForSawmill,
   fetchSpeciesForSawmill,
 } from "../../utils/filestoreOperations";
-import { getFirestore, addDoc, collection } from "firebase/firestore";
+import { getFirestore, addDoc, collection, onSnapshot, doc } from "firebase/firestore";
 import { app } from "../../firebase-config";
 import { getAuth } from "firebase/auth";
 import PlankFromLog from "./sub-components/PlankFromLog";
@@ -28,6 +28,7 @@ const AddPlank = () => {
   const [projects, setProjects] = useState([]);
   const [locations, setLocations] = useState([]);
   const [species, setSpecies] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const db = getFirestore(app);
   const auth = getAuth(app);
@@ -112,7 +113,7 @@ const AddPlank = () => {
         collection(db, `sawmill/${sawmillId}/planks`),
         formData
       );
-      alert(`Plank added successfully with ID: ${docRef.refId}`);
+      // alert(`Plank added successfully with ID: ${docRef.refId}`);
       // Reset form data
       setFormData((prev) => ({
         ...prev,
@@ -137,6 +138,20 @@ const AddPlank = () => {
         speciesName: "",
         logId: "",
       }));
+
+      const unsubscribe = onSnapshot(
+        doc(db, `sawmill/${sawmillId}/planks`, docRef.id),
+        (doc) => {
+          const data = doc.data();
+          if (data.refId) {
+            // Once refId is present, display the alert
+            alert(`Plank added successfully! RefId: ${data.refId}`);
+            unsubscribe(); // Detach the listener
+            setIsLoading(false);
+          }
+        }
+      );
+
     } catch (error) {
       console.error("Error adding plank:", error);
       alert(`Failed to add plank: ${error.message}`);

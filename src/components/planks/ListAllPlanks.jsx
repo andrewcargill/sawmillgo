@@ -22,7 +22,7 @@ const ListAllPlanks = () => {
 
     let q = query(
       collection(db, `sawmill/${sawmillId}/planks`),
-      // orderBy("createdAt", "desc")
+      orderBy("createdAt", "desc")
     );
     const snapshot = await getDocs(q);
     const planksList = snapshot.docs.map((doc) => ({

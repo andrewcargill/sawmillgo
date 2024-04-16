@@ -74,7 +74,7 @@ const PlankDetails = () => {
           <h1>Plank Details</h1>
           <p>Plank Id: {plankDetails.refId}</p>
           <p>Verified: {plankDetails.verified ? "Yes" : "No"}</p>
-          <p>Operator: {plankDetails.operator}</p>
+          <p>Operator: {plankDetails.operatorName}</p>
           <p>Date: {plankDetails.date}</p>
           <p>Length: {plankDetails.length}</p>
           <p>Width: {plankDetails.width}</p>
