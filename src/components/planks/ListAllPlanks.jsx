@@ -5,6 +5,7 @@ import {
   getDocs,
   query,
   orderBy,
+  where,
 } from "firebase/firestore";
 import { app } from "../../firebase-config";
 import Typography from "@mui/material/Typography";
@@ -28,6 +29,7 @@ import {
   TableBody,
   Chip,
   Modal,
+  Box,
 } from "@mui/material";
 
 const ListAllPlanks = () => {
@@ -35,6 +37,11 @@ const ListAllPlanks = () => {
   const [dynamicView, setDynamicView] = useState("list");
   const [openModal, setOpenModal] = useState(false);
   const [modalType, setModalType] = useState("");
+
+  // Filters
+const [verifiedFilter, setVerifiedFilter] = useState(false);
+
+
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
   const navigate = useNavigate();
@@ -57,11 +64,16 @@ const ListAllPlanks = () => {
       return;
     }
 
-    const q = query(
-      collection(db, `sawmill/${sawmillId}/planks`),
-      orderBy("createdAt", "desc")
-    );
+    const baseQuery = collection(db, `sawmill/${sawmillId}/planks`);
+    let q = query(baseQuery, orderBy("createdAt", "desc"));
+
+    // Filters
+    if (verifiedFilter) {
+      q = query(baseQuery, where("verified", "==", true), orderBy("createdAt", "desc"));
+    }
+
     const snapshot = await getDocs(q);
+    console.log("verifiedFilter", verifiedFilter);
     const planksList = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
@@ -71,7 +83,7 @@ const ListAllPlanks = () => {
 
   useEffect(() => {
     fetchPlanks();
-  }, [sawmillId]);
+  }, [sawmillId, verifiedFilter]);
 
   const handleAddPlankClick = () => {
     navigate("/addplank");
@@ -134,7 +146,7 @@ const ListAllPlanks = () => {
             <Table aria-label="simple table" sx={{ minWidth: 800 }}>
               <TableHead>
                 <TableRow>
-                  <TableCell>Ref ID</TableCell>
+                  <TableCell sx={{ position: 'sticky', left: 0, background: 'white', zIndex: 1 }}>Ref ID</TableCell>
                   <TableCell>Quality</TableCell>
                   <TableCell>Species</TableCell>
                   <TableCell>Status</TableCell>
@@ -155,7 +167,7 @@ const ListAllPlanks = () => {
                     onClick={handlePlankClick(plank.id)}
                     style={{ cursor: "pointer" }}
                   >
-                    <TableCell component="th" scope="row">
+                    <TableCell component="th" scope="row" sx={{ position: 'sticky', left: 0, background: 'white', zIndex: 1 }}>
                       {plank.refId}
                     </TableCell>
                     <TableCell>
@@ -184,6 +196,12 @@ const ListAllPlanks = () => {
     setOpenModal(true);
     setModalType(modalType);
   }
+
+  // Filter Functions 
+  const toggleVerifiedFilter = () => {
+    setVerifiedFilter(!verifiedFilter); // Toggle the state of verified filter
+  };
+
 
   return (
     <Grid container spacing={2} p={2}>
@@ -238,25 +256,29 @@ const ListAllPlanks = () => {
               variant="outlined"
               color={"primary"}
               label="All Filters"
+              onClick={handleOpenModal('allFilters')}
             />
           </Grid>
           <Grid pr={1}>
-            <Chip variant="outlined" color={"primary"} label="Verified"  />
+            <Chip variant={verifiedFilter ? "contained" : "outlined"} color={"primary"} label="Verified" onClick={toggleVerifiedFilter} />
           </Grid>
           <Grid pr={1}>
             <Chip variant="outlined" color={"primary"} label="Species" onClick={handleOpenModal('speciesName')} />
           </Grid>
           <Grid pr={1}>
-            <Chip variant="outlined" color={"primary"} label="Grade" />
+            <Chip variant="outlined" color={"primary"} label="Status" onClick={handleOpenModal('status')} />
           </Grid>
           <Grid pr={1}>
-            <Chip variant="outlined" color={"primary"} label="Status" />
+            <Chip variant="outlined" color={"primary"} label="Grade" onClick={handleOpenModal('grade')} />
           </Grid>
           <Grid pr={1}>
-            <Chip variant="outlined" color={"primary"} label="Location" />
+            <Chip variant="outlined" color={"primary"} label="Dimensions" onClick={handleOpenModal('dimensions')} />
           </Grid>
           <Grid pr={1}>
-            <Chip variant="outlined" color={"primary"} label="Project" />
+            <Chip variant="outlined" color={"primary"} label="Location" onClick={handleOpenModal('location')} />
+          </Grid>
+          <Grid pr={1}>
+            <Chip variant="outlined" color={"primary"} label="Project" onClick={handleOpenModal('project')} />
           </Grid>
         </Grid>
 </Grid>
@@ -267,9 +289,31 @@ const ListAllPlanks = () => {
             <Typography variant="body1">No planks found.</Typography>
           )}
         </Grid>
-        <Modal open={openModal}>
+        <Modal
+      open={openModal}
+      onClose={() => setOpenModal(false)}
+      aria-labelledby="tree-details-title"
+      aria-describedby="tree-details-description"
+    >
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: { xs: "90%", sm: 500 },
+          bgcolor: "background.paper",
+          boxShadow: 24,
+          p: 4,
+          maxHeight: { xs: "80vh", sm: "90vh" }, // Adjusted max height
+          overflowY: "auto", // Ensures scrollability
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
 
           <Typography variant="h4">{modalType}</Typography>
+          </Box>
         </Modal>
     
     </Grid>
