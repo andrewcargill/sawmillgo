@@ -64,30 +64,69 @@ const ListAllPlanks = () => {
 
   const fetchPlanks = async () => {
     if (!sawmillId) {
-      console.log("Sawmill ID not found. Cannot fetch planks.");
-      return;
+        console.log("Sawmill ID not found. Cannot fetch planks.");
+        return;
     }
 
     const baseQuery = collection(db, `sawmill/${sawmillId}/planks`);
-    let q = query(baseQuery, orderBy("createdAt", "desc"));
+    let q = baseQuery; // Start with base query
 
-    // Filters
+    // Start building the query from the baseQuery
+    let conditions = [orderBy("createdAt", "desc")]; // Always order by createdAt
+
+    // Check for the verified filter
     if (verifiedFilter) {
-      q = query(
-        baseQuery,
-        where("verified", "==", true),
-        orderBy("createdAt", "desc")
-      );
+        conditions.push(where("verified", "==", true));
+    }
+  
+    // Check allFilters state
+    if (allFilters.grade) {
+        conditions.push(where("grade", "==", allFilters.grade));
     }
 
+    if (allFilters.status) {
+        conditions.push(where("status", "==", allFilters.status));
+    }
+
+    // Apply all conditions to the query
+    q = query(baseQuery, ...conditions);
+
     const snapshot = await getDocs(q);
-    console.log("verifiedFilter", verifiedFilter);
+    console.log("Fetching with conditions: ", { verifiedFilter, gradeFilter: allFilters.grade, statusFilter: allFilters.status  });
     const planksList = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
+        id: doc.id,
+        ...doc.data(),
     }));
     setPlanks(planksList);
-  };
+};
+
+
+  // const fetchPlanks = async () => {
+  //   if (!sawmillId) {
+  //     console.log("Sawmill ID not found. Cannot fetch planks.");
+  //     return;
+  //   }
+
+  //   const baseQuery = collection(db, `sawmill/${sawmillId}/planks`);
+  //   let q = query(baseQuery, orderBy("createdAt", "desc"));
+
+  //   // Filters
+  //   if (verifiedFilter) {
+  //     q = query(
+  //       baseQuery,
+  //       where("verified", "==", true),
+  //       orderBy("createdAt", "desc")
+  //     );
+  //   }
+
+  //   const snapshot = await getDocs(q);
+  //   console.log("verifiedFilter", verifiedFilter);
+  //   const planksList = snapshot.docs.map((doc) => ({
+  //     id: doc.id,
+  //     ...doc.data(),
+  //   }));
+  //   setPlanks(planksList);
+  // };
 
   useEffect(() => {
     fetchPlanks();
@@ -307,17 +346,17 @@ const ListAllPlanks = () => {
           </Grid>
           <Grid pr={1}>
             <Chip
-              variant="outlined"
+              variant={allFilters.status ? "contained" : "outlined"}
               color={"primary"}
-              label="Status"
+              label={`Status ${allFilters.status || ""}`}
               onClick={handleOpenModal("status")}
             />
           </Grid>
           <Grid pr={1}>
             <Chip
-              variant="outlined"
+              variant={allFilters.grade ? "contained" : "outlined"}
               color={"primary"}
-              label="Grade"
+              label={`Grade ${allFilters.grade || ""}`}
               onClick={handleOpenModal("grade")}
             />
           </Grid>

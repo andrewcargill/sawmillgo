@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Box, Typography, Modal } from "@mui/material";
 import GradeFilter from "./GradeFilter";
+import StatusFilter from "./StatusFilter";
 
 
 
@@ -12,7 +13,7 @@ const FilterModal = ({allFilters, setAllFilters, openModal, setOpenModal, modalT
             case 'species':
                 return 'Species Filter';
             case 'status':
-                return 'Status Filter';
+                return <StatusFilter allFilters={allFilters} setAllFilters={setAllFilters} />;
             case 'grade':
                 return <GradeFilter allFilters={allFilters} setAllFilters={setAllFilters} />;
             case 'dimensions':
