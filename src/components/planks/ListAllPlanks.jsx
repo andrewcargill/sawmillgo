@@ -31,16 +31,20 @@ import {
   Modal,
   Box,
 } from "@mui/material";
+import FilterModal from "./sub-components/filter-components/FilterModal";
 
 const ListAllPlanks = () => {
   const [planks, setPlanks] = useState([]);
   const [dynamicView, setDynamicView] = useState("list");
   const [openModal, setOpenModal] = useState(false);
   const [modalType, setModalType] = useState("");
+  const [newestPlank, setNewestPlank] = useState("");
 
   // Filters
-const [verifiedFilter, setVerifiedFilter] = useState(false);
-
+  const [verifiedFilter, setVerifiedFilter] = useState(false);
+  const [allFilters, setAllFilters] = useState([
+   
+  ]);
 
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
@@ -69,7 +73,11 @@ const [verifiedFilter, setVerifiedFilter] = useState(false);
 
     // Filters
     if (verifiedFilter) {
-      q = query(baseQuery, where("verified", "==", true), orderBy("createdAt", "desc"));
+      q = query(
+        baseQuery,
+        where("verified", "==", true),
+        orderBy("createdAt", "desc")
+      );
     }
 
     const snapshot = await getDocs(q);
@@ -83,7 +91,8 @@ const [verifiedFilter, setVerifiedFilter] = useState(false);
 
   useEffect(() => {
     fetchPlanks();
-  }, [sawmillId, verifiedFilter]);
+    console.log("allFilters", allFilters);
+  }, [sawmillId, verifiedFilter, allFilters]);
 
   const handleAddPlankClick = () => {
     navigate("/addplank");
@@ -146,7 +155,16 @@ const [verifiedFilter, setVerifiedFilter] = useState(false);
             <Table aria-label="simple table" sx={{ minWidth: 800 }}>
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ position: 'sticky', left: 0, background: 'white', zIndex: 1 }}>Ref ID</TableCell>
+                  <TableCell
+                    sx={{
+                      position: "sticky",
+                      left: 0,
+                      background: "white",
+                      zIndex: 1,
+                    }}
+                  >
+                    Ref ID
+                  </TableCell>
                   <TableCell>Quality</TableCell>
                   <TableCell>Species</TableCell>
                   <TableCell>Status</TableCell>
@@ -167,7 +185,16 @@ const [verifiedFilter, setVerifiedFilter] = useState(false);
                     onClick={handlePlankClick(plank.id)}
                     style={{ cursor: "pointer" }}
                   >
-                    <TableCell component="th" scope="row" sx={{ position: 'sticky', left: 0, background: 'white', zIndex: 1 }}>
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      sx={{
+                        position: "sticky",
+                        left: 0,
+                        background: "white",
+                        zIndex: 1,
+                      }}
+                    >
                       {plank.refId}
                     </TableCell>
                     <TableCell>
@@ -195,13 +222,12 @@ const [verifiedFilter, setVerifiedFilter] = useState(false);
   const handleOpenModal = (modalType) => () => {
     setOpenModal(true);
     setModalType(modalType);
-  }
+  };
 
-  // Filter Functions 
+  // Filter Functions
   const toggleVerifiedFilter = () => {
     setVerifiedFilter(!verifiedFilter); // Toggle the state of verified filter
   };
-
 
   return (
     <Grid container spacing={2} p={2}>
@@ -231,91 +257,131 @@ const [verifiedFilter, setVerifiedFilter] = useState(false);
         </Button>
       </Grid>
 
-
       <Grid item xs={12}>
         Last added plank:{" "}
         {planks.length > 0 ? planks[0].refId : "No planks available"}
       </Grid>
 
-
       <Grid
         container
-        sx={{ 
-          overflowX: 'auto',
-          '&::-webkit-scrollbar': {
-            display: 'none' 
+        sx={{
+          overflowX: "auto",
+          "&::-webkit-scrollbar": {
+            display: "none",
           },
-          scrollbarWidth: 'none' 
-         }}
+          scrollbarWidth: "none",
+        }}
         alignContent="flex-start"
       >
-        <Grid item xs={12} mt={1} container sx={{ minWidth: 500, flexWrap: "nowrap" }}>
+        <Grid
+          item
+          xs={12}
+          mt={1}
+          container
+          sx={{ minWidth: 500, flexWrap: "nowrap" }}
+        >
           <Grid pr={1}>
             <Chip
               icon={<TuneIcon />}
               variant="outlined"
               color={"primary"}
               label="All Filters"
-              onClick={handleOpenModal('allFilters')}
+              onClick={handleOpenModal("allFilters")}
             />
           </Grid>
           <Grid pr={1}>
-            <Chip variant={verifiedFilter ? "contained" : "outlined"} color={"primary"} label="Verified" onClick={toggleVerifiedFilter} />
+            <Chip
+              variant={verifiedFilter ? "contained" : "outlined"}
+              color={"primary"}
+              label="Verified"
+              onClick={toggleVerifiedFilter}
+            />
           </Grid>
           <Grid pr={1}>
-            <Chip variant="outlined" color={"primary"} label="Species" onClick={handleOpenModal('speciesName')} />
+            <Chip
+              variant="outlined"
+              color={"primary"}
+              label="Species"
+              onClick={handleOpenModal("species")}
+            />
           </Grid>
           <Grid pr={1}>
-            <Chip variant="outlined" color={"primary"} label="Status" onClick={handleOpenModal('status')} />
+            <Chip
+              variant="outlined"
+              color={"primary"}
+              label="Status"
+              onClick={handleOpenModal("status")}
+            />
           </Grid>
           <Grid pr={1}>
-            <Chip variant="outlined" color={"primary"} label="Grade" onClick={handleOpenModal('grade')} />
+            <Chip
+              variant="outlined"
+              color={"primary"}
+              label="Grade"
+              onClick={handleOpenModal("grade")}
+            />
           </Grid>
           <Grid pr={1}>
-            <Chip variant="outlined" color={"primary"} label="Dimensions" onClick={handleOpenModal('dimensions')} />
+            <Chip
+              variant="outlined"
+              color={"primary"}
+              label="Dimensions"
+              onClick={handleOpenModal("dimensions")}
+            />
           </Grid>
           <Grid pr={1}>
-            <Chip variant="outlined" color={"primary"} label="Location" onClick={handleOpenModal('location')} />
+            <Chip
+              variant="outlined"
+              color={"primary"}
+              label="Location"
+              onClick={handleOpenModal("locations")}
+            />
           </Grid>
           <Grid pr={1}>
-            <Chip variant="outlined" color={"primary"} label="Project" onClick={handleOpenModal('project')} />
+            <Chip
+              variant="outlined"
+              color={"primary"}
+              label="Project"
+              onClick={handleOpenModal("projects")}
+            />
           </Grid>
         </Grid>
-</Grid>
-        <Grid item xs={12}>
-          {planks.length > 0 ? (
-            renderPlankView(dynamicView)
-          ) : (
-            <Typography variant="body1">No planks found.</Typography>
-          )}
-        </Grid>
-        <Modal
-      open={openModal}
-      onClose={() => setOpenModal(false)}
-      aria-labelledby="tree-details-title"
-      aria-describedby="tree-details-description"
-    >
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: { xs: "90%", sm: 500 },
-          bgcolor: "background.paper",
-          boxShadow: 24,
-          p: 4,
-          maxHeight: { xs: "80vh", sm: "90vh" }, // Adjusted max height
-          overflowY: "auto", // Ensures scrollability
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+      </Grid>
+      <Grid item xs={12}>
+        {planks.length > 0 ? (
+          renderPlankView(dynamicView)
+        ) : (
+          <Typography variant="body1">No planks found.</Typography>
+        )}
+      </Grid>
 
+        <FilterModal allFilters={allFilters} setAllFilters={setAllFilters} openModal={openModal} setOpenModal={setOpenModal} modalType={modalType} />
+
+      {/* <Modal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        aria-labelledby="tree-details-title"
+        aria-describedby="tree-details-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: { xs: "90%", sm: 500 },
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            maxHeight: { xs: "80vh", sm: "90vh" }, // Adjusted max height
+            overflowY: "auto", // Ensures scrollability
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <Typography variant="h4">{modalType}</Typography>
-          </Box>
-        </Modal>
-    
+        </Box>
+      </Modal> */}
     </Grid>
   );
 };
