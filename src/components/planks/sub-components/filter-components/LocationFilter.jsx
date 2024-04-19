@@ -50,7 +50,7 @@ const LocationFilter = ({ allFilters, setAllFilters, setOpenModal }) => {
 
 
     return (
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12}>
         <FormControl fullWidth>
           <InputLabel id="location-label">Location</InputLabel>
           <Select

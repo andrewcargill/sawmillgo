@@ -4,6 +4,8 @@ import GradeFilter from "./GradeFilter";
 import StatusFilter from "./StatusFilter";
 import SpeciesFilter from "./SpeciesFilter";
 import LocationFilter from "./LocationFilter";
+import ProjectFilter from "./ProjectFilter";
+import DimensionsFilter from "./DimensionsFilter";
 
 
 
@@ -19,11 +21,11 @@ const FilterModal = ({allFilters, setAllFilters, openModal, setOpenModal, modalT
             case 'grade':
                 return <GradeFilter setOpenModal={setOpenModal} allFilters={allFilters} setAllFilters={setAllFilters} />;
             case 'dimensions':
-                return 'Dimensions Filter';
+                return <DimensionsFilter setOpenModal={setOpenModal} allFilters={allFilters} setAllFilters={setAllFilters} />;
             case 'locations':
                 return <LocationFilter setOpenModal={setOpenModal} allFilters={allFilters} setAllFilters={setAllFilters} />;
             case 'projects':
-                return 'Projects Filter';
+                return <ProjectFilter setOpenModal={setOpenModal} allFilters={allFilters} setAllFilters={setAllFilters} />;
             // Add other cases as needed
             default:
                 return <Typography>No filter selected</Typography>;

@@ -61,57 +61,38 @@ const ListAllPlanks = () => {
     setDynamicView(views[nextIndex].view);
   };
 
+
   const fetchPlanks = async () => {
-    if (!sawmillId) {
-      console.log("Sawmill ID not found. Cannot fetch planks.");
-      return;
-    }
+  // Assume allFilters includes: grade, status, speciesId, projectId, and length as a range
+const baseQuery = collection(db, `sawmill/${sawmillId}/planks`);
+let conditions = [orderBy("createdAt", "desc")];
 
-    const baseQuery = collection(db, `sawmill/${sawmillId}/planks`);
-    let q = baseQuery; // Start with base query
+// Equality filters
+if (allFilters.grade) conditions.push(where("grade", "==", allFilters.grade));
+if (allFilters.status) conditions.push(where("status", "==", allFilters.status));
+if (allFilters.speciesId) conditions.push(where("speciesId", "==", allFilters.speciesId));
+if (allFilters.projectId) conditions.push(where("projectId", "==", allFilters.projectId));
 
-    // Start building the query from the baseQuery
-    let conditions = [orderBy("createdAt", "desc")]; // Always order by createdAt
+// Single dimension range filter
+if (allFilters.length) {
+    conditions.push(where("length", ">=", allFilters.length[0]));
+    conditions.push(where("length", "<=", allFilters.length[1]));
+}
 
-    // Check for the verified filter
-    if (verifiedFilter) {
-      conditions.push(where("verified", "==", true));
-    }
+// You must have a composite index for each combination you plan to query on
+const queryToExecute = query(baseQuery, ...conditions);
 
-    // Check allFilters state
-    if (allFilters.grade) {
-      conditions.push(where("grade", "==", allFilters.grade));
-    }
+// Execute query
+const snapshot = await getDocs(queryToExecute);
+const planksList = snapshot.docs.map(doc => ({
+  id: doc.id,
+  ...doc.data(),
+}));
 
-    if (allFilters.status) {
-      conditions.push(where("status", "==", allFilters.status));
-    }
+setPlanks(planksList);
+};
 
-    if (allFilters.speciesId) {
-      conditions.push(where("speciesId", "==", allFilters.speciesId));
-    }
 
-    if (allFilters.locationId) {
-      conditions.push(where("locationId", "==", allFilters.locationId));
-    }
-
-    // Apply all conditions to the query
-    q = query(baseQuery, ...conditions);
-
-    const snapshot = await getDocs(q);
-    console.log("Fetching with conditions: ", {
-      verifiedFilter,
-      gradeFilter: allFilters.grade,
-      statusFilter: allFilters.status,
-      speciesFilter: allFilters.speciesId,
-      locationFilter: allFilters.locationId,
-    });
-    const planksList = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setPlanks(planksList);
-  };
 
   // const fetchPlanks = async () => {
   //   if (!sawmillId) {
@@ -120,19 +101,49 @@ const ListAllPlanks = () => {
   //   }
 
   //   const baseQuery = collection(db, `sawmill/${sawmillId}/planks`);
-  //   let q = query(baseQuery, orderBy("createdAt", "desc"));
+  //   let q = baseQuery; // Start with base query
 
-  //   // Filters
+  //   // Start building the query from the baseQuery
+  //   let conditions = [orderBy("createdAt", "desc")]; // Always order by createdAt
+
+  //   // Check for the verified filter
   //   if (verifiedFilter) {
-  //     q = query(
-  //       baseQuery,
-  //       where("verified", "==", true),
-  //       orderBy("createdAt", "desc")
-  //     );
+  //     conditions.push(where("verified", "==", true));
   //   }
 
+  //   // Check allFilters state
+  //   if (allFilters.grade) {
+  //     conditions.push(where("grade", "==", allFilters.grade));
+  //   }
+
+  //   if (allFilters.status) {
+  //     conditions.push(where("status", "==", allFilters.status));
+  //   }
+
+  //   if (allFilters.speciesId) {
+  //     conditions.push(where("speciesId", "==", allFilters.speciesId));
+  //   }
+
+  //   if (allFilters.locationId) {
+  //     conditions.push(where("locationId", "==", allFilters.locationId));
+  //   }
+
+  //   if (allFilters.projectId) {
+  //     conditions.push(where("projectId", "==", allFilters.projectId));
+  //   }
+
+  //   // Apply all conditions to the query
+  //   q = query(baseQuery, ...conditions);
+
   //   const snapshot = await getDocs(q);
-  //   console.log("verifiedFilter", verifiedFilter);
+  //   console.log("Fetching with conditions: ", {
+  //     verifiedFilter,
+  //     gradeFilter: allFilters.grade,
+  //     statusFilter: allFilters.status,
+  //     speciesFilter: allFilters.speciesId,
+  //     locationFilter: allFilters.locationId,
+  //     projectFilter: allFilters.projectId,
+  //   });
   //   const planksList = snapshot.docs.map((doc) => ({
   //     id: doc.id,
   //     ...doc.data(),
@@ -294,7 +305,14 @@ const ListAllPlanks = () => {
             locationId: null,
             locationName: null
         }));
-        
+
+      } else if (filter === "projects") {
+        setAllFilters((prevFilters) => ({
+            ...prevFilters,
+            projectId: null,
+            projectName: null
+        }));
+
     } else {
         setAllFilters((prevFilters) => ({
             ...prevFilters,
@@ -430,10 +448,14 @@ const ListAllPlanks = () => {
           </Grid>
           <Grid pr={1}>
             <Chip
-              variant="outlined"
+              variant={allFilters.projectId ? "contained" : "outlined"}
               color={"primary"}
-              label="Project"
+              label={allFilters.projectId ? `Project: ${allFilters.projectName || ""}` : "Project"}
               onClick={handleOpenModal("projects")}
+              onDelete={
+                allFilters.projectId ? handleResetFilter("projects") : undefined
+              }
+              deleteIcon={<CancelIcon />}
             />
           </Grid>
         </Grid>
