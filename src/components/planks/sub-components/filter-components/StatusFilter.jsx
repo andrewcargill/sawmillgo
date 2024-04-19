@@ -1,13 +1,14 @@
 import React from "react";
 import { Grid, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
-const StatusFilter = ({ allFilters, setAllFilters }) => {
+const StatusFilter = ({ allFilters, setAllFilters, setOpenModal }) => {
   const handleChange = (event) => {
     const value = event.target.value === "" ? null : event.target.value;
     setAllFilters(prevFilters => ({
         ...prevFilters,
         status: value
     }));
+    setOpenModal(false);
 };
 
 
@@ -23,7 +24,6 @@ const StatusFilter = ({ allFilters, setAllFilters }) => {
                 label="Status"  // Corrected from 'Grade' to 'Status'
                 onChange={handleChange}
               >
-                <MenuItem value="">Reset</MenuItem>
                 <MenuItem value="available">Available</MenuItem>
                 <MenuItem value="reserved">Reserved</MenuItem>
                 <MenuItem value="sold">Sold</MenuItem>

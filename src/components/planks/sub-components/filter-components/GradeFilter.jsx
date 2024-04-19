@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
-const GradeFilter = ({ allFilters, setAllFilters }) => {
+const GradeFilter = ({ allFilters, setAllFilters, setOpenModal }) => {
 
     const handleChange = (event) => {
         const value = event.target.value === "" ? null : event.target.value; 
@@ -9,6 +9,7 @@ const GradeFilter = ({ allFilters, setAllFilters }) => {
             ...prevFilters,
             grade: value
         }));
+        setOpenModal(false);
     };
     return (
         <Grid item xs={12}>
@@ -22,7 +23,6 @@ const GradeFilter = ({ allFilters, setAllFilters }) => {
                 label="Grade"
                 onChange={handleChange}
               >
-                <MenuItem value="">Reset</MenuItem>
                 <MenuItem value="1">1</MenuItem>
                 <MenuItem value="2">2</MenuItem>
                 <MenuItem value="3">3</MenuItem>

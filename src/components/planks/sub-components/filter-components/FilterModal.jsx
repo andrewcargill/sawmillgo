@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { Box, Typography, Modal } from "@mui/material";
 import GradeFilter from "./GradeFilter";
 import StatusFilter from "./StatusFilter";
+import SpeciesFilter from "./SpeciesFilter";
+import LocationFilter from "./LocationFilter";
 
 
 
@@ -11,15 +13,15 @@ const FilterModal = ({allFilters, setAllFilters, openModal, setOpenModal, modalT
     const getFilterComponent = () => {
         switch (modalType) {
             case 'species':
-                return 'Species Filter';
+                return <SpeciesFilter setOpenModal={setOpenModal} allFilters={allFilters} setAllFilters={setAllFilters} />;
             case 'status':
-                return <StatusFilter allFilters={allFilters} setAllFilters={setAllFilters} />;
+                return <StatusFilter setOpenModal={setOpenModal} allFilters={allFilters} setAllFilters={setAllFilters} />;
             case 'grade':
-                return <GradeFilter allFilters={allFilters} setAllFilters={setAllFilters} />;
+                return <GradeFilter setOpenModal={setOpenModal} allFilters={allFilters} setAllFilters={setAllFilters} />;
             case 'dimensions':
                 return 'Dimensions Filter';
             case 'locations':
-                return 'Locations Filter';
+                return <LocationFilter setOpenModal={setOpenModal} allFilters={allFilters} setAllFilters={setAllFilters} />;
             case 'projects':
                 return 'Projects Filter';
             // Add other cases as needed

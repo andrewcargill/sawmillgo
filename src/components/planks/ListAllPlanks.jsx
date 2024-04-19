@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
+import CancelIcon from "@mui/icons-material/Cancel";
 import { useNavigate } from "react-router-dom";
 import PlankListContent from "./sub-components/PlankListContent";
 import AppsIcon from "@mui/icons-material/Apps";
@@ -42,9 +43,7 @@ const ListAllPlanks = () => {
 
   // Filters
   const [verifiedFilter, setVerifiedFilter] = useState(false);
-  const [allFilters, setAllFilters] = useState([
-   
-  ]);
+  const [allFilters, setAllFilters] = useState([]);
 
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
@@ -64,8 +63,8 @@ const ListAllPlanks = () => {
 
   const fetchPlanks = async () => {
     if (!sawmillId) {
-        console.log("Sawmill ID not found. Cannot fetch planks.");
-        return;
+      console.log("Sawmill ID not found. Cannot fetch planks.");
+      return;
     }
 
     const baseQuery = collection(db, `sawmill/${sawmillId}/planks`);
@@ -76,30 +75,43 @@ const ListAllPlanks = () => {
 
     // Check for the verified filter
     if (verifiedFilter) {
-        conditions.push(where("verified", "==", true));
+      conditions.push(where("verified", "==", true));
     }
-  
+
     // Check allFilters state
     if (allFilters.grade) {
-        conditions.push(where("grade", "==", allFilters.grade));
+      conditions.push(where("grade", "==", allFilters.grade));
     }
 
     if (allFilters.status) {
-        conditions.push(where("status", "==", allFilters.status));
+      conditions.push(where("status", "==", allFilters.status));
+    }
+
+    if (allFilters.speciesId) {
+      conditions.push(where("speciesId", "==", allFilters.speciesId));
+    }
+
+    if (allFilters.locationId) {
+      conditions.push(where("locationId", "==", allFilters.locationId));
     }
 
     // Apply all conditions to the query
     q = query(baseQuery, ...conditions);
 
     const snapshot = await getDocs(q);
-    console.log("Fetching with conditions: ", { verifiedFilter, gradeFilter: allFilters.grade, statusFilter: allFilters.status  });
+    console.log("Fetching with conditions: ", {
+      verifiedFilter,
+      gradeFilter: allFilters.grade,
+      statusFilter: allFilters.status,
+      speciesFilter: allFilters.speciesId,
+      locationFilter: allFilters.locationId,
+    });
     const planksList = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
+      id: doc.id,
+      ...doc.data(),
     }));
     setPlanks(planksList);
-};
-
+  };
 
   // const fetchPlanks = async () => {
   //   if (!sawmillId) {
@@ -268,6 +280,30 @@ const ListAllPlanks = () => {
     setVerifiedFilter(!verifiedFilter); // Toggle the state of verified filter
   };
 
+  const handleResetFilter = (filter) => () => {
+    if (filter === "species") {
+        setAllFilters((prevFilters) => ({
+            ...prevFilters,
+            speciesId: null,
+            speciesName: null
+        }));
+
+      } else if (filter === "locations") {
+        setAllFilters((prevFilters) => ({
+            ...prevFilters,
+            locationId: null,
+            locationName: null
+        }));
+        
+    } else {
+        setAllFilters((prevFilters) => ({
+            ...prevFilters,
+            [filter]: null
+        }));
+    }
+};
+
+
   return (
     <Grid container spacing={2} p={2}>
       <Grid
@@ -332,32 +368,44 @@ const ListAllPlanks = () => {
             <Chip
               variant={verifiedFilter ? "contained" : "outlined"}
               color={"primary"}
-              label="Verified"
+              label={"Verified"}
               onClick={toggleVerifiedFilter}
             />
           </Grid>
           <Grid pr={1}>
             <Chip
-              variant="outlined"
+              variant={allFilters.speciesId ? "contained" : "outlined"}
               color={"primary"}
-              label="Species"
+              label={allFilters.speciesId  ? `Species: ${allFilters.speciesName || ""}` : "Species"}
               onClick={handleOpenModal("species")}
+              onDelete={
+                allFilters.speciesId ? handleResetFilter("species") : undefined
+              }
+              deleteIcon={<CancelIcon />}
             />
           </Grid>
           <Grid pr={1}>
             <Chip
               variant={allFilters.status ? "contained" : "outlined"}
               color={"primary"}
-              label={`Status ${allFilters.status || ""}`}
+              label={allFilters.status ? `Status: ${allFilters.status || ""}` : "Status"}
               onClick={handleOpenModal("status")}
+              onDelete={
+                allFilters.status ? handleResetFilter("status") : undefined
+              }
+              deleteIcon={<CancelIcon />}
             />
           </Grid>
           <Grid pr={1}>
             <Chip
               variant={allFilters.grade ? "contained" : "outlined"}
               color={"primary"}
-              label={`Grade ${allFilters.grade || ""}`}
+              label={allFilters.grade ? `Grade: ${allFilters.grade || ""}` : "Grade"}
               onClick={handleOpenModal("grade")}
+              onDelete={
+                allFilters.grade ? handleResetFilter("grade") : undefined
+              }
+              deleteIcon={<CancelIcon />}
             />
           </Grid>
           <Grid pr={1}>
@@ -370,10 +418,14 @@ const ListAllPlanks = () => {
           </Grid>
           <Grid pr={1}>
             <Chip
-              variant="outlined"
+              variant={allFilters.locationId ? "contained" : "outlined"}
               color={"primary"}
-              label="Location"
+              label={allFilters.locationId ? `Location: ${allFilters.locationName || ""}` : "Location"}
               onClick={handleOpenModal("locations")}
+              onDelete={
+                allFilters.locationId ? handleResetFilter("locations") : undefined
+              }
+              deleteIcon={<CancelIcon />}
             />
           </Grid>
           <Grid pr={1}>
@@ -394,7 +446,13 @@ const ListAllPlanks = () => {
         )}
       </Grid>
 
-        <FilterModal allFilters={allFilters} setAllFilters={setAllFilters} openModal={openModal} setOpenModal={setOpenModal} modalType={modalType} />
+      <FilterModal
+        allFilters={allFilters}
+        setAllFilters={setAllFilters}
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        modalType={modalType}
+      />
 
       {/* <Modal
         open={openModal}
