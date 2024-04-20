@@ -13,11 +13,11 @@ const HomePage = () => {
 
   return (
     <>
-    <Grid container>
+    <Grid container pb={4}>
      <Typography variant="h2" color="initial">A cloud based forestry management system that delivers complete transparency and the story behind your wood products.</Typography>
     </Grid>
 
-    <Grid container p={3} justifyContent={'center'}>
+    <Grid container p={3} bgcolor={'primary.main'} color={'primary.contrastText'}  justifyContent={'center'}>
       <Paper>
       <List>
         <ListItem>
