@@ -10,16 +10,37 @@ import {
   MenuItem,
   Checkbox,
   FormControlLabel,
+  styled,
 } from "@mui/material";
 import {
   fetchLocationsForSawmill,
   fetchProjectsForSawmill,
   fetchSpeciesForSawmill,
 } from "../../utils/filestoreOperations";
-import { getFirestore, addDoc, collection, onSnapshot, doc } from "firebase/firestore";
+import {
+  getFirestore,
+  addDoc,
+  collection,
+  onSnapshot,
+  doc,
+} from "firebase/firestore";
 import { app } from "../../firebase-config";
 import { getAuth } from "firebase/auth";
 import PlankFromLog from "./sub-components/PlankFromLog";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 
 const AddPlank = () => {
   const [withLog, setWithLog] = useState(false);
@@ -29,6 +50,11 @@ const AddPlank = () => {
   const [locations, setLocations] = useState([]);
   const [species, setSpecies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [imageFiles, setImageFiles] = useState({
+    image1: null,
+    image2: null
+  });
+  
 
   const db = getFirestore(app);
   const auth = getAuth(app);
@@ -77,42 +103,66 @@ const AddPlank = () => {
     }
   }, [db, sawmillId]);
 
+
+  //Handle Image Upload
+  const handleFileChange = (event) => {
+    const { name, files } = event.target;
+    setImageFiles(prev => ({ ...prev, [name]: files[0] }));
+  };
+  
+
+
+  const uploadImage = async (file) => {
+    if (!file) return null;
+    const storage = getStorage(app);
+    const storageRef = ref(storage, `planks/${sawmillId}/${file.name}_${new Date().getTime()}`);
+    await uploadBytes(storageRef, file);
+    return getDownloadURL(storageRef);
+  };
+  
+
+
   useEffect(() => {
     console.log("Form data:", formData);
-  }, [formData]);
+    console.log("Image files:", imageFiles);
+  }, [formData, imageFiles]);
 
   const handleChange = (event) => {
     const { name, value, checked, type } = event.target;
     // Handle different input types specifically
     let actualValue;
     switch (type) {
-        case 'checkbox':
-            actualValue = checked;
-            break;
-        case 'number':
-            actualValue = parseFloat(value); // Convert numeric strings to numbers
-            break;
-        default:
-            actualValue = value;
-            break;
+      case "checkbox":
+        actualValue = checked;
+        break;
+      case "number":
+        actualValue = parseFloat(value); // Convert numeric strings to numbers
+        break;
+      default:
+        actualValue = value;
+        break;
     }
 
     // Handle linked data for dropdowns
     if (name === "locationId" || name === "speciesId" || name === "projectId") {
-        const list = name === "locationId" ? locations : name === "speciesId" ? species : projects;
-        const item = list.find(item => item.id === actualValue);
-        const itemNameField = name === "projectId" ? "projectName" : "name"; // Different field name for project
+      const list =
+        name === "locationId"
+          ? locations
+          : name === "speciesId"
+          ? species
+          : projects;
+      const item = list.find((item) => item.id === actualValue);
+      const itemNameField = name === "projectId" ? "projectName" : "name"; // Different field name for project
 
-        setFormData(prev => ({
-            ...prev,
-            [name]: actualValue,
-            [`${name.slice(0, -2)}Name`]: item ? item[itemNameField] : "",
-        }));
+      setFormData((prev) => ({
+        ...prev,
+        [name]: actualValue,
+        [`${name.slice(0, -2)}Name`]: item ? item[itemNameField] : "",
+      }));
     } else {
-        setFormData(prev => ({ ...prev, [name]: actualValue }));
+      setFormData((prev) => ({ ...prev, [name]: actualValue }));
     }
-};
-
+  };
 
   // const handleChange = (event) => {
   //   const { name, value, checked, type } = event.target;
@@ -139,22 +189,98 @@ const AddPlank = () => {
   //   }
   // };
 
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+
+  //   const image1Url = await uploadImage(imageFiles.image1);
+  //   const image2Url = await uploadImage(imageFiles.image2);
+
+  //   const plankData = {
+  //     ...formData,
+  //     image1: image1Url,
+  //     image2: image2Url,
+  //     // additional fields
+  //   };
+
+  //   try {
+  //     const docRef = await addDoc(
+  //       collection(db, `sawmill/${sawmillId}/planks`),
+  //       formData
+  //     );
+  //     // alert(`Plank added successfully with ID: ${docRef.refId}`);
+  //     // Reset form data
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       date: "",
+  //       length: "",
+  //       width: "",
+  //       depth: "",
+  //       thickness: "",
+  //       grade: "",
+  //       image1: "",
+  //       image2: "",
+  //       notes: "",
+  //       furniture: false,
+  //       construction: false,
+  //       liveEdge: false,
+  //       general: false,
+  //       locationId: "",
+  //       locationName: "",
+  //       projectId: "",
+  //       projectName: "",
+  //       speciesId: "",
+  //       speciesName: "",
+  //       logId: "",
+  //     }));
+
+  //     const unsubscribe = onSnapshot(
+  //       doc(db, `sawmill/${sawmillId}/planks`, docRef.id),
+  //       (doc) => {
+  //         const data = doc.data();
+  //         if (data.refId) {
+  //           // Once refId is present, display the alert
+  //           alert(`Plank added successfully! RefId: ${data.refId}`);
+  //           unsubscribe(); // Detach the listener
+  //           setIsLoading(false);
+  //         }
+  //       }
+  //     );
+  //   } catch (error) {
+  //     console.error("Error adding plank:", error);
+  //     alert(`Failed to add plank: ${error.message}`);
+  //   }
+  // };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Display loading indicator if applicable
+    setIsLoading(true);
+
+    // Upload images and get URLs
+    const image1Url = await uploadImage(imageFiles.image1);
+    const image2Url = await uploadImage(imageFiles.image2);
+
+    // Update formData with the new image URLs
+    const plankData = {
+      ...formData,
+      image1: image1Url,  // Ensure the URL is assigned even if it's null
+      image2: image2Url,  // Ensure the URL is assigned even if it's null
+    };
+
     try {
-      const docRef = await addDoc(
-        collection(db, `sawmill/${sawmillId}/planks`),
-        formData
-      );
-      // alert(`Plank added successfully with ID: ${docRef.refId}`);
-      // Reset form data
-      setFormData((prev) => ({
-        ...prev,
+      // Use plankData which includes the image URLs
+      const docRef = await addDoc(collection(db, `sawmill/${sawmillId}/planks`), plankData);
+      // alert(`Plank added successfully with ID: ${docRef.id}`);
+
+      // Reset form data after successful submission
+      setFormData({
+        operatorUID: currentUserUID,
+        operatorName: userName,
         date: "",
         length: "",
         width: "",
         depth: "",
-        thickness: "",
         grade: "",
         image1: "",
         image2: "",
@@ -170,26 +296,32 @@ const AddPlank = () => {
         speciesId: "",
         speciesName: "",
         logId: "",
-      }));
+        status: "available",
+        verified: false,
+        grade: "",
+      });
 
       const unsubscribe = onSnapshot(
-        doc(db, `sawmill/${sawmillId}/planks`, docRef.id),
-        (doc) => {
-          const data = doc.data();
-          if (data.refId) {
-            // Once refId is present, display the alert
-            alert(`Plank added successfully! RefId: ${data.refId}`);
-            unsubscribe(); // Detach the listener
-            setIsLoading(false);
-          }
-        }
-      );
+              doc(db, `sawmill/${sawmillId}/planks`, docRef.id),
+              (doc) => {
+                const data = doc.data();
+                if (data.refId) {
+                  // Once refId is present, display the alert
+                  alert(`Plank added successfully! RefId: ${data.refId}`);
+                  unsubscribe(); // Detach the listener
+                  setIsLoading(false);
+                }
+              }
+            );
+
 
     } catch (error) {
       console.error("Error adding plank:", error);
       alert(`Failed to add plank: ${error.message}`);
+      setIsLoading(false);  // Ensure loading indicator is turned off on error
     }
   };
+
 
   const handleWithoutLogClick = () => {
     setWithLog(false);
@@ -249,28 +381,28 @@ const AddPlank = () => {
       )}
 
       {showForm && (
-        <>
-         {formData.logId == "" && (
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel id="species-label">Species</InputLabel>
-              <Select
-                labelId="species-label"
-                id="speciesId"
-                name="speciesId"
-                value={formData.speciesId}
-                label="species"
-                onChange={handleChange}
-              >
-                {species.map((specie) => (
-                  <MenuItem key={specie.id} value={specie.id}>
-                    {specie.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-            )}
+        <Grid container xs={12} spacing={2}>
+          {formData.logId == "" && (
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel id="species-label">Species</InputLabel>
+                <Select
+                  labelId="species-label"
+                  id="speciesId"
+                  name="speciesId"
+                  value={formData.speciesId}
+                  label="species"
+                  onChange={handleChange}
+                >
+                  {species.map((specie) => (
+                    <MenuItem key={specie.id} value={specie.id}>
+                      {specie.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          )}
 
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
@@ -380,6 +512,9 @@ const AddPlank = () => {
               required
             />
           </Grid>
+
+         
+
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
@@ -392,6 +527,9 @@ const AddPlank = () => {
               rows={4}
             />
           </Grid>
+          
+
+          <Grid container p={1} >
           <CheckboxGrid
             name="furniture"
             label="Furniture"
@@ -416,6 +554,51 @@ const AddPlank = () => {
             checked={formData.general}
             onChange={handleChange}
           />
+          </Grid>
+
+          <Grid container item p={1} xs={12} sm={12}  alignContent={'center'} justifyContent={'space-around'} >
+            <Grid p={1}>
+            <Button
+              component="label"
+              role={undefined}
+              variant="contained"
+              tabIndex={-1}
+              startIcon={<CloudUploadIcon />}
+            >
+              Upload Image1
+              <VisuallyHiddenInput name="image1" onChange={handleFileChange} type="file" />
+            </Button>
+            <Grid>
+          
+          {imageFiles.image1 && 
+              <Grid>
+                {imageFiles.image1.name}
+              </Grid>
+          }
+            </Grid>
+            </Grid>
+            <Grid p={1}>
+            <Button
+              component="label"
+              role={undefined}
+              variant="contained"
+              tabIndex={-1}
+              startIcon={<CloudUploadIcon />}
+            >
+              Upload Image2
+              <VisuallyHiddenInput name="image2" onChange={handleFileChange} type="file" />
+            </Button>
+            <Grid>
+            {imageFiles.image2 && 
+              <Grid>
+                {imageFiles.image2.name}
+              </Grid>
+          }
+          </Grid>
+            </Grid>
+          
+            
+          </Grid>
 
           {/** Repeat similar fields for length, width, depth, thickness, etc. */}
           {/** Include species, location, and project selects as in the original example */}
@@ -431,7 +614,7 @@ const AddPlank = () => {
               Submit
             </Button>
           </Grid>
-        </>
+        </Grid>
       )}
     </div>
   );
