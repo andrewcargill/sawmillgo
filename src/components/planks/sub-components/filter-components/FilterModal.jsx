@@ -6,6 +6,9 @@ import SpeciesFilter from "./SpeciesFilter";
 import LocationFilter from "./LocationFilter";
 import ProjectFilter from "./ProjectFilter";
 import DimensionsFilter from "./DimensionsFilter";
+import LengthFilter from "./LengthFilter";
+import WidthFilter from "./WidthFilter";
+import DepthFilter from "./DepthFilter";
 
 
 
@@ -22,6 +25,12 @@ const FilterModal = ({allFilters, setAllFilters, openModal, setOpenModal, modalT
                 return <GradeFilter setOpenModal={setOpenModal} allFilters={allFilters} setAllFilters={setAllFilters} />;
             case 'dimensions':
                 return <DimensionsFilter setOpenModal={setOpenModal} allFilters={allFilters} setAllFilters={setAllFilters} />;
+            case 'length':
+                return <LengthFilter setOpenModal={setOpenModal} allFilters={allFilters} setAllFilters={setAllFilters} />;
+            case 'width':
+                return <WidthFilter setOpenModal={setOpenModal} allFilters={allFilters} setAllFilters={setAllFilters} />;
+            case 'depth':
+                return <DepthFilter setOpenModal={setOpenModal} allFilters={allFilters} setAllFilters={setAllFilters} />;
             case 'locations':
                 return <LocationFilter setOpenModal={setOpenModal} allFilters={allFilters} setAllFilters={setAllFilters} />;
             case 'projects':

@@ -83,28 +83,61 @@ const AddPlank = () => {
 
   const handleChange = (event) => {
     const { name, value, checked, type } = event.target;
-    const actualValue = type === "checkbox" ? checked : value;
-
-    // Special handling for dropdowns with related name fields
-    if (name === "locationId" || name === "speciesId" || name === "projectId") {
-      const list =
-        name === "locationId"
-          ? locations
-          : name === "speciesId"
-          ? species
-          : projects;
-      const item = list.find((item) => item.id === value);
-      const itemNameField = name === "projectId" ? "projectName" : "name"; // Use projectName for projects
-
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-        [`${name.slice(0, -2)}Name`]: item ? item[itemNameField] : "",
-      }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: actualValue }));
+    // Handle different input types specifically
+    let actualValue;
+    switch (type) {
+        case 'checkbox':
+            actualValue = checked;
+            break;
+        case 'number':
+            actualValue = parseFloat(value); // Convert numeric strings to numbers
+            break;
+        default:
+            actualValue = value;
+            break;
     }
-  };
+
+    // Handle linked data for dropdowns
+    if (name === "locationId" || name === "speciesId" || name === "projectId") {
+        const list = name === "locationId" ? locations : name === "speciesId" ? species : projects;
+        const item = list.find(item => item.id === actualValue);
+        const itemNameField = name === "projectId" ? "projectName" : "name"; // Different field name for project
+
+        setFormData(prev => ({
+            ...prev,
+            [name]: actualValue,
+            [`${name.slice(0, -2)}Name`]: item ? item[itemNameField] : "",
+        }));
+    } else {
+        setFormData(prev => ({ ...prev, [name]: actualValue }));
+    }
+};
+
+
+  // const handleChange = (event) => {
+  //   const { name, value, checked, type } = event.target;
+  //   const actualValue = type === "checkbox" ? checked : value;
+
+  //   // Special handling for dropdowns with related name fields
+  //   if (name === "locationId" || name === "speciesId" || name === "projectId") {
+  //     const list =
+  //       name === "locationId"
+  //         ? locations
+  //         : name === "speciesId"
+  //         ? species
+  //         : projects;
+  //     const item = list.find((item) => item.id === value);
+  //     const itemNameField = name === "projectId" ? "projectName" : "name"; // Use projectName for projects
+
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       [name]: value,
+  //       [`${name.slice(0, -2)}Name`]: item ? item[itemNameField] : "",
+  //     }));
+  //   } else {
+  //     setFormData((prev) => ({ ...prev, [name]: actualValue }));
+  //   }
+  // };
 
   const handleSubmit = async (event) => {
     event.preventDefault();

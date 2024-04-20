@@ -59,9 +59,35 @@ const EditPlank = () => {
 
   const handleInputChange = (e) => {
     const { name, value, checked, type } = e.target;
-    const actualValue = type === "checkbox" ? checked : value;
-    setPlank(prev => ({ ...prev, [name]: actualValue }));
-  };
+    let actualValue;
+
+    switch (type) {
+        case 'checkbox':
+            actualValue = checked; // Directly use the boolean value for checkboxes
+            break;
+        case 'number':
+            actualValue = value === "" ? "" : parseFloat(value); // Convert numeric input to float, handle empty string gracefully
+            if (isNaN(actualValue)) {
+                actualValue = value; // If conversion fails, revert to original value to avoid data loss
+            }
+            break;
+        default:
+            actualValue = value; // Use the string value directly for other types
+            break;
+    }
+
+    setPlank(prev => ({
+        ...prev,
+        [name]: actualValue
+    }));
+};
+
+
+  // const handleInputChange = (e) => {
+  //   const { name, value, checked, type } = e.target;
+  //   const actualValue = type === "checkbox" ? checked : value;
+  //   setPlank(prev => ({ ...prev, [name]: actualValue }));
+  // };
 
   const handleSelectChange = (event, data) => {
     const { name, value } = event.target;

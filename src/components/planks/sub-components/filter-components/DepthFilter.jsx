@@ -1,0 +1,72 @@
+import React, { useEffect } from "react";
+import { Grid, Typography, Slider, Box, Button } from "@mui/material";
+
+const DepthFilter = ({ allFilters, setAllFilters, setOpenModal, fetchPlanks }) => {
+  const [localFilters, setLocalFilters] = React.useState({
+ 
+    depth: allFilters.depth,
+
+
+  });
+
+
+  const handleSliderChange = (dimension) => (event, newValue) => {
+    setLocalFilters(prev => ({
+      ...prev,
+      [dimension]: newValue
+    }));
+  };
+
+  const handleSubmit = () => {
+    setAllFilters(prev => ({
+      ...prev, 
+      ...localFilters
+  }));
+
+    setOpenModal(false);
+  };
+
+  return (
+    <Box padding={2}>
+      {['depth'].map((dimension) => (
+        <div key={dimension}>
+          <Typography gutterBottom>{dimension.toUpperCase()} (cm)</Typography>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs>
+              <Slider
+                value={localFilters[dimension] || [5, 20]} 
+                onChange={handleSliderChange(dimension)}
+                valueLabelDisplay="auto"
+                min={1}
+                max={dimension === 'length' ? 700 : dimension === 'width' ? 50 : 40}
+                marks={[
+                  {
+                    value: 1,
+                    label: '1 cm',
+                  },
+                  {
+                    value: dimension === 'length' ? 400 : dimension === 'width' ? 25 : 10,
+                    label: `${dimension === 'length' ? 400 : dimension === 'width' ? 25 : 10} cm`,
+                  },
+                  {
+                    value: dimension === 'length' ? 700 : dimension === 'width' ? 50 : 40,
+                    label: `${dimension === 'length' ? 700 : dimension === 'width' ? 50 : 40} cm`,
+                  }
+                ]}
+                
+              />
+            </Grid>
+          </Grid>
+        </div>
+      ))}
+      <Grid pt={2}>
+      <Button fullWidth variant="contained" color="primary" onClick={handleSubmit}>
+        Apply Filters
+      </Button>
+      </Grid>
+      
+    </Box>
+  );
+};
+
+export default DepthFilter;

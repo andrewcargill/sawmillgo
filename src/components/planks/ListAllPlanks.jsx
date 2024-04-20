@@ -67,16 +67,30 @@ const ListAllPlanks = () => {
 const baseQuery = collection(db, `sawmill/${sawmillId}/planks`);
 let conditions = [orderBy("createdAt", "desc")];
 
+// Verified filter
+if (verifiedFilter) conditions.push(where("verified", "==", true));
+
 // Equality filters
 if (allFilters.grade) conditions.push(where("grade", "==", allFilters.grade));
 if (allFilters.status) conditions.push(where("status", "==", allFilters.status));
 if (allFilters.speciesId) conditions.push(where("speciesId", "==", allFilters.speciesId));
 if (allFilters.projectId) conditions.push(where("projectId", "==", allFilters.projectId));
+if (allFilters.locationId) conditions.push(where("locationId", "==", allFilters.locationId));
 
 // Single dimension range filter
 if (allFilters.length) {
     conditions.push(where("length", ">=", allFilters.length[0]));
     conditions.push(where("length", "<=", allFilters.length[1]));
+}
+
+if (allFilters.width) {
+    conditions.push(where("width", ">=", allFilters.width[0]));
+    conditions.push(where("width", "<=", allFilters.width[1]));
+}
+
+if (allFilters.depth) {
+    conditions.push(where("depth", ">=", allFilters.depth[0]));
+    conditions.push(where("depth", "<=", allFilters.depth[1]));
 }
 
 // You must have a composite index for each combination you plan to query on
@@ -91,65 +105,6 @@ const planksList = snapshot.docs.map(doc => ({
 
 setPlanks(planksList);
 };
-
-
-
-  // const fetchPlanks = async () => {
-  //   if (!sawmillId) {
-  //     console.log("Sawmill ID not found. Cannot fetch planks.");
-  //     return;
-  //   }
-
-  //   const baseQuery = collection(db, `sawmill/${sawmillId}/planks`);
-  //   let q = baseQuery; // Start with base query
-
-  //   // Start building the query from the baseQuery
-  //   let conditions = [orderBy("createdAt", "desc")]; // Always order by createdAt
-
-  //   // Check for the verified filter
-  //   if (verifiedFilter) {
-  //     conditions.push(where("verified", "==", true));
-  //   }
-
-  //   // Check allFilters state
-  //   if (allFilters.grade) {
-  //     conditions.push(where("grade", "==", allFilters.grade));
-  //   }
-
-  //   if (allFilters.status) {
-  //     conditions.push(where("status", "==", allFilters.status));
-  //   }
-
-  //   if (allFilters.speciesId) {
-  //     conditions.push(where("speciesId", "==", allFilters.speciesId));
-  //   }
-
-  //   if (allFilters.locationId) {
-  //     conditions.push(where("locationId", "==", allFilters.locationId));
-  //   }
-
-  //   if (allFilters.projectId) {
-  //     conditions.push(where("projectId", "==", allFilters.projectId));
-  //   }
-
-  //   // Apply all conditions to the query
-  //   q = query(baseQuery, ...conditions);
-
-  //   const snapshot = await getDocs(q);
-  //   console.log("Fetching with conditions: ", {
-  //     verifiedFilter,
-  //     gradeFilter: allFilters.grade,
-  //     statusFilter: allFilters.status,
-  //     speciesFilter: allFilters.speciesId,
-  //     locationFilter: allFilters.locationId,
-  //     projectFilter: allFilters.projectId,
-  //   });
-  //   const planksList = snapshot.docs.map((doc) => ({
-  //     id: doc.id,
-  //     ...doc.data(),
-  //   }));
-  //   setPlanks(planksList);
-  // };
 
   useEffect(() => {
     fetchPlanks();
@@ -313,6 +268,12 @@ setPlanks(planksList);
             projectName: null
         }));
 
+      } else if (filter === "dimensions") {
+        setAllFilters((prevFilters) => ({
+            ...prevFilters,
+            length: null,
+        }));
+
     } else {
         setAllFilters((prevFilters) => ({
             ...prevFilters,
@@ -426,12 +387,53 @@ setPlanks(planksList);
               deleteIcon={<CancelIcon />}
             />
           </Grid>
-          <Grid pr={1}>
+          {/* <Grid pr={1}>
             <Chip
-              variant="outlined"
+              variant={allFilters.length ? "contained" : "outlined"}
               color={"primary"}
               label="Dimensions"
               onClick={handleOpenModal("dimensions")}
+              onDelete={
+                allFilters.length ? handleResetFilter("dimensions") : undefined
+              }
+              deleteIcon={<CancelIcon />}
+            />
+          </Grid> */}
+          <Grid pr={1}>
+            <Chip
+              variant={allFilters.length ? "contained" : "outlined"}
+              color={"primary"}
+              label={allFilters.length ? `Length: ${allFilters.length[0] || ""}-${allFilters.length[1]}cm` : "Length"}
+              onClick={handleOpenModal("length")}
+              onDelete={
+                allFilters.length ? handleResetFilter("length") : undefined
+              }
+              deleteIcon={<CancelIcon />}
+            />
+          </Grid>
+
+          <Grid pr={1}>
+            <Chip
+              variant={allFilters.width ? "contained" : "outlined"}
+              color={"primary"}
+              label={allFilters.width ? `Width: ${allFilters.width[0] || ""}-${allFilters.width[1]}cm` : "Width"}
+              onClick={handleOpenModal("width")}
+              onDelete={
+                allFilters.width ? handleResetFilter("width") : undefined
+              }
+              deleteIcon={<CancelIcon />}
+            />
+          </Grid>
+          <Grid pr={1}>
+            <Chip
+              variant={allFilters.depth ? "contained" : "outlined"}
+              color={"primary"}
+              label={allFilters.depth ? `Depth: ${allFilters.depth[0] || ""}-${allFilters.depth[1]}cm` : "Depth"}
+              onClick={handleOpenModal("depth")}
+              onDelete={
+                allFilters.depth ? handleResetFilter("depth") : undefined
+              }
+              deleteIcon={<CancelIcon />}
             />
           </Grid>
           <Grid pr={1}>
