@@ -11,11 +11,14 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  FormControlLabel,
+  Switch,
 } from "@mui/material";
 import { doc, setDoc, updateDoc, addDoc, collection, getFirestore } from "firebase/firestore";
 import { app } from "../../firebase-config";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { getAuth } from 'firebase/auth';
+import { Form } from "react-router-dom";
 
 
 function ProjectAddEditModal({ projectDetails, isOpen, onClose }) {
@@ -33,6 +36,7 @@ function ProjectAddEditModal({ projectDetails, isOpen, onClose }) {
     date: '',
     deadline: '',
     status: 'active',
+    verified: false,
   });
 
   const db = getFirestore(app);
@@ -45,6 +49,7 @@ function ProjectAddEditModal({ projectDetails, isOpen, onClose }) {
 
 
   useEffect(() => {
+    console.log("formValues", formValues);
     if (projectDetails) {
       setFormValues({
         projectName: projectDetails.projectName || '',
@@ -56,9 +61,10 @@ function ProjectAddEditModal({ projectDetails, isOpen, onClose }) {
         date: projectDetails.date || '',
         deadline: projectDetails.deadline || '',
         status: projectDetails.status || 'active',
+        verified: projectDetails.verified || false,
       });
     }
-  }, [projectDetails]);
+  }, [projectDetails, formValues]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -119,7 +125,9 @@ function ProjectAddEditModal({ projectDetails, isOpen, onClose }) {
   };
   
   
-  
+  const handleSwitchChange = (event) => {
+    setFormValues({ ...formValues, verified: event.target.checked });
+  };
 
   return (
  
@@ -128,6 +136,12 @@ function ProjectAddEditModal({ projectDetails, isOpen, onClose }) {
           {projectDetails ? 'Edit Project' : 'Add New Project'}
         </Typography>
         <Grid container spacing={2} mt={2}>
+        <Grid item xs={12}>
+            <FormControlLabel
+              control={<Switch checked={formValues.verified} onChange={handleSwitchChange} />}
+              label="Is this project for verified items?"
+            />
+          </Grid>
 
         <Grid item xs={12}>
             <FormControl fullWidth>

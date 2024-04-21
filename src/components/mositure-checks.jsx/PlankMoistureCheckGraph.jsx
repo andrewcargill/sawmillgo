@@ -6,7 +6,7 @@ import { Paper, Grid, Typography } from "@mui/material";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const PlankMoistureCheckGraph = () => {
-  const { plankId } = useParams(); // Assuming you are getting plankId from the route
+  const { plankId } = useParams();
   const db = getFirestore(app);
   const [data, setData] = useState([]);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
@@ -17,7 +17,7 @@ const PlankMoistureCheckGraph = () => {
       const q = query(collection(db, `sawmill/${sawmillId}/planks/${plankId}/moistureChecks`));
       const querySnapshot = await getDocs(q);
       const moistureData = querySnapshot.docs.map(doc => ({
-        date: doc.data().date, // Keep as string if no manipulation is needed
+        date: doc.data().date,
         moistureContent: doc.data().moistureContent,
       }));
       setData(moistureData);

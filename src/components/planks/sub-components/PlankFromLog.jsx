@@ -32,8 +32,6 @@ const PlankFromLog = ({ formData, setFormData, setShowForm }) => {
         console.log("Searching for Log ID:", logRefId);
       } else {
         alert("No log found with that refId.");
-        console.log("Searching for Log ID:", logRefId);
-        console.log('sawmillId:', sawmillId);
       }
     } catch (error) {
       console.error("Failed to fetch log data:", error);
@@ -42,35 +40,40 @@ const PlankFromLog = ({ formData, setFormData, setShowForm }) => {
   };
 
   const updateFormDataWithLogData = (logData, logId) => {
-    // Construct the new form data object
+    // Construct the new form data object based on verification status
     const updatedFormData = {
       ...formData,
       logId: logData.refId,
       speciesId: logData.speciesId,
       length: logData.length,
       speciesName: logData.speciesName,
-      projectId: logData.projectId || "",
-      projectName: logData.projectName || "",
-      verified: logData.verified ? true : formData.verified
+      verified: logData.verified
     };
 
-    setFormData(updatedFormData); // Update formData state directly
+    console.log("Log Data:", logData);
 
-    // Determine whether to show the project dialog
+    if (logData.verified) {
+      updatedFormData.treeId = logData.treeId; // Include treeId if log is verified
+    }
+
     if (logData.projectId) {
-      setProjectDialogOpen(true); // Confirm addition to project
+      updatedFormData.projectId = logData.projectId;
+      updatedFormData.projectName = logData.projectName;
+      setProjectDialogOpen(true); // Confirm addition to project if projectId is available
     } else {
       setShowForm(true); // Proceed without project dialog
     }
+
+    setFormData(updatedFormData); // Update formData state
+    setShowLogId(true);
   };
 
   const handleDialogClose = (agree) => {
-    setShowForm(true);
-    setShowLogId(true);
-    setProjectDialogOpen(false);
     if (!agree) {
       setFormData({ ...formData, projectId: "", projectName: "" });
     }
+    setShowForm(true);
+    setProjectDialogOpen(false);
   };
 
   const handleKeyPress = (event) => {
@@ -88,19 +91,9 @@ const PlankFromLog = ({ formData, setFormData, setShowForm }) => {
     >
       {showLogId ? (
         <Grid item xs={12}>
-
-        
-            {formData.verified ? (
-                <Typography variant="h6">
-                   LOG: {formData.logId} - {formData.speciesName} VERIFIED
-            </Typography>
-            ) : (
-              <Typography variant="h6">
-              LOG: {formData.logId} - {formData.speciesName} - UNVERIFIED
-       </Typography>
-            )}
-           
-
+          <Typography variant="h6">
+            LOG: {formData.logId} - {formData.speciesName} - {formData.verified ? "VERIFIED" : "UNVERIFIED"}
+          </Typography>
         </Grid>
       ) : (
         <Grid item xs={12}>
@@ -108,7 +101,7 @@ const PlankFromLog = ({ formData, setFormData, setShowForm }) => {
           <TextField
             label="Log ID"
             variant="outlined"
-            onKeyPress={handleKeyPress} // Use the onKeyPress event
+            onKeyPress={handleKeyPress}
             fullWidth
           />
         </Grid>
@@ -117,19 +110,14 @@ const PlankFromLog = ({ formData, setFormData, setShowForm }) => {
         <DialogTitle>Add to Project?</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            This log is part of the "{formData.projectName}". Would you like to
-            add this plank to the same project?
+            This log is part of the "{formData.projectName}". Would you like to add this plank to the same project?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => handleDialogClose(false)} color="primary">
             No
           </Button>
-          <Button
-            onClick={() => handleDialogClose(true)}
-            color="primary"
-            autoFocus
-          >
+          <Button onClick={() => handleDialogClose(true)} color="primary" autoFocus>
             Yes
           </Button>
         </DialogActions>

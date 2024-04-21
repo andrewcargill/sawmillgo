@@ -133,7 +133,7 @@ const PlankDetails = () => {
             </Grid>
             </Grid>
             
-                <PlankMoistureCheckGraph plankId={plankId} />
+                <PlankMoistureCheckGraph />
             
 
           <Grid container spacing={2} p={1} >
