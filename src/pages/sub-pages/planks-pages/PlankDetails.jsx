@@ -11,7 +11,9 @@ import {
   DialogContentText,
   TextField,
   DialogActions,
+  Paper,
 } from "@mui/material";
+import PlankMoistureCheckGraph from "../../../components/mositure-checks.jsx/PlankMoistureCheckGraph";
 
 const PlankDetails = () => {
   const [open, setOpen] = useState(false);
@@ -61,6 +63,10 @@ const PlankDetails = () => {
 
   const handleEditClick = () => {
     navigate(`/editplank/${plankId}`);
+  };
+
+  const handleMoistureClick = () => {
+    navigate(`/monitorplank/${plankId}`);
   };
 
   const handleClose = () => {
@@ -126,6 +132,10 @@ const PlankDetails = () => {
               />
             </Grid>
             </Grid>
+            
+                <PlankMoistureCheckGraph plankId={plankId} />
+            
+
           <Grid container spacing={2} p={1} >
             <Grid item xs={12}>
             <Button variant="contained" onClick={handleClickOpen} fullWidth>
@@ -138,6 +148,16 @@ const PlankDetails = () => {
               Edit
             </Button>
             </Grid>
+           
+          </Grid>
+          <Grid container spacing={2} p={1} >
+            <Grid item xs={12}>
+            <Button variant="contained" onClick={handleMoistureClick} fullWidth>
+              Add Moisture Check
+            </Button>
+            </Grid>
+            
+       
            
           </Grid>
 

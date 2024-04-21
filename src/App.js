@@ -34,6 +34,7 @@ import PlanksPage from "./pages/sub-pages/PlanksPage";
 import PlankDetails from "./pages/sub-pages/planks-pages/PlankDetails";
 import EditPlank from "./components/planks/EditPlank";
 import AddPlank from "./components/planks/AddPlank";
+import AddMoistureCheck from "./components/mositure-checks.jsx/AddMoistureCheck";
 
 function App() {
  
@@ -62,6 +63,7 @@ function App() {
         <Route path="/plank/:plankId" element={<PlankDetails />} />
         <Route path="/editplank/:plankId" element={<EditPlank />} />
         <Route path="/addplank" element={<AddPlank />} />
+        <Route path="/monitorplank/:plankId" element={<AddMoistureCheck />} />
         <Route path="/locations" element={<LocationsPage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/species" element={<SpeciesPage />} />

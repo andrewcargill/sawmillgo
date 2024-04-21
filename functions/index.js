@@ -400,6 +400,7 @@ exports.initializeSawmillSubcollections = functions.firestore
           checkDate: "2023-04-12T14:00:00Z",
           moistureContent: 12.5,
           operator: "UserUID",
+          operatorName: "John Doe",
         });
 
       await db.collection(`sawmill/${sawmillId}/locations`).add({
