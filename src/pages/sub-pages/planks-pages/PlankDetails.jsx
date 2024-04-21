@@ -87,6 +87,45 @@ const PlankDetails = () => {
           <p>Status: {plankDetails.status}</p>
           <p>Species: {plankDetails.speciesName}</p>
           <br />
+          <Grid container>
+          <Grid
+              item
+              container
+              xs={6}
+              alignContent={"flex-start"}
+              justifyContent={"flex-end"}
+              maxHeight={'150px'}
+            >
+              <img
+                src={plankDetails.image1}
+                alt="Tree"
+                style={{
+                  width: "auto",
+                  height: "100%",
+                  objectFit: "contain",
+                }}
+              />
+            </Grid>
+          <Grid
+              item
+              container
+              xs={6}
+              alignContent={"flex-start"}
+              justifyContent={"flex-end"}
+              maxHeight={'150px'}
+            >
+              <img
+                src={plankDetails.image2}
+                alt="Tree"
+                style={{
+                  width: "auto",
+                  height: "100%",
+                  objectFit: "contain",
+                 
+                }}
+              />
+            </Grid>
+            </Grid>
           <Grid container spacing={2} p={1} >
             <Grid item xs={12}>
             <Button variant="contained" onClick={handleClickOpen} fullWidth>
