@@ -156,7 +156,7 @@ function ProjectAddEditModal({ projectDetails, isOpen, onClose }) {
               >
                 <MenuItem value="active">Active</MenuItem>
                 <MenuItem value="paused">Paused</MenuItem>
-                <MenuItem value="with creator">With Creator</MenuItem>
+                <MenuItem value="withCreator">With Creator</MenuItem>
                 <MenuItem value="sold">Sold</MenuItem>
               </Select>
             </FormControl>
