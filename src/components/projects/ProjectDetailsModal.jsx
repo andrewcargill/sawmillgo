@@ -28,19 +28,23 @@ function ProjectDetailsModal({ projectDetails, onClose, setMode }) {
   const projectUid = projectDetails?.id;
 
   const handleDelete = async () => {
+    console.log("handleDelete....");
     // Use prompt to ask the user to input the refId
     const userInput = window.prompt(
       `This action will delete ${projectDetails.projectName}. All linked stock will have status set to 'avaliable'.`
     );
 
-    if (userInput === projectDetails.projectName) {
+    if (userInput === 'yes') {
+      console.log("Deleting project...");
       try {
         if (projectUid) {
+          console.log("Deleting project with ID: ", projectUid);
           await deleteDoc(doc(db, `sawmill/${sawmillId}/projects`, projectUid));
           alert("Project deleted successfully.");
           onClose(); // Close the modal or redirect user
         }
       } catch (error) {
+        console.log("Error deleting project: ", error);
         console.error("Error deleting project: ", error);
         alert(`Failed to delete project. Error: ${error.message}`);
       }

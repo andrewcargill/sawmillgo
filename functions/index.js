@@ -34,7 +34,59 @@ async function generateUniqueRefId(db) {
   return refId;
 }
 
-exports.updateTreeStatusAndProjectNameOnProjectChange = functions.firestore
+// exports.updateTreeStatusAndProjectNameOnProjectChange = functions.firestore
+//   .document("sawmill/{sawmillId}/projects/{projectId}")
+//   .onUpdate(async (change, context) => {
+//     const db = admin.firestore();
+//     const projectId = context.params.projectId;
+//     const projectBeforeUpdate = change.before.data();
+//     const projectAfterUpdate = change.after.data();
+
+//     // Determine the new tree status based on the project's status
+//     let newTreeStatus;
+//     if (["active", "paused"].includes(projectAfterUpdate.status)) {
+//       newTreeStatus = "reserved";
+//     } else if (["sold", "with creator"].includes(projectAfterUpdate.status)) {
+//       newTreeStatus = "sold";
+//     } else {
+//       console.log(`Unknown project status: ${projectAfterUpdate.status}`);
+//       return null;
+//     }
+
+//     // Prepare updates for trees if the project name has changed
+//     let updates = { status: newTreeStatus };
+//     if (projectBeforeUpdate.projectName !== projectAfterUpdate.projectName) {
+//       updates.projectName = projectAfterUpdate.projectName;
+//     }
+
+//     // Update the status and, if necessary, projectName of all trees associated with this project
+//     const treesQuerySnapshot = await db
+//       .collectionGroup("trees")
+//       .where("projectId", "==", projectId)
+//       .get();
+
+//     if (treesQuerySnapshot.empty) {
+//       console.log("No trees found for the project");
+//       return null;
+//     }
+
+//     const batch = db.batch();
+//     treesQuerySnapshot.forEach((doc) => {
+//       batch.update(doc.ref, updates);
+//     });
+
+//     await batch.commit();
+//     console.log(
+//       `Updated all trees for project ${projectId}. Changes: `,
+//       updates
+//     );
+//   });
+
+// const functions = require('firebase-functions');
+// const admin = require('firebase-admin');
+// admin.initializeApp();
+
+exports.updateItemsOnProjectChange = functions.firestore
   .document("sawmill/{sawmillId}/projects/{projectId}")
   .onUpdate(async (change, context) => {
     const db = admin.firestore();
@@ -42,44 +94,70 @@ exports.updateTreeStatusAndProjectNameOnProjectChange = functions.firestore
     const projectBeforeUpdate = change.before.data();
     const projectAfterUpdate = change.after.data();
 
-    // Determine the new tree status based on the project's status
-    let newTreeStatus;
+    // Determine the new status based on the project's status
+    let newItemStatus;
     if (["active", "paused"].includes(projectAfterUpdate.status)) {
-      newTreeStatus = "reserved";
+      newItemStatus = "reserved";
     } else if (["sold", "with creator"].includes(projectAfterUpdate.status)) {
-      newTreeStatus = "sold";
+      newItemStatus = "sold";
     } else {
       console.log(`Unknown project status: ${projectAfterUpdate.status}`);
       return null;
     }
 
-    // Prepare updates for trees if the project name has changed
-    let updates = { status: newTreeStatus };
+    // Prepare updates if the project name or status has changed
+    let updates = { status: newItemStatus };
     if (projectBeforeUpdate.projectName !== projectAfterUpdate.projectName) {
       updates.projectName = projectAfterUpdate.projectName;
     }
 
-    // Update the status and, if necessary, projectName of all trees associated with this project
-    const treesQuerySnapshot = await db
-      .collectionGroup("trees")
-      .where("projectId", "==", projectId)
-      .get();
+    // Define the types of items to update
+    const itemTypes = ['trees', 'logs', 'planks'];
 
-    if (treesQuerySnapshot.empty) {
-      console.log("No trees found for the project");
-      return null;
+    // Update each type of item in a batch
+    for (const itemType of itemTypes) {
+      const itemsQuerySnapshot = await db
+        .collectionGroup(itemType)
+        .where("projectId", "==", projectId)
+        .get();
+
+      if (!itemsQuerySnapshot.empty) {
+        const batch = db.batch();
+        itemsQuerySnapshot.forEach((doc) => {
+          batch.update(doc.ref, updates);
+        });
+        await batch.commit();
+        console.log(`Updated all ${itemType} for project ${projectId}. Changes: `, updates);
+      }
     }
+  });
 
-    const batch = db.batch();
-    treesQuerySnapshot.forEach((doc) => {
-      batch.update(doc.ref, updates);
-    });
+  exports.resetItemsOnProjectDeletion = functions.firestore
+  .document("sawmill/{sawmillId}/projects/{projectId}")
+  .onDelete(async (snapshot, context) => {
+    const db = admin.firestore();
+    const projectId = context.params.projectId;
 
-    await batch.commit();
-    console.log(
-      `Updated all trees for project ${projectId}. Changes: `,
-      updates
-    );
+    // Define the types of items to reset
+    const itemTypes = ['trees', 'logs', 'planks'];
+    const resets = { projectId: admin.firestore.FieldValue.delete(), projectName: admin.firestore.FieldValue.delete() };
+
+    // Reset each type of item in a batch
+    for (const itemType of itemTypes) {
+      const itemsQuerySnapshot = await db
+        .collectionGroup(itemType)
+        .where("projectId", "==", projectId)
+        .get();
+
+      if (!itemsQuerySnapshot.empty) {
+        const batch = db.batch();
+        itemsQuerySnapshot.forEach((doc) => {
+          batch.update(doc.ref, resets);
+        });
+        await batch.commit();
+        console.log(`Reset projectId and projectName for all ${itemType} where projectId was ${projectId}`);
+      }
+    }
   });
 
 exports.onTreeUpdated = functions.firestore
