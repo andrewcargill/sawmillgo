@@ -65,15 +65,15 @@ const EditPlank = () => {
     fetchLocationsForSawmill(db, sawmillId)
       .then(setLocations)
       .catch((error) => alert(error.message));
-    fetchProjectsForSawmill(db, sawmillId)
-      .then((fetchedProjects) => {
-        const normalizedProjects = fetchedProjects.map((project) => ({
-          id: project.id,
-          name: project.projectName,
-        }));
-        setProjects(normalizedProjects);
-      })
-      .catch(console.error);
+    // fetchProjectsForSawmill(db, sawmillId)
+    //   .then((fetchedProjects) => {
+    //     const normalizedProjects = fetchedProjects.map((project) => ({
+    //       id: project.id,
+    //       name: project.projectName,
+    //     }));
+    //     setProjects(normalizedProjects);
+    //   })
+    //   .catch(console.error);
     fetchSpeciesForSawmill(db, sawmillId)
       .then(setSpecies)
       .catch((error) => alert(error.message));
@@ -83,6 +83,36 @@ const EditPlank = () => {
     const { name, files } = event.target;
     setImageFiles((prev) => ({ ...prev, [name]: files[0] }));
   };
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const plankRef = doc(db, `sawmill/${sawmillId}/planks`, plankId);
+        const plankSnap = await getDoc(plankRef);
+        if (!plankSnap.exists()) {
+          alert("Plank not found!");
+          navigate("/planks");
+          return;
+        }
+        
+        const plankData = plankSnap.data();
+        setPlank({ id: plankSnap.id, ...plankData });
+  
+        const projects = await fetchProjectsForSawmill(db, sawmillId, plankData.verified);
+        const normalizedProjects = projects.map(project => ({
+          id: project.id,
+          name: project.projectName,
+        }));
+        setProjects(normalizedProjects);
+      } catch (error) {
+        console.error("Error fetching plank or projects:", error);
+        alert(error.message);
+      }
+    }
+    if (sawmillId && plankId) {
+      fetchData();
+    }
+  }, [db, sawmillId, plankId, navigate]);
 
   const uploadImage = async (file) => {
     if (!file) return null;
