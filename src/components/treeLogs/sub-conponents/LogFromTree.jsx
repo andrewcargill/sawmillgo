@@ -18,7 +18,7 @@ import { app } from "../../../firebase-config";
 
 
 
-const LogFromTree = ({ formData, setFormData, setShowForm }) => {
+const LogFromTree = ({ formData, setFormData, setShowForm, updateTreeId }) => {
 
   const db = getFirestore(app);
 const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
@@ -28,33 +28,41 @@ const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
   const [showTreeId, setShowTreeId] = useState(false);
 
 
-  const fetchTreeData = async (treeRefId) => {
-    const treesCollection = collection(db, `sawmill/${sawmillId}/trees`);
-    const q = query(treesCollection, where("refId", "==", treeRefId.trim())); 
+const fetchTreeData = async (treeRefId) => {
+  const treesCollection = collection(db, `sawmill/${sawmillId}/trees`);
+  const q = query(treesCollection, where("refId", "==", treeRefId.trim())); 
 
-    try {
-        const querySnapshot = await getDocs(q);
-        if (!querySnapshot.empty) {
-            const treeSnap = querySnapshot.docs[0]; // assuming the refId is unique and you want the first match
-            const treeData = treeSnap.data();
-            updateFormDataWithTreeData(treeData, treeSnap.id); // passing the document ID
-            console.log("Searching for Tree ID:", treeRefId);
-        } else {
-            alert("No tree found with that refId.");
-            console.log("Searching for Tree ID:", treeRefId);
-            console.log('sawmillId:', sawmillId)
-        }
-    } catch (error) {
-        console.error("Failed to fetch tree data:", error);
-        alert("Error fetching tree data.");
-    }
+  try {
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+          const treeSnap = querySnapshot.docs[0]; 
+          const treeData = treeSnap.data();
+          if (treeData.logged) {
+         
+              alert(`This tree has already been fully logged. No additional logs can be created from it. Please contact Admin with ref: ${treeRefId}`);
+              console.log("Tree ID:", treeRefId, "has already been fully logged.");
+          } else {
+              updateFormDataWithTreeData(treeData, treeSnap.id); // passing the document ID
+              console.log("Searching for Tree ID:", treeRefId);
+          }
+      } else {
+          alert("No tree found with that refId.");
+          console.log("Searching for Tree ID:", treeRefId);
+          console.log('sawmillId:', sawmillId)
+      }
+  } catch (error) {
+      console.error("Failed to fetch tree data:", error);
+      alert("Error fetching tree data.");
+  }
 };
+
 
   
   
 
   const updateFormDataWithTreeData = (treeData, treeId) => {
     // Construct the new form data object
+    updateTreeId(treeId);
     const updatedFormData = {
       ...formData,
       treeId: treeData.refId,
@@ -66,6 +74,7 @@ const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
     };
   
     setFormData(updatedFormData); // Update formData state directly
+    console.log('treeId: ', treeId)
   
     // Determine whether to show the project dialog
     if (treeData.projectId) {
