@@ -7,21 +7,25 @@ import {
     TableRow,
     TableCell,
     TableBody,
-    Paper
+    Paper,
+    Typography,
 
  } from "@mui/material";
 
 
-const FilteredProjectsTable = ({ projects, title, openProjectModal }) => {
+
+const FilteredProjectsTable = ({ projects, title, openProjectModal, dynamicView }) => {
   return (
     <Grid container>
+      {dynamicView === 'list' ? (
       <Grid item xs={12}>
-        <h2>{title}</h2>
+        {/* <h2>{title}</h2> */}
         {projects.length > 0 ? (
           <Grid item container>
             <TableContainer component={Paper}>
               <Table aria-label="simple table" sx={{ minWidth: 450 }}>
                 <TableHead>
+
                   <TableRow>
                     <TableCell
                       sx={{
@@ -35,11 +39,8 @@ const FilteredProjectsTable = ({ projects, title, openProjectModal }) => {
                     </TableCell>
                     <TableCell>Customer</TableCell>
                     <TableCell>Manager</TableCell>
-
                     <TableCell>Start Date</TableCell>
                     <TableCell>Deadline</TableCell>
-
-               
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -63,12 +64,10 @@ const FilteredProjectsTable = ({ projects, title, openProjectModal }) => {
                       >
                         {project.projectName}
                       </TableCell>
-
                       <TableCell>{project.customerName}</TableCell>
                       <TableCell>{project.createdBy}</TableCell>
                       <TableCell>{project.date}</TableCell>
                       <TableCell>{project.deadline}</TableCell>
-           
                     </TableRow>
                   ))}
                 </TableBody>
@@ -79,6 +78,47 @@ const FilteredProjectsTable = ({ projects, title, openProjectModal }) => {
           <p>No projects found.</p>
         )}
       </Grid>
+      ):(
+        <Grid item xs={12}>
+        {/* <h2>{title}</h2> */}
+        {projects.length > 0 ? (
+          <Grid item container>
+           {projects.map((project) => (
+              <Grid
+                className="item-select"
+                item
+                xs={12}
+                sm={6}
+                lg={3}
+                key={project.id}
+                p={2}
+                m={1}
+                bgcolor="white.main"
+                sx={{
+                  border: "4px solid green",
+                  
+                  borderRadius: "5px",
+                  padding: "12px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  cursor: "pointer",
+                }}
+                onClick={() => openProjectModal(project, "view")}
+              >
+                <Grid item>
+                  <Typography variant="h6">{project.projectName}</Typography>
+                  <Typography variant="body2">{project.creationDate}</Typography>
+                </Grid>
+              </Grid>
+            ))}
+          </Grid>
+        ) : (
+          <p>No projects found.</p>
+        )}
+      </Grid>
+      )}
     </Grid>
   );
 };
