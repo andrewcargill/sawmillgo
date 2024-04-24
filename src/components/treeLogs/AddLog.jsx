@@ -73,15 +73,7 @@ const AddLog = () => {
           alert(error.message);
         });
 
-      fetchProjectsForSawmill(db, sawmillId)
-        .then((fetchedProjects) => {
-          setProjects(fetchedProjects);
-        })
-        .catch((error) => {
-          console.error("Error fetching projects:", error);
-          alert("Failed to fetch projects: " + error.message);
-        });
-
+     
       fetchSpeciesForSawmill(db, sawmillId)
         .then((fetchedSpecies) => {
           setSpecies(fetchedSpecies);
@@ -92,6 +84,14 @@ const AddLog = () => {
         });
     }
   }, [sawmillId]);
+
+  useEffect(() => {
+    if (sawmillId && formData.verified !== undefined) {
+      fetchProjectsForSawmill(db, sawmillId, formData.verified)
+        .then(setProjects)
+        .catch(console.error);
+    }
+  }, [db, sawmillId, formData.verified]);
 
 
   const handleSubmit = async (e) => {
