@@ -1,4 +1,4 @@
-import { collection, query, getDocs, where } from 'firebase/firestore';
+import { collection, query, getDocs } from 'firebase/firestore';
 
 /**
  * Fetches locations for a given sawmill ID.
@@ -21,37 +21,20 @@ export const fetchLocationsForSawmill = async (db, sawmillId) => {
   }
 };
 
-// export const fetchProjectsForSawmill = async (db, sawmillId) => {
-//     try {
-//       const projectsQuery = query(collection(db, `sawmill/${sawmillId}/projects`));
-//       const querySnapshot = await getDocs(projectsQuery);
-//       const projects = querySnapshot.docs.map(doc => ({
-//         id: doc.id,
-//         ...doc.data(),
-//       }));
-//       return projects;
-//     } catch (error) {
-//       console.error("Error fetching projects:", error);
-//       throw new Error("Failed to fetch projects.");
-//     }
-//   };
-
-export const fetchProjectsForSawmill = async (db, sawmillId, isVerified) => {
-  try {
-    const projectsQuery = query(
-      collection(db, `sawmill/${sawmillId}/projects`),
-      where("verified", "==", isVerified)
-    );
-    const querySnapshot = await getDocs(projectsQuery);
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-  } catch (error) {
-    console.error("Error fetching projects:", error);
-    throw new Error("Failed to fetch projects.");
-  }
-};
+export const fetchProjectsForSawmill = async (db, sawmillId) => {
+    try {
+      const projectsQuery = query(collection(db, `sawmill/${sawmillId}/projects`));
+      const querySnapshot = await getDocs(projectsQuery);
+      const projects = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      return projects;
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+      throw new Error("Failed to fetch projects.");
+    }
+  };
 
 export const fetchSpeciesForSawmill = async (db, sawmillId) => {
     try {

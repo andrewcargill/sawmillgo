@@ -93,14 +93,20 @@ const AddPlank = () => {
       fetchLocationsForSawmill(db, sawmillId)
         .then(setLocations)
         .catch(console.error);
-      fetchProjectsForSawmill(db, sawmillId)
-        .then(setProjects)
-        .catch(console.error);
+  
       fetchSpeciesForSawmill(db, sawmillId)
         .then(setSpecies)
         .catch(console.error);
     }
   }, [db, sawmillId]);
+
+  useEffect(() => {
+    if (sawmillId && formData.verified !== undefined) {
+      fetchProjectsForSawmill(db, sawmillId, formData.verified)
+        .then(setProjects)
+        .catch(console.error);
+    }
+  }, [db, sawmillId, formData.verified]); 
 
   //Handle Image Upload
   const handleFileChange = (event) => {
