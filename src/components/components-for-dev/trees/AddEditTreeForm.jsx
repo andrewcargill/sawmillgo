@@ -16,7 +16,7 @@ import { getAuth } from "firebase/auth";
 import ListEditTree from "./ListEditTrees"; // Make sure this is correctly imported
 import {
   fetchLocationsForSawmill,
-  fetchProjectsForSawmill,
+  fetchVerifiedProjectsForSawmill,
   fetchSpeciesForSawmill,
 } from "../../../utils/filestoreOperations";
 import {
@@ -111,13 +111,13 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
           alert(error.message);
         });
 
-      fetchProjectsForSawmill(db, sawmillId)
-        .then((fetchedProjects) => {
-          setProjects(fetchedProjects);
+        fetchVerifiedProjectsForSawmill(db, sawmillId)
+        .then((verifiedProjects) => {
+            setProjects(verifiedProjects); 
         })
         .catch((error) => {
-          console.error("Error fetching projects:", error);
-          alert("Failed to fetch projects: " + error.message);
+            console.error("Error fetching verified projects:", error);
+            alert("Failed to fetch verified projects: " + error.message);
         });
 
       fetchSpeciesForSawmill(db, sawmillId)

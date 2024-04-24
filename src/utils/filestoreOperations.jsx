@@ -36,6 +36,24 @@ export const fetchLocationsForSawmill = async (db, sawmillId) => {
 //     }
 //   };
 
+export const fetchVerifiedProjectsForSawmill = async (db, sawmillId) => {
+  try {
+      const projectsQuery = query(
+          collection(db, `sawmill/${sawmillId}/projects`),
+          where("verified", "==", true) // Filter for verified projects only
+      );
+      const querySnapshot = await getDocs(projectsQuery);
+      return querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+      }));
+  } catch (error) {
+      console.error("Error fetching verified projects:", error);
+      throw new Error("Failed to fetch verified projects.");
+  }
+};
+
+
 export const fetchProjectsForSawmill = async (db, sawmillId, isVerified) => {
   try {
     const projectsQuery = query(
