@@ -13,7 +13,7 @@ import {
 import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
 import { app } from "../../../firebase-config";
 
-const PlankFromLog = ({ formData, setFormData, setShowForm }) => {
+const PlankFromLog = ({ formData, setFormData, setShowForm, updateLogId }) => {
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
   const [projectDialogOpen, setProjectDialogOpen] = useState(false);
@@ -41,6 +41,7 @@ const PlankFromLog = ({ formData, setFormData, setShowForm }) => {
 
   const updateFormDataWithLogData = (logData, logId) => {
     // Construct the new form data object based on verification status
+    updateLogId(logId);
     const updatedFormData = {
       ...formData,
       logId: logData.refId,

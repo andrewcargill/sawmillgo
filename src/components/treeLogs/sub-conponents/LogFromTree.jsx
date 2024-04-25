@@ -57,9 +57,6 @@ const fetchTreeData = async (treeRefId) => {
 };
 
 
-  
-  
-
   const updateFormDataWithTreeData = (treeData, treeId) => {
     // Construct the new form data object
     updateTreeId(treeId);

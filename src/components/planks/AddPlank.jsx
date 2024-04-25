@@ -11,6 +11,11 @@ import {
   Checkbox,
   FormControlLabel,
   styled,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import {
   fetchLocationsForSawmill,
@@ -23,6 +28,7 @@ import {
   collection,
   onSnapshot,
   doc,
+  runTransaction,
 } from "firebase/firestore";
 import { app } from "../../firebase-config";
 import { getAuth } from "firebase/auth";
@@ -44,12 +50,15 @@ const VisuallyHiddenInput = styled("input")({
 
 const AddPlank = () => {
   const [withLog, setWithLog] = useState(false);
+  const [logId, setLogId] = useState("");
   const [showLogInput, setShowLogInput] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [projects, setProjects] = useState([]);
   const [locations, setLocations] = useState([]);
   const [species, setSpecies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFinalPlankDialogOpen, setIsFinalPlankDialogOpen] = useState(false);
+  const [logIsPlanked, setlogIsPlanked] = useState(false);
   const [imageFiles, setImageFiles] = useState({
     image1: null,
     image2: null,
@@ -93,7 +102,7 @@ const AddPlank = () => {
       fetchLocationsForSawmill(db, sawmillId)
         .then(setLocations)
         .catch(console.error);
-  
+
       fetchSpeciesForSawmill(db, sawmillId)
         .then(setSpecies)
         .catch(console.error);
@@ -106,7 +115,7 @@ const AddPlank = () => {
         .then(setProjects)
         .catch(console.error);
     }
-  }, [db, sawmillId, formData.verified]); 
+  }, [db, sawmillId, formData.verified]);
 
   //Handle Image Upload
   const handleFileChange = (event) => {
@@ -239,6 +248,39 @@ const AddPlank = () => {
     }
   };
 
+  const handleFinalPlankConfirmation = async () => {
+    setIsLoading(true);
+    const logRef = doc(db, `sawmill/${sawmillId}/logs`, logId);
+
+    try {
+      await runTransaction(db, async (transaction) => {
+        const logDoc = await transaction.get(logRef);
+        if (!logDoc.exists()) {
+          throw new Error("Document does not exist!");
+        }
+
+        const logData = logDoc.data();
+        if (logData.planked === false) {
+          // Only update if planked is false
+          transaction.update(logRef, { planked: true });
+          console.log("Plank marked as fully logged.");
+          setlogIsPlanked(true);
+
+          // await handleSubmit();
+        } else {
+          console.log("Log already marked as milled, no action taken.");
+        }
+      });
+      alert("Transaction successfully completed!");
+    } catch (error) {
+      console.error("Transaction failed: ", error);
+      alert("Failed to mark log as milled: " + error.message);
+    }
+
+    setIsLoading(false);
+    setIsFinalPlankDialogOpen(false); // Close the dialog after handling
+  };
+
   const handleWithoutLogClick = () => {
     setWithLog(false);
     setShowForm(true);
@@ -248,6 +290,10 @@ const AddPlank = () => {
   const handleWithLogClick = () => {
     setWithLog(true);
     setShowLogInput(true);
+  };
+
+  const updateLogId = (value) => {
+    setLogId(value);
   };
 
   return (
@@ -289,6 +335,7 @@ const AddPlank = () => {
               formData={formData}
               setFormData={setFormData}
               setShowForm={setShowForm}
+              updateLogId={updateLogId}
             />
           ) : (
             "Since there is no parent tree to confirm the origin of this plank, it has been assigned an unverified rating."
@@ -518,10 +565,21 @@ const AddPlank = () => {
             </Grid>
           </Grid>
 
-          {/** Repeat similar fields for length, width, depth, thickness, etc. */}
-          {/** Include species, location, and project selects as in the original example */}
-          {/** Include checkboxes for furniture, construction, liveEdge, and general */}
+          {formData.logId !== "" && (
+            <Grid item xs={12} sm={12}>
+              <Button
+                onClick={() => setIsFinalPlankDialogOpen(true)}
+                fullWidth
+                variant="contained"
+                color={logIsPlanked ? "dark" : "secondary"}
+                disabled={logIsPlanked}
+              >
+                {logIsPlanked ? "SET AS FINAL LOG" : "FINAL LOG?"}
+              </Button>
+            </Grid>
+          )}
 
+         
           <Grid item xs={12}>
             <Button
               variant="contained"
@@ -534,6 +592,34 @@ const AddPlank = () => {
           </Grid>
         </Grid>
       )}
+      {/* Dialog for confirming final log entry */}
+      <Dialog
+            open={isFinalPlankDialogOpen}
+            onClose={() => setIsFinalPlankDialogOpen(false)}
+          >
+            <DialogTitle>Confirm Final Plank</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Is this the final plank from this log? Confirming will mark the
+                log as fully milled.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={() => setIsFinalPlankDialogOpen(false)}
+                color="primary"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleFinalPlankConfirmation}
+                color="primary"
+                autoFocus
+              >
+                Confirm
+              </Button>
+            </DialogActions>
+          </Dialog>
     </div>
   );
 };
