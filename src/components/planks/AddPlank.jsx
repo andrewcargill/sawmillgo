@@ -307,7 +307,7 @@ const AddPlank = () => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography variant="h6">
-                Is this plank from a registered tree?
+                Is this plank from a registered log?
               </Typography>
               <Button
                 variant="contained"

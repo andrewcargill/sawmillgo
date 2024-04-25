@@ -34,58 +34,6 @@ async function generateUniqueRefId(db) {
   return refId;
 }
 
-// exports.updateTreeStatusAndProjectNameOnProjectChange = functions.firestore
-//   .document("sawmill/{sawmillId}/projects/{projectId}")
-//   .onUpdate(async (change, context) => {
-//     const db = admin.firestore();
-//     const projectId = context.params.projectId;
-//     const projectBeforeUpdate = change.before.data();
-//     const projectAfterUpdate = change.after.data();
-
-//     // Determine the new tree status based on the project's status
-//     let newTreeStatus;
-//     if (["active", "paused"].includes(projectAfterUpdate.status)) {
-//       newTreeStatus = "reserved";
-//     } else if (["sold", "with creator"].includes(projectAfterUpdate.status)) {
-//       newTreeStatus = "sold";
-//     } else {
-//       console.log(`Unknown project status: ${projectAfterUpdate.status}`);
-//       return null;
-//     }
-
-//     // Prepare updates for trees if the project name has changed
-//     let updates = { status: newTreeStatus };
-//     if (projectBeforeUpdate.projectName !== projectAfterUpdate.projectName) {
-//       updates.projectName = projectAfterUpdate.projectName;
-//     }
-
-//     // Update the status and, if necessary, projectName of all trees associated with this project
-//     const treesQuerySnapshot = await db
-//       .collectionGroup("trees")
-//       .where("projectId", "==", projectId)
-//       .get();
-
-//     if (treesQuerySnapshot.empty) {
-//       console.log("No trees found for the project");
-//       return null;
-//     }
-
-//     const batch = db.batch();
-//     treesQuerySnapshot.forEach((doc) => {
-//       batch.update(doc.ref, updates);
-//     });
-
-//     await batch.commit();
-//     console.log(
-//       `Updated all trees for project ${projectId}. Changes: `,
-//       updates
-//     );
-//   });
-
-// const functions = require('firebase-functions');
-// const admin = require('firebase-admin');
-// admin.initializeApp();
-
 exports.updateItemsOnProjectChange = functions.firestore
   .document("sawmill/{sawmillId}/projects/{projectId}")
   .onUpdate(async (change, context) => {
@@ -112,7 +60,7 @@ exports.updateItemsOnProjectChange = functions.firestore
     }
 
     // Define the types of items to update
-    const itemTypes = ['trees', 'logs', 'planks'];
+    const itemTypes = ["trees", "logs", "planks"];
 
     // Update each type of item in a batch
     for (const itemType of itemTypes) {
@@ -127,20 +75,26 @@ exports.updateItemsOnProjectChange = functions.firestore
           batch.update(doc.ref, updates);
         });
         await batch.commit();
-        console.log(`Updated all ${itemType} for project ${projectId}. Changes: `, updates);
+        console.log(
+          `Updated all ${itemType} for project ${projectId}. Changes: `,
+          updates
+        );
       }
     }
   });
 
-  exports.resetItemsOnProjectDeletion = functions.firestore
+exports.resetItemsOnProjectDeletion = functions.firestore
   .document("sawmill/{sawmillId}/projects/{projectId}")
   .onDelete(async (snapshot, context) => {
     const db = admin.firestore();
     const projectId = context.params.projectId;
 
     // Define the types of items to reset
-    const itemTypes = ['trees', 'logs', 'planks'];
-    const resets = { projectId: admin.firestore.FieldValue.delete(), projectName: admin.firestore.FieldValue.delete() };
+    const itemTypes = ["trees", "logs", "planks"];
+    const resets = {
+      projectId: admin.firestore.FieldValue.delete(),
+      projectName: admin.firestore.FieldValue.delete(),
+    };
 
     // Reset each type of item in a batch
     for (const itemType of itemTypes) {
@@ -155,10 +109,20 @@ exports.updateItemsOnProjectChange = functions.firestore
           batch.update(doc.ref, resets);
         });
         await batch.commit();
-        console.log(`Reset projectId and projectName for all ${itemType} where projectId was ${projectId}`);
+        console.log(
+          `Reset projectId and projectName for all ${itemType} where projectId was ${projectId}`
+        );
       }
     }
   });
+
+// const functions = require("firebase-functions");
+// const admin = require("firebase-admin");
+// admin.initializeApp();
+
+// const functions = require("firebase-functions");
+// const admin = require("firebase-admin");
+// admin.initializeApp();
 
 exports.onTreeUpdated = functions.firestore
   .document("sawmill/{sawmillId}/trees/{treeId}")
@@ -340,7 +304,69 @@ exports.addLog = functions.firestore
     }
   });
 
-  exports.addPlank = functions.firestore
+// exports.addPlank = functions.firestore
+// .document("sawmill/{sawmillId}/planks/{plankId}")
+// .onCreate(async (snap, context) => {
+//   const db = admin.firestore();
+//   const sawmillId = context.params.sawmillId;
+//   const plankId = context.params.plankId;
+//   const plankData = snap.data();
+//   const projectId = plankData.projectId;
+
+//   try {
+//     // Generate a unique RefId for the plank and set the createdAt timestamp
+//     const refId = await generateUniqueRefId(db);
+//     let updates = {
+//       refId: refId,
+//       createdAt: admin.firestore.FieldValue.serverTimestamp(), // Adding createdAt timestamp
+//     };
+
+//     // If a projectId is specified, fetch the project to determine the plank's status
+//     if (projectId) {
+//       const projectRef = db
+//         .collection("sawmill")
+//         .doc(sawmillId)
+//         .collection("projects")
+//         .doc(projectId);
+//       const projectSnap = await projectRef.get();
+
+//       if (!projectSnap.exists) {
+//         console.log(`Project with ID ${projectId} does not exist.`);
+//         return null;
+//       }
+
+//       const projectData = projectSnap.data();
+//       let newPlankStatus;
+
+//       // Determine the new plank status based on the project's status
+//       if (["active", "paused"].includes(projectData.status)) {
+//         newPlankStatus = "reserved";
+//       } else if (["sold", "with creator"].includes(projectData.status)) {
+//         newPlankStatus = "sold";
+//       } else {
+//         console.log(`Unknown project status: ${projectData.status}`);
+//         return null;
+//       }
+
+//       updates["status"] = newPlankStatus;
+//     }
+
+//     // Update the plank document with the new RefId, createdAt timestamp, and, if applicable, the new status
+//     await db
+//       .collection("sawmill")
+//       .doc(sawmillId)
+//       .collection("planks")
+//       .doc(plankId)
+//       .update(updates);
+//     console.log(
+//       `Assigned unique RefId ${refId} and createdAt timestamp to plank ${plankId} in sawmill ${sawmillId}. Status: ${updates.status}`
+//     );
+//   } catch (error) {
+//     console.error("Error processing plank:", error);
+//   }
+// });
+
+exports.addPlank = functions.firestore
   .document("sawmill/{sawmillId}/planks/{plankId}")
   .onCreate(async (snap, context) => {
     const db = admin.firestore();
@@ -348,16 +374,16 @@ exports.addLog = functions.firestore
     const plankId = context.params.plankId;
     const plankData = snap.data();
     const projectId = plankData.projectId;
+    const logId = plankData.logId; // Assuming logId is stored in plank data
 
     try {
-      // Generate a unique RefId for the plank and set the createdAt timestamp
       const refId = await generateUniqueRefId(db);
+
       let updates = {
         refId: refId,
-        createdAt: admin.firestore.FieldValue.serverTimestamp(), // Adding createdAt timestamp
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
       };
 
-      // If a projectId is specified, fetch the project to determine the plank's status
       if (projectId) {
         const projectRef = db
           .collection("sawmill")
@@ -372,36 +398,72 @@ exports.addLog = functions.firestore
         }
 
         const projectData = projectSnap.data();
-        let newPlankStatus;
+        let newPlankStatus =
+          projectData.status === "active" || projectData.status === "paused"
+            ? "reserved"
+            : projectData.status === "sold" ||
+              projectData.status === "with creator"
+            ? "sold"
+            : null;
 
-        // Determine the new plank status based on the project's status
-        if (["active", "paused"].includes(projectData.status)) {
-          newPlankStatus = "reserved";
-        } else if (["sold", "with creator"].includes(projectData.status)) {
-          newPlankStatus = "sold";
+        if (newPlankStatus) {
+          updates["status"] = newPlankStatus;
         } else {
           console.log(`Unknown project status: ${projectData.status}`);
           return null;
         }
-
-        updates["status"] = newPlankStatus;
       }
 
-      // Update the plank document with the new RefId, createdAt timestamp, and, if applicable, the new status
+      // First, update the plank document with refId and possibly status
       await db
         .collection("sawmill")
         .doc(sawmillId)
         .collection("planks")
         .doc(plankId)
         .update(updates);
+
+      // If a logId is provided, update the corresponding log document
+      if (logId) {
+        // Adjust query to find log by a 'refId' field
+        const logsCollection = db
+          .collection("sawmill")
+          .doc(sawmillId)
+          .collection("logs");
+        const querySnapshot = await logsCollection
+          .where("refId", "==", logId)
+          .limit(1)
+          .get();
+        if (!querySnapshot.empty) {
+          const logDoc = querySnapshot.docs[0]; // Get the first document that matches
+          await db.runTransaction(async (transaction) => {
+            const logData = logDoc.data();
+            const plankIds = logData.plankIds || [];
+            if (!plankIds.includes(refId)) {
+              // Ensure plankRefId is passed correctly
+              plankIds.push(refId); // Add the plank's refId to the array
+              transaction.update(logDoc.ref, { plankIds: plankIds });
+            } else {
+              console.warn(
+                "Plank ID already exists in the log's plankIds array."
+              );
+            }
+          });
+        } else {
+          throw new Error(`No log found with refId: ${logId}`);
+        }
+      } else {
+        throw new Error("logId is undefined or not provided.");
+      }
+
       console.log(
-        `Assigned unique RefId ${refId} and createdAt timestamp to plank ${plankId} in sawmill ${sawmillId}. Status: ${updates.status}`
+        `Assigned unique RefId ${refId} to plank ${plankId} in sawmill ${sawmillId}. Status: ${
+          updates.status || "N/A"
+        }`
       );
     } catch (error) {
       console.error("Error processing plank:", error);
     }
   });
-
 
 exports.initializeSawmillSubcollections = functions.firestore
   .document("sawmill/{sawmillId}")

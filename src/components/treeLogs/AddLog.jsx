@@ -72,6 +72,7 @@ const AddLog = () => {
     length: "",
     status: "available",
     verified: false,
+    planked: false,
   });
 
   useEffect(() => {
@@ -144,6 +145,7 @@ const AddLog = () => {
         length: "",
         status: "available",
         verified: false,
+        planked: false,
       });
 
       const unsubscribe = onSnapshot(
