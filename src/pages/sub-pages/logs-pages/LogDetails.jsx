@@ -12,11 +12,13 @@ import {
   TextField,
   DialogActions,
 } from "@mui/material";
+import { set } from "firebase/database";
 
 const LogDetails = () => {
   const [open, setOpen] = useState(false);
   const [deleteInput, setDeleteInput] = useState("");
   const [logDetails, setLogDetails] = useState(null);
+  const [plankList, setPlankList] = useState([]);
   const { logId } = useParams();
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
@@ -29,11 +31,15 @@ const LogDetails = () => {
 
   useEffect(() => {
     const fetchLogDetails = async () => {
-      const docRef = doc(db, `sawmill/${sawmillId}/logs`, logId); // Ensure you have the correct path and possibly sawmillId
+      const docRef = doc(db, `sawmill/${sawmillId}/logs`, logId);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
         setLogDetails(docSnap.data());
+        setPlankList(docSnap.data().plankIds);
+        console.log(plankList);
+        
+        
       } else {
         console.log("No such document!");
       }
@@ -89,7 +95,16 @@ const LogDetails = () => {
               <p>Tree Id: {logDetails.treeId}</p>
               <p> (p/h)Lumberjack: John Smith</p>
               <p>(p/h)Felled: 2023-04-01</p>
+            <br/>
+            
+                <h2>Planks from this log</h2>
+                {plankList?.map((plankId) => (
+                  <p key={plankId}>{plankId}</p>
+                ))}
+             
+
             </>
+
           )}
           <Grid container spacing={2} p={1} >
             <Grid item xs={12}>
