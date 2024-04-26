@@ -22,6 +22,8 @@ import TreeDetailsModal from "./TreeDetailsModal";
 import TreeListModal from "./TreeListModal";
 import { fetchSpeciesForSawmill } from "../../utils/filestoreOperations";
 import { Add } from "@mui/icons-material";
+import CarpenterIcon from "@mui/icons-material/Carpenter";
+import BlockIcon from "@mui/icons-material/Block";
 
 const ListAllTrees = () => {
   const [trees, setTrees] = useState([]);
@@ -222,6 +224,7 @@ const ListAllTrees = () => {
               m={1}
               bgcolor={"white.main"}
               style={{
+                position: 'relative',
                 border: `2px solid ${tree.logged ? "orange" : "green"}`,
                 borderRadius: "5px",
                 padding: "12px",
@@ -239,7 +242,13 @@ const ListAllTrees = () => {
               <Grid item>
                 <p>{tree.speciesName}</p>
               </Grid>
+              <div style={{ position: 'absolute', top: '8px', right: '8px' }}>
+
+{tree.logIds && tree.logIds.length > 0 && <CarpenterIcon color="dark" fontSize="small" /> }
+{tree.logged && <BlockIcon color="secondary" fontSize="small" /> }
+</div>
             </Grid>
+            
           ))
         ) : (
           <Grid item xs={12}>

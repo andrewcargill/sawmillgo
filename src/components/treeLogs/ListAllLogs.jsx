@@ -6,6 +6,9 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
+import CarpenterIcon from '@mui/icons-material/Carpenter';
+import BlockIcon from '@mui/icons-material/Block';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 
 const ListAllLogs = () => {
   const [logs, setLogs] = useState([]);
@@ -87,38 +90,49 @@ const ListAllLogs = () => {
         alignContent={"center"}
       >
         {logs.length > 0 ? (
-          logs.map((log) => (
-            <Grid
-              className="item-select"
-              item
-              container
-              xs={3}
-              sm={2}
-              lg={2}
-              key={log.id}
-              m={1}
-              bgcolor={"white.main"}
-              style={{
-        
-                border: log.verified ? "4px solid green" : "2px solid lightgrey",
-                borderRadius: "5px",
-                padding: "12px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                cursor: "pointer",
-              }}
-              onClick={handleLogClick(log.id)}
-            >
-              <Grid item>
-                <h3>{log.refId}</h3>
-              </Grid>
-              <Grid item>
-                <p>{log.speciesName}</p>
-              </Grid>
-            </Grid>
-          ))
+     logs.map((log) => (
+      <Grid
+        className="item-select"
+        item
+        container
+        xs={3}
+        sm={2}
+        lg={2}
+        key={log.id}
+        m={1}
+        bgcolor={"white.main"}
+        style={{
+          position: 'relative', // Ensure this container is the positioning context
+          border: log.verified ? "4px solid green" : "2px solid lightgrey",
+          borderRadius: "5px",
+          padding: "12px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          cursor: "pointer",
+        }}
+        onClick={handleLogClick(log.id)}
+      >
+        <Grid item>
+          <h3>{log.refId}</h3>
+        </Grid>
+        <Grid item>
+          <p>{log.speciesName}</p>
+        </Grid>
+        {/* Position the icon absolutely within its parent Grid container */}
+        <div style={{ position: 'absolute', top: '8px', right: '8px' }}>
+
+         {log.plankIds && log.plankIds.length > 0 && <CarpenterIcon color="dark" fontSize="small" /> }
+         {log.planked && <BlockIcon color="secondary" fontSize="small" /> }
+         {log.verified && <WorkspacePremiumIcon color="primary" fontSize="small" /> }
+        </div>
+        {/* <div style={{ position: 'absolute', top: '8px', right: '20px' }}>
+       
+        </div> */}
+      </Grid>
+    ))
+    
         ) : (
           <Grid item xs={12}>
             <Typography variant="body1">No logs found.</Typography>

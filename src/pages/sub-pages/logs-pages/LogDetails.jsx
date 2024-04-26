@@ -97,15 +97,20 @@ const LogDetails = () => {
               <p>(p/h)Felled: 2023-04-01</p>
             <br/>
             
-                <h2>Planks from this log</h2>
-                {plankList?.map((plankId) => (
-                  <p key={plankId}>{plankId}</p>
-                ))}
-             
+          
 
             </>
 
           )}
+{logDetails.plankIds &&
+<>
+<h2>Planks from this log</h2>
+                {plankList?.map((plankId) => (
+                  <p key={plankId}>{plankId}</p>
+                ))}
+</>
+              }
+             
           <Grid container spacing={2} p={1} >
             <Grid item xs={12}>
             <Button variant="contained" onClick={handleClickOpen} fullWidth>
