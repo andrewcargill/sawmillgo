@@ -104,102 +104,233 @@ const AddLog = () => {
     }
   }, [db, sawmillId, formData.verified]);
 
+  useEffect(() => {
+    console.log("tree is logged:", treeIsLogged);
+  }, [treeIsLogged]);
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setIsLoading(true);
+
+  //   // Basic validation example
+  //   if (
+  //     !sawmillId ||
+  //     !formData.date ||
+  //     !formData.locationId ||
+  //     !formData.speciesId
+  //   ) {
+  //     console.error("All required fields must be filled.");
+  //     alert("Please fill all required fields.");
+  //     setIsLoading(false);
+  //     return;
+  //   }
+
+  //   try {
+  //     const docRef = await addDoc(
+  //       collection(db, `sawmill/${sawmillId}/logs`),
+  //       formData
+  //     );
+  //     console.log("Document written with ID: ", docRef.id);
+  //     // alert("Log added successfully");
+
+  //     // Resetting form data
+  //     setFormData({
+  //       date: "",
+  //       lumberjackUid: currentUserUID,
+  //       lumberjackName: userName,
+  //       treeId: "",
+  //       projectId: "",
+  //       projectName: "",
+  //       locationId: "",
+  //       locationName: "",
+  //       speciesName: "",
+  //       speciesId: "",
+  //       diameter: "",
+  //       length: "",
+  //       status: "available",
+  //       verified: false,
+  //       planked: false,
+  //     });
+
+  //     const unsubscribe = onSnapshot(
+  //       doc(db, `sawmill/${sawmillId}/logs`, docRef.id),
+  //       (doc) => {
+  //         const data = doc.data();
+  //         if (data.refId) {
+  //           // Once refId is present, display the alert
+  //           alert(`Log added successfully! RefId: ${data.refId}`);
+  //           unsubscribe(); // Detach the listener
+  //           setIsLoading(false);
+  //         }
+  //       }
+  //     );
+  //   } catch (error) {
+  //     console.error("Error adding document: ", error);
+  //     alert("Failed to add log: " + error.message);
+  //   }
+
+  //   setIsLoading(false);
+  // };
+
+  // const handleFinalLogConfirmation = async () => {
+  //   setIsLoading(true);
+  //   const treeRef = doc(db, `sawmill/${sawmillId}/trees`, treeId);
+
+  //   try {
+  //     await runTransaction(db, async (transaction) => {
+  //       const treeDoc = await transaction.get(treeRef);
+  //       if (!treeDoc.exists()) {
+  //         throw new Error("Document does not exist!");
+  //       }
+
+  //       const treeData = treeDoc.data();
+  //       if (treeData.logged === false) {
+  //         // Only update if logged is false
+  //         transaction.update(treeRef, { logged: true });
+  //         console.log("Tree marked as fully logged.");
+  //         setTreeIsLogged(true);
+
+  //         // await handleSubmit();
+  //       } else {
+  //         console.log("Tree already marked as logged, no action taken.");
+  //       }
+  //     });
+  //     alert("Transaction successfully completed!");
+  //   } catch (error) {
+  //     console.error("Transaction failed: ", error);
+  //     alert("Failed to mark tree as fully logged: " + error.message);
+  //   }
+
+  //   setIsLoading(false);
+  //   setIsFinalLogDialogOpen(false); // Close the dialog after handling
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
-    // Basic validation example
-    if (
-      !sawmillId ||
-      !formData.date ||
-      !formData.locationId ||
-      !formData.speciesId
-    ) {
+  
+    if (!sawmillId || !formData.date || !formData.locationId || !formData.speciesId) {
       console.error("All required fields must be filled.");
       alert("Please fill all required fields.");
       setIsLoading(false);
       return;
     }
+  
+    // Open confirmation dialog if the log is set as final and a tree ID is present
+    if (treeIsLogged && formData.treeId) {
+      setIsFinalLogDialogOpen(true);
+    } else {
+      submitLog();  // Submit the log without updating the tree
+    }
+  };
+  
+  const handleFinalLogConfirmation = () => {
+    setIsFinalLogDialogOpen(false);  // Close the dialog
+    submitLog(true);  // Submit the log and mark the tree as logged
+  };
+  
+  const handleCancelFinalLog = () => {
+    setIsFinalLogDialogOpen(false);
+    submitLog();  // Submit the log without marking the tree as logged
+  };
+  
 
+  const resetForm = () => {
+    setFormData({
+      date: "",
+      lumberjackUid: currentUserUID,
+      lumberjackName: userName,
+      treeId: "",
+      projectId: "",
+      projectName: "",
+      locationId: "",
+      locationName: "",
+      speciesName: "",
+      speciesId: "",
+      diameter: "",
+      length: "",
+      status: "available",
+      verified: false,
+      planked: false,
+    });
+    setTreeIsLogged(false);
+  };
+
+  // const submitLog = async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     const docRef = await addDoc(
+  //       collection(db, `sawmill/${sawmillId}/logs`),
+  //       formData
+  //     );
+  //     console.log("Document written with ID: ", docRef.id);
+
+  //     // Subscription to listen for the generated RefId
+  //     const unsubscribe = onSnapshot(
+  //       doc(db, `sawmill/${sawmillId}/logs`, docRef.id),
+  //       (snapshot) => {
+  //         const data = snapshot.data();
+  //         if (data && data.refId) {
+  //           console.log("RefId has been generated: ", data.refId);
+  //           alert(`Log added successfully! RefId: ${data.refId}`);
+
+  //           // Update the tree as fully logged if confirmed and applicable
+  //           if (treeIsLogged && formData.treeId) {
+  //             const treeRef = doc(
+  //               db,
+  //               `sawmill/${sawmillId}/trees`,
+  //               formData.treeId
+  //             );
+  //             updateDoc(treeRef, { logged: true })
+  //               .then(() => {
+  //                 console.log("Tree marked as fully logged.");
+  //               })
+  //               .catch((error) =>
+  //                 console.error("Failed to mark tree as logged: ", error)
+  //               );
+  //           }
+
+  //           unsubscribe(); // Detach the listener
+  //           resetForm(); // Clear form data after successful submission
+  //         }
+  //       },
+  //       (error) => {
+  //         console.error("Failed to fetch updated document: ", error);
+  //         alert("Error fetching updated document.");
+  //       }
+  //     );
+  //   } catch (error) {
+  //     console.error("Error adding document: ", error);
+  //     alert("Failed to add log: " + error.message);
+  //   }
+  //   setIsLoading(false);
+  // };
+
+  const submitLog = async (markTreeLogged = false) => {
     try {
-      const docRef = await addDoc(
-        collection(db, `sawmill/${sawmillId}/logs`),
-        formData
-      );
+      const docRef = await addDoc(collection(db, `sawmill/${sawmillId}/logs`), formData);
       console.log("Document written with ID: ", docRef.id);
-      // alert("Log added successfully");
-
-      // Resetting form data
-      setFormData({
-        date: "",
-        lumberjackUid: currentUserUID,
-        lumberjackName: userName,
-        treeId: "",
-        projectId: "",
-        projectName: "",
-        locationId: "",
-        locationName: "",
-        speciesName: "",
-        speciesId: "",
-        diameter: "",
-        length: "",
-        status: "available",
-        verified: false,
-        planked: false,
-      });
-
-      const unsubscribe = onSnapshot(
-        doc(db, `sawmill/${sawmillId}/logs`, docRef.id),
-        (doc) => {
-          const data = doc.data();
-          if (data.refId) {
-            // Once refId is present, display the alert
-            alert(`Log added successfully! RefId: ${data.refId}`);
-            unsubscribe(); // Detach the listener
-            setIsLoading(false);
+  
+      const unsubscribe = onSnapshot(doc(db, `sawmill/${sawmillId}/logs`, docRef.id), (docSnapshot) => {
+        if (docSnapshot.exists && docSnapshot.data().refId) {
+          console.log("RefId has been generated: ", docSnapshot.data().refId);
+          alert(`Log added successfully! RefId: ${docSnapshot.data().refId}`);
+          if (markTreeLogged) {
+            updateDoc(doc(db, `sawmill/${sawmillId}/trees`, formData.treeId), { logged: true });
+            console.log("Tree marked as fully logged.");
           }
+          unsubscribe();
+          resetForm();
+          setIsLoading(false);
         }
-      );
+      });
     } catch (error) {
       console.error("Error adding document: ", error);
       alert("Failed to add log: " + error.message);
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
-
-  const handleFinalLogConfirmation = async () => {
-    setIsLoading(true);
-    const treeRef = doc(db, `sawmill/${sawmillId}/trees`, treeId);
-
-    try {
-      await runTransaction(db, async (transaction) => {
-        const treeDoc = await transaction.get(treeRef);
-        if (!treeDoc.exists()) {
-          throw new Error("Document does not exist!");
-        }
-
-        const treeData = treeDoc.data();
-        if (treeData.logged === false) {
-          // Only update if logged is false
-          transaction.update(treeRef, { logged: true });
-          console.log("Tree marked as fully logged.");
-          setTreeIsLogged(true);
-
-          // await handleSubmit();
-        } else {
-          console.log("Tree already marked as logged, no action taken.");
-        }
-      });
-      alert("Transaction successfully completed!");
-    } catch (error) {
-      console.error("Transaction failed: ", error);
-      alert("Failed to mark tree as fully logged: " + error.message);
-    }
-
-    setIsLoading(false);
-    setIsFinalLogDialogOpen(false); // Close the dialog after handling
-  };
+  
 
   const handleWithoutTreeClick = () => {
     setWithTree(false);
@@ -408,17 +539,25 @@ const AddLog = () => {
           </Grid>
 
           {formData.treeId !== "" && (
-            <Grid item xs={12} sm={12}>
-              <Button
-                onClick={() => setIsFinalLogDialogOpen(true)}
-                fullWidth
-                variant="contained"
-                color={treeIsLogged ? "dark" : "secondary"}
-                disabled={treeIsLogged}
-              >
-                {treeIsLogged ? "SET AS FINAL LOG" : "FINAL LOG?"}
-              </Button>
-            </Grid>
+            // <Grid item xs={12} sm={12}>
+            //   <Button
+            //     onClick={() => setTreeIsLogged(true)}
+            //     fullWidth
+            //     variant="contained"
+            //     color={treeIsLogged ? "dark" : "secondary"}
+            //     disabled={treeIsLogged}
+            //   >
+            //     {treeIsLogged ? "SET AS FINAL LOG" : "FINAL LOG?"}
+            //   </Button>
+            // </Grid>
+            <Button
+              onClick={() => setTreeIsLogged((prev) => !prev)} // Toggle the state
+              fullWidth
+              variant="contained"
+              color={treeIsLogged ? "dark" : "secondary"}
+            >
+              {treeIsLogged ? "Final Log Set" : "Set as Final Log?"}
+            </Button>
           )}
           <Grid item xs={12} sm={12}>
             <Button
@@ -445,13 +584,13 @@ const AddLog = () => {
             </DialogContent>
             <DialogActions>
               <Button
-                onClick={() => setIsFinalLogDialogOpen(false)}
+                onClick={handleFinalLogConfirmation}
                 color="primary"
               >
                 Cancel
               </Button>
               <Button
-                onClick={handleFinalLogConfirmation}
+                onClick={handleCancelFinalLog}
                 color="primary"
                 autoFocus
               >
