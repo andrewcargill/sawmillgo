@@ -18,25 +18,56 @@ function TreeDetailsModal({ treeDetails, onClose, setMode }) {
   const sawmillId = userLocalStorage?.sawmillId;
   const treeUid = treeDetails?.id;
 
+  // const handleDelete = async () => {
+  //   // Use prompt to ask the user to input the refId
+  //   const userInput = window.prompt(
+  //     `This action will delete ${treeDetails.refId}. Type the Ref ID to confirm.`
+  //   );
+
+  //   if (userInput === treeDetails.refId) {
+  //     try {
+  //       if (treeUid) {
+  //         await deleteDoc(doc(db, `sawmill/${sawmillId}/trees`, treeUid));
+  //         alert("Tree deleted successfully.");
+  //         onClose(); // Close the modal or redirect user
+  //       }
+  //     } catch (error) {
+  //       console.error("Error deleting tree: ", error);
+  //       alert(`Failed to delete tree. Error: ${error.message}`);
+  //     }
+  //   }
+  // };
+
   const handleDelete = async () => {
     // Use prompt to ask the user to input the refId
     const userInput = window.prompt(
       `This action will delete ${treeDetails.refId}. Type the Ref ID to confirm.`
     );
-
+  
     if (userInput === treeDetails.refId) {
-      try {
-        if (treeUid) {
-          await deleteDoc(doc(db, `sawmill/${sawmillId}/trees`, treeUid));
-          alert("Tree deleted successfully.");
-          onClose(); // Close the modal or redirect user
+      // Check for associated log IDs in the tree details
+      if (treeDetails.logIds && treeDetails.logIds.length > 0) {
+        // If log IDs exist, prevent deletion and alert the user with a list of log IDs
+        const logList = treeDetails.logIds.join(', '); // Creates a string of log IDs separated by commas
+        alert(`Cannot delete tree: It has associated logs with IDs: ${logList}.`);
+      } else {
+        // If no log IDs, proceed with deletion
+        try {
+          if (treeDetails.id) { // Assuming treeDetails.id is the correct document ID for the tree
+            await deleteDoc(doc(db, `sawmill/${sawmillId}/trees`, treeDetails.id));
+            alert("Tree deleted successfully.");
+            onClose(); // Close the modal or redirect user
+          }
+        } catch (error) {
+          console.error("Error deleting tree: ", error);
+          alert(`Failed to delete tree. Error: ${error.message}`);
         }
-      } catch (error) {
-        console.error("Error deleting tree: ", error);
-        alert(`Failed to delete tree. Error: ${error.message}`);
       }
+    } else {
+      alert("Incorrect RefId. Please try again.");
     }
   };
+  
 
   const handleEditButtonClick = () => {
     setMode("edit");

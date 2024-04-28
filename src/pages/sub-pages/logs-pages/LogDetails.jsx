@@ -48,17 +48,31 @@ const LogDetails = () => {
     fetchLogDetails();
   }, [logId]);
 
+
   const handleDelete = async () => {
+    // First, check if the input Ref ID matches the log's Ref ID
     if (deleteInput === logDetails.refId) {
-      await deleteDoc(doc(db, `sawmill/${sawmillId}/logs`, logId));
-      alert("Log deleted successfully");
-      // Redirect or perform additional actions as necessary
-      setLogDetails(null); // Clear the details if staying on the same page
+      // Check for associated plank IDs in the log details
+      if (logDetails.plankIds && logDetails.plankIds.length > 0) {
+        // If plank IDs exist, prevent deletion and alert the user
+        const plankList = logDetails.plankIds.join(', '); // Creates a string of plank IDs separated by commas
+        alert(`Cannot delete log: It has associated planks with IDs: ${plankList}. These must be removed if you wish to remove this log`);
+      } else {
+        // If no plank IDs, proceed with deletion
+        try {
+          await deleteDoc(doc(db, `sawmill/${sawmillId}/logs`, logId));
+          alert("Log deleted successfully.");
+          setLogDetails(null); // Clear the details if staying on the same page
+        } catch (error) {
+          console.error("Error deleting log:", error);
+          alert("Failed to delete log. Please try again.");
+        }
+      }
     } else {
       alert("Incorrect RefId. Please try again.");
     }
     setOpen(false); // Close the dialog after attempt
-    returnToAllLogs();
+    returnToAllLogs(); // Assumed function to redirect user
   };
 
   const handleClickOpen = () => {

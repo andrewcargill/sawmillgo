@@ -192,15 +192,23 @@ exports.onTreeUpdated = functions.firestore
     if (projectIdAfter !== projectIdBefore) {
       // Handle removal from the old project
       if (projectIdBefore) {
-        const oldProjectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectIdBefore);
+        const oldProjectRef = db
+          .collection("sawmill")
+          .doc(sawmillId)
+          .collection("projects")
+          .doc(projectIdBefore);
         await oldProjectRef.update({
-          treeRefIds: admin.firestore.FieldValue.arrayRemove(treeRefId)
+          treeRefIds: admin.firestore.FieldValue.arrayRemove(treeRefId),
         });
       }
 
       // Handle addition to the new project
       if (projectIdAfter) {
-        const newProjectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectIdAfter);
+        const newProjectRef = db
+          .collection("sawmill")
+          .doc(sawmillId)
+          .collection("projects")
+          .doc(projectIdAfter);
         const newProjectSnap = await newProjectRef.get();
 
         if (!newProjectSnap.exists) {
@@ -222,7 +230,7 @@ exports.onTreeUpdated = functions.firestore
 
         // Update the new project with the treeRefId
         await newProjectRef.update({
-          treeRefIds: admin.firestore.FieldValue.arrayUnion(treeRefId)
+          treeRefIds: admin.firestore.FieldValue.arrayUnion(treeRefId),
         });
 
         // Set the new status for the tree
@@ -242,7 +250,7 @@ exports.onTreeUpdated = functions.firestore
     return null; // End function execution if there's no projectId change
   });
 
-  exports.onTreeDeleted = functions.firestore
+exports.onTreeDeleted = functions.firestore
   .document("sawmill/{sawmillId}/trees/{treeId}")
   .onDelete(async (snap, context) => {
     const db = admin.firestore();
@@ -253,14 +261,20 @@ exports.onTreeUpdated = functions.firestore
     const treeRefId = treeData.refId; // Ensure the tree document includes refId
 
     if (projectId) {
-      const projectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectId);
+      const projectRef = db
+        .collection("sawmill")
+        .doc(sawmillId)
+        .collection("projects")
+        .doc(projectId);
 
       // Remove the tree's refId from the project's treeRefIds array
       try {
         await projectRef.update({
-          treeRefIds: admin.firestore.FieldValue.arrayRemove(treeRefId)
+          treeRefIds: admin.firestore.FieldValue.arrayRemove(treeRefId),
         });
-        console.log(`Removed tree refId ${treeRefId} from project ${projectId} upon deletion.`);
+        console.log(
+          `Removed tree refId ${treeRefId} from project ${projectId} upon deletion.`
+        );
       } catch (error) {
         console.error("Error removing tree refId from project:", error);
       }
@@ -268,9 +282,6 @@ exports.onTreeUpdated = functions.firestore
 
     return null;
   });
-
-
-
 
 exports.addTree = functions.firestore
   .document("sawmill/{sawmillId}/trees/{treeId}")
@@ -431,7 +442,7 @@ exports.addLog = functions.firestore
     }
   });
 
-  exports.onLogUpdated = functions.firestore
+exports.onLogUpdated = functions.firestore
   .document("sawmill/{sawmillId}/logs/{logId}")
   .onUpdate(async (change, context) => {
     const db = admin.firestore();
@@ -448,15 +459,23 @@ exports.addLog = functions.firestore
     if (projectIdAfter !== projectIdBefore) {
       // Handle removal from the old project
       if (projectIdBefore) {
-        const oldProjectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectIdBefore);
+        const oldProjectRef = db
+          .collection("sawmill")
+          .doc(sawmillId)
+          .collection("projects")
+          .doc(projectIdBefore);
         await oldProjectRef.update({
-          logRefIds: admin.firestore.FieldValue.arrayRemove(logRefId)
+          logRefIds: admin.firestore.FieldValue.arrayRemove(logRefId),
         });
       }
 
       // Handle addition to the new project
       if (projectIdAfter) {
-        const newProjectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectIdAfter);
+        const newProjectRef = db
+          .collection("sawmill")
+          .doc(sawmillId)
+          .collection("projects")
+          .doc(projectIdAfter);
         const newProjectSnap = await newProjectRef.get();
 
         if (!newProjectSnap.exists) {
@@ -478,7 +497,7 @@ exports.addLog = functions.firestore
 
         // Update the new project with the logRefId
         await newProjectRef.update({
-          logRefIds: admin.firestore.FieldValue.arrayUnion(logRefId)
+          logRefIds: admin.firestore.FieldValue.arrayUnion(logRefId),
         });
 
         // Set the new status for the log
@@ -498,7 +517,33 @@ exports.addLog = functions.firestore
     return null; // End function execution if there's no projectId change
   });
 
-  exports.onLogDeleted = functions.firestore
+// exports.onLogDeleted = functions.firestore
+// .document("sawmill/{sawmillId}/logs/{logId}")
+// .onDelete(async (snap, context) => {
+//   const db = admin.firestore();
+//   const sawmillId = context.params.sawmillId;
+//   const logData = snap.data();
+//   const projectId = logData.projectId;
+//   const logRefId = logData.refId; // Ensure the log document includes refId
+
+//   if (projectId) {
+//     const projectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectId);
+
+//     // Remove the log's refId from the project's logRefIds array
+//     try {
+//       await projectRef.update({
+//         logRefIds: admin.firestore.FieldValue.arrayRemove(logRefId)
+//       });
+//       console.log(`Removed log refId ${logRefId} from project ${projectId} upon deletion.`);
+//     } catch (error) {
+//       console.error("Error removing log refId from project:", error);
+//     }
+//   }
+
+//   return null;
+// });
+
+exports.onLogDeleted = functions.firestore
   .document("sawmill/{sawmillId}/logs/{logId}")
   .onDelete(async (snap, context) => {
     const db = admin.firestore();
@@ -506,25 +551,54 @@ exports.addLog = functions.firestore
     const logData = snap.data();
     const projectId = logData.projectId;
     const logRefId = logData.refId; // Ensure the log document includes refId
+    const treeId = logData.treeId; // The refId of the tree this log is associated with
 
+    // Remove the log's refId from the associated project
     if (projectId) {
-      const projectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectId);
-
-      // Remove the log's refId from the project's logRefIds array
+      const projectRef = db
+        .collection("sawmill")
+        .doc(sawmillId)
+        .collection("projects")
+        .doc(projectId);
       try {
         await projectRef.update({
-          logRefIds: admin.firestore.FieldValue.arrayRemove(logRefId)
+          logRefIds: admin.firestore.FieldValue.arrayRemove(logRefId),
         });
-        console.log(`Removed log refId ${logRefId} from project ${projectId} upon deletion.`);
+        console.log(
+          `Removed log refId ${logRefId} from project ${projectId} upon deletion.`
+        );
       } catch (error) {
         console.error("Error removing log refId from project:", error);
+      }
+    }
+    // Remove the log's refId from the associated tree
+    if (treeId) {
+      const treeRef = db
+        .collection("sawmill")
+        .doc(sawmillId)
+        .collection("trees")
+        .where("refId", "==", treeId);
+      const querySnapshot = await treeRef.get();
+
+      if (!querySnapshot.empty) {
+        const treeDoc = querySnapshot.docs[0]; // Assuming only one tree will have this refId
+        try {
+          await treeDoc.ref.update({
+            logIds: admin.firestore.FieldValue.arrayRemove(logRefId),
+          });
+          console.log(`Removed log refId ${logRefId} from tree ${treeId}.`);
+        } catch (error) {
+          console.error(`Error removing log refId from tree ${treeId}:`, error);
+        }
+      } else {
+        console.log(
+          `No tree found with refId ${treeId}, no log refId removal needed.`
+        );
       }
     }
 
     return null;
   });
-
-
 
 exports.addPlank = functions.firestore
   .document("sawmill/{sawmillId}/planks/{plankId}")
@@ -630,7 +704,7 @@ exports.addPlank = functions.firestore
     }
   });
 
-  exports.onPlankUpdated = functions.firestore
+exports.onPlankUpdated = functions.firestore
   .document("sawmill/{sawmillId}/planks/{plankId}")
   .onUpdate(async (change, context) => {
     const db = admin.firestore();
@@ -647,15 +721,23 @@ exports.addPlank = functions.firestore
     if (projectIdAfter !== projectIdBefore) {
       // Handle removal from the old project
       if (projectIdBefore) {
-        const oldProjectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectIdBefore);
+        const oldProjectRef = db
+          .collection("sawmill")
+          .doc(sawmillId)
+          .collection("projects")
+          .doc(projectIdBefore);
         await oldProjectRef.update({
-          plankRefIds: admin.firestore.FieldValue.arrayRemove(plankRefId)
+          plankRefIds: admin.firestore.FieldValue.arrayRemove(plankRefId),
         });
       }
 
       // Handle addition to the new project
       if (projectIdAfter) {
-        const newProjectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectIdAfter);
+        const newProjectRef = db
+          .collection("sawmill")
+          .doc(sawmillId)
+          .collection("projects")
+          .doc(projectIdAfter);
         const newProjectSnap = await newProjectRef.get();
 
         if (!newProjectSnap.exists) {
@@ -677,7 +759,7 @@ exports.addPlank = functions.firestore
 
         // Update the new project with the plankRefId
         await newProjectRef.update({
-          plankRefIds: admin.firestore.FieldValue.arrayUnion(plankRefId)
+          plankRefIds: admin.firestore.FieldValue.arrayUnion(plankRefId),
         });
 
         // Set the new status for the plank
@@ -697,7 +779,7 @@ exports.addPlank = functions.firestore
     return null; // End function execution if there's no projectId change
   });
 
-  exports.onPlankDeleted = functions.firestore
+exports.onPlankDeleted = functions.firestore
   .document("sawmill/{sawmillId}/planks/{plankId}")
   .onDelete(async (snap, context) => {
     const db = admin.firestore();
@@ -705,25 +787,59 @@ exports.addPlank = functions.firestore
     const plankData = snap.data();
     const projectId = plankData.projectId;
     const plankRefId = plankData.refId; // Ensure the plank document includes refId
+    const logRefId = plankData.logId; // The refId of the log this plank is associated with
 
+    // Remove plank refId from associated project
     if (projectId) {
-      const projectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectId);
-
-      // Remove the plank's refId from the project's plankRefIds array
+      const projectRef = db
+        .collection("sawmill")
+        .doc(sawmillId)
+        .collection("projects")
+        .doc(projectId);
       try {
         await projectRef.update({
-          plankRefIds: admin.firestore.FieldValue.arrayRemove(plankRefId)
+          plankRefIds: admin.firestore.FieldValue.arrayRemove(plankRefId),
         });
-        console.log(`Removed plank refId ${plankRefId} from project ${projectId} upon deletion.`);
+        console.log(
+          `Removed plank refId ${plankRefId} from project ${projectId} upon deletion.`
+        );
       } catch (error) {
         console.error("Error removing plank refId from project:", error);
       }
     }
 
+    // Remove plank refId from associated log by querying logRefId
+    if (logRefId) {
+      const logsRef = db
+        .collection("sawmill")
+        .doc(sawmillId)
+        .collection("logs");
+      const querySnapshot = await logsRef.where("refId", "==", logRefId).get();
+
+      if (!querySnapshot.empty) {
+        const logDoc = querySnapshot.docs[0]; // Assuming only one log will have this refId
+        try {
+          await logDoc.ref.update({
+            plankIds: admin.firestore.FieldValue.arrayRemove(plankRefId),
+          });
+          console.log(
+            `Removed plank refId ${plankRefId} from log ${logRefId}.`
+          );
+        } catch (error) {
+          console.error(
+            `Error removing plank refId from log ${logRefId}:`,
+            error
+          );
+        }
+      } else {
+        console.log(
+          `No log found with refId ${logRefId}, no plank refId removal needed.`
+        );
+      }
+    }
+
     return null;
   });
-
-
 
 exports.initializeSawmillSubcollections = functions.firestore
   .document("sawmill/{sawmillId}")
