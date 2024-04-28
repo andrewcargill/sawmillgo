@@ -188,7 +188,7 @@ exports.addTree = functions.firestore
       // Generate a unique RefId for the tree
       const refId = await generateUniqueRefId(db);
       let updates = {
-        refId: refId ,
+        refId: refId,
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
       };
 
@@ -221,11 +221,10 @@ exports.addTree = functions.firestore
 
         updates["status"] = newTreeStatus;
 
-         // Update the project document by adding the tree's refId to the project's treeRefIds array
+        // Update the project document by adding the tree's refId to the project's treeRefIds array
         await projectRef.update({
-          treeRefIds: admin.firestore.FieldValue.arrayUnion(refId)
+          treeRefIds: admin.firestore.FieldValue.arrayUnion(refId),
         });
-
       }
 
       // Update the tree document with the new RefId and, if applicable, the new status
@@ -262,7 +261,11 @@ exports.addLog = functions.firestore
       };
 
       if (projectId) {
-        const projectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectId);
+        const projectRef = db
+          .collection("sawmill")
+          .doc(sawmillId)
+          .collection("projects")
+          .doc(projectId);
         const projectSnap = await projectRef.get();
         if (!projectSnap.exists) {
           console.log(`Project with ID ${projectId} does not exist.`);
@@ -270,8 +273,11 @@ exports.addLog = functions.firestore
         }
 
         const projectData = projectSnap.data();
-        updates["status"] = ["active", "paused"].includes(projectData.status) ? "reserved" :
-          ["sold", "with creator"].includes(projectData.status) ? "sold" : null;
+        updates["status"] = ["active", "paused"].includes(projectData.status)
+          ? "reserved"
+          : ["sold", "with creator"].includes(projectData.status)
+          ? "sold"
+          : null;
         if (!updates["status"]) {
           console.log(`Unknown project status: ${projectData.status}`);
           return null;
@@ -279,49 +285,54 @@ exports.addLog = functions.firestore
 
         //update project document by adding the log's refId to the project's logRefIds array
         await projectRef.update({
-          logRefIds: admin.firestore.FieldValue.arrayUnion(refId)
+          logRefIds: admin.firestore.FieldValue.arrayUnion(refId),
         });
-
       }
 
       // Update the log document with the new RefId, createdAt timestamp, and status
-      await db.collection("sawmill").doc(sawmillId).collection("logs").doc(logId).update(updates);
+      await db
+        .collection("sawmill")
+        .doc(sawmillId)
+        .collection("logs")
+        .doc(logId)
+        .update(updates);
 
       // If treeId exists, update the corresponding tree document
       if (treeId) {
-        const treesCollection = db.collection("sawmill").doc(sawmillId).collection("trees");
+        const treesCollection = db
+          .collection("sawmill")
+          .doc(sawmillId)
+          .collection("trees");
         const querySnapshot = await treesCollection
           .where("refId", "==", treeId)
           .limit(1)
           .get();
-          if (!querySnapshot.empty) {
-            const treeDoc = querySnapshot.docs[0]; // Get the first document that matches
-            await db.runTransaction(async (transaction) => {
-              const treeData = treeDoc.data();
-              const logIds = treeData.logIds || [];
-              if (!logIds.includes(refId)) {
-                // Ensure plankRefId is passed correctly
-                logIds.push(refId); // Add the plank's refId to the array
-                transaction.update(treeDoc.ref, { logIds: logIds });
-              } else {
-                console.warn(
-                  "Log ID already exists in the tree's LogIds array."
-                );
-              }
-            });
-          } else {
-            throw new Error(`No tree found with refId: ${treeId}`);
-          }
+        if (!querySnapshot.empty) {
+          const treeDoc = querySnapshot.docs[0]; // Get the first document that matches
+          await db.runTransaction(async (transaction) => {
+            const treeData = treeDoc.data();
+            const logIds = treeData.logIds || [];
+            if (!logIds.includes(refId)) {
+              // Ensure plankRefId is passed correctly
+              logIds.push(refId); // Add the plank's refId to the array
+              transaction.update(treeDoc.ref, { logIds: logIds });
+            } else {
+              console.warn("Log ID already exists in the tree's LogIds array.");
+            }
+          });
         } else {
-          throw new Error("treeId is undefined or not provided.");
+          throw new Error(`No tree found with refId: ${treeId}`);
         }
-      console.log(`Assigned unique RefId ${refId} to log ${logId} in sawmill ${sawmillId}. Status: ${updates.status}`);
+      } else {
+        throw new Error("treeId is undefined or not provided.");
+      }
+      console.log(
+        `Assigned unique RefId ${refId} to log ${logId} in sawmill ${sawmillId}. Status: ${updates.status}`
+      );
     } catch (error) {
       console.error("Error processing log:", error);
     }
   });
-
-
 
 exports.addPlank = functions.firestore
   .document("sawmill/{sawmillId}/planks/{plankId}")
@@ -369,6 +380,11 @@ exports.addPlank = functions.firestore
           console.log(`Unknown project status: ${projectData.status}`);
           return null;
         }
+
+        // Update the project document by adding the planks refId to the project's plankRefIds array
+        await projectRef.update({
+          plankRefIds: admin.firestore.FieldValue.arrayUnion(refId),
+        });
       }
 
       // First, update the plank document with refId and possibly status

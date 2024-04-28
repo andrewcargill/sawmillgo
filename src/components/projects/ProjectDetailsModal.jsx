@@ -203,10 +203,26 @@ function ProjectDetailsModal({ projectDetails, onClose, setMode }) {
                   ))}
                  
                 </TableCell>
+                <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                  {projectDetails?.plankRefIds && projectDetails?.plankRefIds.map((plank) => (
+                    <div>
+                    <Chip
+                     
+                      key={plank}
+                      // icon={<TagFacesIcon />}
+                      label={plank}
+                      variant="outlined"
+                      color="dark"
+                      size="small"
+                    />
+
+                    </div>
                
-                <TableCell sx={{ py: 0.5, px: 1 }}>
-                 GGFD
+                  ))}
+                 
                 </TableCell>
+               
+              
               </TableRow>
               </TableBody>
               </Table>
