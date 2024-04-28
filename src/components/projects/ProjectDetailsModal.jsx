@@ -238,9 +238,14 @@ function ProjectDetailsModal({ projectDetails, onClose, setMode }) {
               <Button variant="contained" onClick={handleEditButtonClick}>
                 Edit
               </Button>
+             
 
               <Button variant="contained" color="warning" onClick={handleDelete}>
                 Delete
+              </Button>
+
+              <Button variant="outlined" onClick=''>
+                Generate Report
               </Button>
 
               <IconButton aria-label="" onClick={onClose}>
