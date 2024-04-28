@@ -498,6 +498,33 @@ exports.addLog = functions.firestore
     return null; // End function execution if there's no projectId change
   });
 
+  exports.onLogDeleted = functions.firestore
+  .document("sawmill/{sawmillId}/logs/{logId}")
+  .onDelete(async (snap, context) => {
+    const db = admin.firestore();
+    const sawmillId = context.params.sawmillId;
+    const logData = snap.data();
+    const projectId = logData.projectId;
+    const logRefId = logData.refId; // Ensure the log document includes refId
+
+    if (projectId) {
+      const projectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectId);
+
+      // Remove the log's refId from the project's logRefIds array
+      try {
+        await projectRef.update({
+          logRefIds: admin.firestore.FieldValue.arrayRemove(logRefId)
+        });
+        console.log(`Removed log refId ${logRefId} from project ${projectId} upon deletion.`);
+      } catch (error) {
+        console.error("Error removing log refId from project:", error);
+      }
+    }
+
+    return null;
+  });
+
+
 
 exports.addPlank = functions.firestore
   .document("sawmill/{sawmillId}/planks/{plankId}")
@@ -669,6 +696,33 @@ exports.addPlank = functions.firestore
 
     return null; // End function execution if there's no projectId change
   });
+
+  exports.onPlankDeleted = functions.firestore
+  .document("sawmill/{sawmillId}/planks/{plankId}")
+  .onDelete(async (snap, context) => {
+    const db = admin.firestore();
+    const sawmillId = context.params.sawmillId;
+    const plankData = snap.data();
+    const projectId = plankData.projectId;
+    const plankRefId = plankData.refId; // Ensure the plank document includes refId
+
+    if (projectId) {
+      const projectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectId);
+
+      // Remove the plank's refId from the project's plankRefIds array
+      try {
+        await projectRef.update({
+          plankRefIds: admin.firestore.FieldValue.arrayRemove(plankRefId)
+        });
+        console.log(`Removed plank refId ${plankRefId} from project ${projectId} upon deletion.`);
+      } catch (error) {
+        console.error("Error removing plank refId from project:", error);
+      }
+    }
+
+    return null;
+  });
+
 
 
 exports.initializeSawmillSubcollections = functions.firestore
