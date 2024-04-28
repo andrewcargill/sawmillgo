@@ -26,7 +26,6 @@ function ProjectDetailsModal({ projectDetails, onClose, setMode }) {
   const db = getFirestore(app);
   const sawmillId = userLocalStorage?.sawmillId;
   const projectUid = projectDetails?.id;
-  const [treeRefIds, setTreeRefIds] = useState([projectDetails.treeRefIds]);
 
   const handleDelete = async () => {
     console.log("handleDelete....");
@@ -167,8 +166,8 @@ function ProjectDetailsModal({ projectDetails, onClose, setMode }) {
               </TableRow>
               <TableRow>
                 <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
-                  {projectDetails.treeRefIds && projectDetails.treeRefIds.map((tree) => (
-                    <TableRow>
+                  {projectDetails?.treeRefIds && projectDetails?.treeRefIds.map((tree) => (
+                    <div>
                     <Chip
                      
                       key={tree}
@@ -178,13 +177,33 @@ function ProjectDetailsModal({ projectDetails, onClose, setMode }) {
                       color="dark"
                       size="small"
                     />
-                  </TableRow>
+                    </div>
+                    
+             
+                  ))}
+
+                 
+                </TableCell>
+              
+                <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
+                  {projectDetails?.logRefIds && projectDetails?.logRefIds.map((log) => (
+                    <div>
+                    <Chip
+                     
+                      key={log}
+                      // icon={<TagFacesIcon />}
+                      label={log}
+                      variant="outlined"
+                      color="dark"
+                      size="small"
+                    />
+
+                    </div>
+               
                   ))}
                  
                 </TableCell>
-                <TableCell sx={{ py: 0.5, px: 1 }}>
-                XXFL
-                </TableCell>
+               
                 <TableCell sx={{ py: 0.5, px: 1 }}>
                  GGFD
                 </TableCell>

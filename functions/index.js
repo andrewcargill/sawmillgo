@@ -276,6 +276,12 @@ exports.addLog = functions.firestore
           console.log(`Unknown project status: ${projectData.status}`);
           return null;
         }
+
+        //update project document by adding the log's refId to the project's logRefIds array
+        await projectRef.update({
+          logRefIds: admin.firestore.FieldValue.arrayUnion(refId)
+        });
+
       }
 
       // Update the log document with the new RefId, createdAt timestamp, and status
