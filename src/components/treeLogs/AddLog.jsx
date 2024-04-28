@@ -177,7 +177,12 @@ const AddLog = () => {
               const querySnapshot = await getDocs(treeQuery);
               if (!querySnapshot.empty) {
                 const treeDocRef = querySnapshot.docs[0].ref;
-                await updateDoc(treeDocRef, { logged: true });
+                // await updateDoc(treeDocRef, { logged: true });
+                await updateDoc(treeDocRef, {
+                  logged: true,
+                  projectId: '', // Reset projectId as tree is now fully logged
+                  projectName: '' // Reset projectName
+                });
                 console.log("Tree marked as fully logged.");
               } else {
                 console.error("No tree found with the provided refId.");
