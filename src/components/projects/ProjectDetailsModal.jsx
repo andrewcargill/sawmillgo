@@ -26,6 +26,7 @@ function ProjectDetailsModal({ projectDetails, onClose, setMode }) {
   const db = getFirestore(app);
   const sawmillId = userLocalStorage?.sawmillId;
   const projectUid = projectDetails?.id;
+  const [treeRefIds, setTreeRefIds] = useState([projectDetails.treeRefIds]);
 
   const handleDelete = async () => {
     console.log("handleDelete....");
@@ -166,10 +167,20 @@ function ProjectDetailsModal({ projectDetails, onClose, setMode }) {
               </TableRow>
               <TableRow>
                 <TableCell sx={{ width: "30%", py: 0.5, px: 1 }}>
-                 <div>XXFN</div> 
-                 <div>XXFN</div> 
-                 <div>XXFN</div> 
-                 <div>XXFN</div> 
+                  {projectDetails.treeRefIds && projectDetails.treeRefIds.map((tree) => (
+                    <TableRow>
+                    <Chip
+                     
+                      key={tree}
+                      // icon={<TagFacesIcon />}
+                      label={tree}
+                      variant="outlined"
+                      color="dark"
+                      size="small"
+                    />
+                  </TableRow>
+                  ))}
+                 
                 </TableCell>
                 <TableCell sx={{ py: 0.5, px: 1 }}>
                 XXFL
