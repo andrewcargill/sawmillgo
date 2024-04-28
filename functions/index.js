@@ -116,6 +116,65 @@ exports.resetItemsOnProjectDeletion = functions.firestore
     }
   });
 
+// exports.onTreeUpdated = functions.firestore
+//   .document("sawmill/{sawmillId}/trees/{treeId}")
+//   .onUpdate(async (change, context) => {
+//     const db = admin.firestore();
+//     const sawmillId = context.params.sawmillId;
+//     const beforeData = change.before.data();
+//     const afterData = change.after.data();
+//     const projectIdBefore = beforeData.projectId;
+//     const projectIdAfter = afterData.projectId;
+
+//     // Initialize an object to hold potential updates for the tree document
+//     let treeUpdates = {};
+
+//     // Check if the projectId has been added or changed to a different one
+//     if (projectIdAfter && projectIdAfter !== projectIdBefore) {
+//       // Fetch the new project document to determine the tree's new status
+//       const projectRef = db
+//         .collection("sawmill")
+//         .doc(sawmillId)
+//         .collection("projects")
+//         .doc(projectIdAfter);
+//       const projectSnap = await projectRef.get();
+
+//       if (!projectSnap.exists) {
+//         console.log(`Project with ID ${projectIdAfter} does not exist.`);
+//         return null;
+//       }
+
+//       const projectData = projectSnap.data();
+//       // Determine the new tree status based on the project's status
+//       if (["active", "paused"].includes(projectData.status)) {
+//         treeUpdates.status = "reserved";
+//       } else if (["sold", "with creator"].includes(projectData.status)) {
+//         treeUpdates.status = "sold";
+//       } else {
+//         console.log(
+//           `Unknown or unhandled project status: ${projectData.status}`
+//         );
+//         return null;
+//       }
+//     }
+
+//     // If the tree was removed from a project, set its status to 'available'
+//     if (projectIdBefore && !projectIdAfter) {
+//       treeUpdates.status = "available";
+//     }
+
+//     // If there are updates to apply to the tree document, perform the update
+//     if (Object.keys(treeUpdates).length > 0) {
+//       await change.after.ref.update(treeUpdates);
+//       console.log(
+//         `Tree document ${context.params.treeId} updated with:`,
+//         treeUpdates
+//       );
+//     }
+
+//     return null; // End function execution if there's no projectId change
+//   });
+
 exports.onTreeUpdated = functions.firestore
   .document("sawmill/{sawmillId}/trees/{treeId}")
   .onUpdate(async (change, context) => {
@@ -125,55 +184,93 @@ exports.onTreeUpdated = functions.firestore
     const afterData = change.after.data();
     const projectIdBefore = beforeData.projectId;
     const projectIdAfter = afterData.projectId;
+    const treeRefId = afterData.refId; // Use the refId from the tree's data
 
-    // Initialize an object to hold potential updates for the tree document
     let treeUpdates = {};
 
-    // Check if the projectId has been added or changed to a different one
-    if (projectIdAfter && projectIdAfter !== projectIdBefore) {
-      // Fetch the new project document to determine the tree's new status
-      const projectRef = db
-        .collection("sawmill")
-        .doc(sawmillId)
-        .collection("projects")
-        .doc(projectIdAfter);
-      const projectSnap = await projectRef.get();
-
-      if (!projectSnap.exists) {
-        console.log(`Project with ID ${projectIdAfter} does not exist.`);
-        return null;
+    // Handle project switch or removal
+    if (projectIdAfter !== projectIdBefore) {
+      // Handle removal from the old project
+      if (projectIdBefore) {
+        const oldProjectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectIdBefore);
+        await oldProjectRef.update({
+          treeRefIds: admin.firestore.FieldValue.arrayRemove(treeRefId)
+        });
       }
 
-      const projectData = projectSnap.data();
-      // Determine the new tree status based on the project's status
-      if (["active", "paused"].includes(projectData.status)) {
-        treeUpdates.status = "reserved";
-      } else if (["sold", "with creator"].includes(projectData.status)) {
-        treeUpdates.status = "sold";
+      // Handle addition to the new project
+      if (projectIdAfter) {
+        const newProjectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectIdAfter);
+        const newProjectSnap = await newProjectRef.get();
+
+        if (!newProjectSnap.exists) {
+          console.log(`Project with ID ${projectIdAfter} does not exist.`);
+          return null;
+        }
+
+        const newProjectData = newProjectSnap.data();
+        let newTreeStatus;
+
+        if (["active", "paused"].includes(newProjectData.status)) {
+          newTreeStatus = "reserved";
+        } else if (["sold", "with creator"].includes(newProjectData.status)) {
+          newTreeStatus = "sold";
+        } else {
+          console.log(`Unhandled project status: ${newProjectData.status}`);
+          return null;
+        }
+
+        // Update the new project with the treeRefId
+        await newProjectRef.update({
+          treeRefIds: admin.firestore.FieldValue.arrayUnion(treeRefId)
+        });
+
+        // Set the new status for the tree
+        treeUpdates.status = newTreeStatus;
       } else {
-        console.log(
-          `Unknown or unhandled project status: ${projectData.status}`
-        );
-        return null;
+        // If no new project is assigned, set tree status to 'available'
+        treeUpdates.status = "available";
       }
     }
 
-    // If the tree was removed from a project, set its status to 'available'
-    if (projectIdBefore && !projectIdAfter) {
-      treeUpdates.status = "available";
-    }
-
-    // If there are updates to apply to the tree document, perform the update
+    // Apply updates to the tree document
     if (Object.keys(treeUpdates).length > 0) {
       await change.after.ref.update(treeUpdates);
-      console.log(
-        `Tree document ${context.params.treeId} updated with:`,
-        treeUpdates
-      );
+      console.log(`Tree document updated with:`, treeUpdates);
     }
 
     return null; // End function execution if there's no projectId change
   });
+
+  exports.onTreeDeleted = functions.firestore
+  .document("sawmill/{sawmillId}/trees/{treeId}")
+  .onDelete(async (snap, context) => {
+    const db = admin.firestore();
+    const sawmillId = context.params.sawmillId;
+    const treeId = context.params.treeId;
+    const treeData = snap.data();
+    const projectId = treeData.projectId;
+    const treeRefId = treeData.refId; // Ensure the tree document includes refId
+
+    if (projectId) {
+      const projectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectId);
+
+      // Remove the tree's refId from the project's treeRefIds array
+      try {
+        await projectRef.update({
+          treeRefIds: admin.firestore.FieldValue.arrayRemove(treeRefId)
+        });
+        console.log(`Removed tree refId ${treeRefId} from project ${projectId} upon deletion.`);
+      } catch (error) {
+        console.error("Error removing tree refId from project:", error);
+      }
+    }
+
+    return null;
+  });
+
+
+
 
 exports.addTree = functions.firestore
   .document("sawmill/{sawmillId}/trees/{treeId}")
