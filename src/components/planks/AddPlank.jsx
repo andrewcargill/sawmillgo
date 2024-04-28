@@ -262,7 +262,11 @@ const AddPlank = () => {
         const logData = logDoc.data();
         if (logData.planked === false) {
           // Only update if planked is false
-          transaction.update(logRef, { planked: true });
+          transaction.update(logRef, { 
+            planked: true,
+            projectId: '',
+            projectName: '', 
+          });
           console.log("Plank marked as fully logged.");
           setlogIsPlanked(true);
 

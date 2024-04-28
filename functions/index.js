@@ -755,6 +755,110 @@ exports.onPlankDeleted = functions.firestore
     return null;
   });
 
+  //Tracks movement of items in the sawmill
+  // exports.trackItemCreationAndUpdate = functions.firestore
+  // .document('sawmill/{sawmillId}/{itemType}/{itemId}')
+  // .onWrite(async (change, context) => {
+  //   const db = admin.firestore();
+  //   const sawmillId = context.params.sawmillId;
+  //   const itemType = context.params.itemType;
+  //   const itemId = context.params.itemId;
+  //   const dataAfter = change.after.exists ? change.after.data() : null;
+  //   const dataBefore = change.before.exists ? change.before.data() : null;
+
+  //   // Handle item creation
+  //   if (!change.before.exists && change.after.exists) {
+  //     // Item is being created, log the initial location as a 'movement'
+  //     const initialMovement = {
+  //       fromLocation: 'N/A',  // Since it's a new creation, there is no 'from' location
+  //       toLocation: dataAfter.locationId,
+  //       timestamp: admin.firestore.FieldValue.serverTimestamp(),
+  //       action: 'Created' // Additional field to indicate the nature of the movement
+  //     };
+
+  //     try {
+  //       await db.doc(`sawmill/${sawmillId}/${itemType}/${itemId}`)
+  //         .collection('movements')
+  //         .add(initialMovement);
+  //       console.log(`Initial movement logged for new ${itemType} ${itemId}`);
+  //     } catch (error) {
+  //       console.error("Error logging initial movement: ", error);
+  //     }
+  //   }
+
+  //   // Handle location updates
+  //   if (change.before.exists && change.after.exists && dataBefore.locationId !== dataAfter.locationId) {
+  //     const updateMovement = {
+  //       fromLocation: dataBefore.locationId,
+  //       toLocation: dataAfter.locationId,
+  //       timestamp: admin.firestore.FieldValue.serverTimestamp(),
+  //       action: 'Moved' // Indicates this is a relocation
+  //     };
+
+  //     try {
+  //       await db.doc(`sawmill/${sawmillId}/${itemType}/${itemId}`)
+  //         .collection('movements')
+  //         .add(updateMovement);
+  //       console.log(`Movement logged for ${itemType} ${itemId} from ${dataBefore.locationId} to ${dataAfter.locationId}`);
+  //     } catch (error) {
+  //       console.error("Error logging movement on update: ", error);
+  //     }
+  //   }
+  // });
+
+  exports.trackItemCreationAndUpdate = functions.firestore
+  .document('sawmill/{sawmillId}/{itemType}/{itemId}')
+  .onWrite(async (change, context) => {
+    const db = admin.firestore();
+    const sawmillId = context.params.sawmillId;
+    const itemType = context.params.itemType;
+    const itemId = context.params.itemId;
+    const dataAfter = change.after.exists ? change.after.data() : null;
+    const dataBefore = change.before.exists ? change.before.data() : null;
+
+    // Handle item creation
+    if (!change.before.exists && change.after.exists) {
+      const initialMovement = {
+        fromLocation: 'N/A',  // Since it's a new creation, there is no 'from' location
+        toLocation: dataAfter.locationId,
+        toLocationName: dataAfter.locationName || 'Unknown Location', // Use locationName field if available, otherwise default to 'Unknown Location'
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        action: 'Created' // Additional field to indicate the nature of the movement
+      };
+
+      try {
+        await db.doc(`sawmill/${sawmillId}/${itemType}/${itemId}`)
+          .collection('movements')
+          .add(initialMovement);
+        console.log(`Initial movement logged for new ${itemType} ${itemId}`);
+      } catch (error) {
+        console.error("Error logging initial movement: ", error);
+      }
+    }
+
+    // Handle location updates
+    if (change.before.exists && change.after.exists && dataBefore.locationId !== dataAfter.locationId) {
+      const updateMovement = {
+        fromLocation: dataBefore.locationId,
+        fromLocationName: dataBefore.locationName || 'Unknown Location', // Use locationName field if available, otherwise default to 'Unknown Location'
+        toLocation: dataAfter.locationId,
+        toLocationName: dataAfter.locationName || 'Unknown Location', // Use locationName field if available, otherwise default to 'Unknown Location'
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        action: 'Moved' // Indicates this is a relocation
+      };
+
+      try {
+        await db.doc(`sawmill/${sawmillId}/${itemType}/${itemId}`)
+          .collection('movements')
+          .add(updateMovement);
+        console.log(`Movement logged for ${itemType} ${itemId} from ${dataBefore.locationId} to ${dataAfter.locationId}`);
+      } catch (error) {
+        console.error("Error logging movement on update: ", error);
+      }
+    }
+  });
+
+
 exports.initializeSawmillSubcollections = functions.firestore
   .document("sawmill/{sawmillId}")
   .onCreate(async (snap, context) => {
