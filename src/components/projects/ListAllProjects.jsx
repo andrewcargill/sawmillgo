@@ -155,10 +155,10 @@ const ListAllProjects = () => {
             <ToggleButton color="secondary" value="paused" aria-label="paused">
             Paused
             </ToggleButton>
-            <ToggleButton color="secondary"  value="creator" aria-label="creator">
+            <ToggleButton color="secondary"  value="withCreator" aria-label="withCreator">
              Creator
             </ToggleButton>
-            <ToggleButton color="secondary"  value="complete" aria-label="complete">
+            <ToggleButton color="secondary"  value="sold" aria-label="sold">
             Complete
             </ToggleButton>
           </ToggleButtonGroup>
@@ -195,7 +195,7 @@ const ListAllProjects = () => {
         />
       )}
       
-{filterSelector === 'creator' && (
+{filterSelector === 'withCreator' && (
         <FilteredProjectsTable
           projects={projects.filter((p) => p.status === "withCreator")}
           dynamicView={dynamicView}

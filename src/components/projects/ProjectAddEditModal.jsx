@@ -49,7 +49,6 @@ function ProjectAddEditModal({ projectDetails, isOpen, onClose }) {
 
 
   useEffect(() => {
-    console.log("formValues", formValues);
     if (projectDetails) {
       setFormValues({
         projectName: projectDetails.projectName || '',
@@ -64,7 +63,7 @@ function ProjectAddEditModal({ projectDetails, isOpen, onClose }) {
         verified: projectDetails.verified || false,
       });
     }
-  }, [projectDetails, formValues]);
+  }, [projectDetails]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
