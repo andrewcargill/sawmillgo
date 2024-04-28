@@ -33,21 +33,22 @@ The system focuses on the verified path from trees to end products, but also all
 - **Users:** Store information about system users, their roles, and their activities, such as creating and modifying records.
 
 
-### Gloabl settings
-### Sawmill profile (coming soon)
-Here you can create a homepage sharing your unique story and how you manage and source for wood.
+## Global Settings
+
+### Sawmill Profile (Coming Soon)
+This section will allow you to create a homepage to share your unique story about how you manage and source wood.
+
 ### UserProfile
-Every user must have a username. A user can also add a user image and be allocated to specific rolls within the system. 
+Every user must have a username. Additionally, users can upload a profile image and be assigned specific roles within the system.
 
 ### Species
-Here we set tree species that you will use within your system. You will need to add at least one species of tree before you can start adding items to the system. 
+This setting allows you to define the tree species used within your system. You must add at least one species of tree before you can begin adding items.
 
 ### Locations
-Here we set various locations where any item might be stored. The movement between these locations is stored to ensure that you can find any item with ease. Locations are also feature part of the end report of verified projects. 
+Configure various storage locations for any item. The system tracks movements between these locations to simplify item retrieval. These locations are also included in the end reports of verified projects.
 
 ### Projects
-Here we set up projects. Projects are how we manage the status of any item within the system. An item can have a status of 'available, reserved and sold' and it's status is set automatically depending on the allocated projects status. You do not need an project to start using the system. Important! A project is strictly set to manage ONLY verified or unverified items. This is because verified reports are created via projects. 
-
+Projects are used to manage the status of items within the system. An item can be marked as 'available,' 'reserved,' or 'sold,' with its status automatically updated based on the associated project's status. Note: It is not necessary to have a project in order to use the system. However, projects are designated to manage either ONLY verified or unverified items, as verified reports are generated through projects.
 
 
 

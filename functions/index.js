@@ -603,6 +603,74 @@ exports.addPlank = functions.firestore
     }
   });
 
+  exports.onPlankUpdated = functions.firestore
+  .document("sawmill/{sawmillId}/planks/{plankId}")
+  .onUpdate(async (change, context) => {
+    const db = admin.firestore();
+    const sawmillId = context.params.sawmillId;
+    const beforeData = change.before.data();
+    const afterData = change.after.data();
+    const projectIdBefore = beforeData.projectId;
+    const projectIdAfter = afterData.projectId;
+    const plankRefId = afterData.refId; // Use the refId from the plank's data
+
+    let plankUpdates = {};
+
+    // Handle project switch or removal
+    if (projectIdAfter !== projectIdBefore) {
+      // Handle removal from the old project
+      if (projectIdBefore) {
+        const oldProjectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectIdBefore);
+        await oldProjectRef.update({
+          plankRefIds: admin.firestore.FieldValue.arrayRemove(plankRefId)
+        });
+      }
+
+      // Handle addition to the new project
+      if (projectIdAfter) {
+        const newProjectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectIdAfter);
+        const newProjectSnap = await newProjectRef.get();
+
+        if (!newProjectSnap.exists) {
+          console.log(`Project with ID ${projectIdAfter} does not exist.`);
+          return null;
+        }
+
+        const newProjectData = newProjectSnap.data();
+        let newPlankStatus;
+
+        if (["active", "paused"].includes(newProjectData.status)) {
+          newPlankStatus = "reserved";
+        } else if (["sold", "with creator"].includes(newProjectData.status)) {
+          newPlankStatus = "sold";
+        } else {
+          console.log(`Unhandled project status: ${newProjectData.status}`);
+          return null;
+        }
+
+        // Update the new project with the plankRefId
+        await newProjectRef.update({
+          plankRefIds: admin.firestore.FieldValue.arrayUnion(plankRefId)
+        });
+
+        // Set the new status for the plank
+        plankUpdates.status = newPlankStatus;
+      } else {
+        // If no new project is assigned, set plank status to 'available'
+        plankUpdates.status = "available";
+      }
+    }
+
+    // Apply updates to the plank document
+    if (Object.keys(plankUpdates).length > 0) {
+      await change.after.ref.update(plankUpdates);
+      console.log(`Plank document updated with:`, plankUpdates);
+    }
+
+    return null; // End function execution if there's no projectId change
+  });
+
+
 exports.initializeSawmillSubcollections = functions.firestore
   .document("sawmill/{sawmillId}")
   .onCreate(async (snap, context) => {
