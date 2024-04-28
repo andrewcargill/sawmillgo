@@ -225,6 +225,11 @@ function renderSelect(name, label, options, onChange, value) {
           label={label}
           onChange={onChange}
         >
+          {label === "Project" && (
+            <MenuItem value="">
+              No Project
+            </MenuItem>
+          )}
           {options.map((option) => (
             <MenuItem key={option.id} value={option.id}>
               {option.name}

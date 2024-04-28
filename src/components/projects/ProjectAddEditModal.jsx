@@ -44,6 +44,8 @@ function ProjectAddEditModal({ projectDetails, isOpen, onClose }) {
   const currentUserUID = auth.currentUser ? auth.currentUser.uid : null;
   const userLocalStorage = JSON.parse(localStorage.getItem("user"));
   const sawmillId = userLocalStorage?.sawmillId;
+  const displayName = userLocalStorage?.displayName;
+
   
 
 

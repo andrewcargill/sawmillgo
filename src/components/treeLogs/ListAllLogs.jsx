@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 import CarpenterIcon from '@mui/icons-material/Carpenter';
 import BlockIcon from '@mui/icons-material/Block';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 
 const ListAllLogs = () => {
   const [logs, setLogs] = useState([]);
@@ -103,7 +105,7 @@ const ListAllLogs = () => {
         bgcolor={"white.main"}
         style={{
           position: 'relative', // Ensure this container is the positioning context
-          border: log.verified ? "4px solid green" : "2px solid lightgrey",
+          border: "2px solid lightgrey",
           borderRadius: "5px",
           padding: "12px",
           display: "flex",
@@ -124,7 +126,9 @@ const ListAllLogs = () => {
         <div style={{ position: 'absolute', top: '8px', right: '8px' }}>
 
          {log.plankIds && log.plankIds.length > 0 && <CarpenterIcon color="dark" fontSize="small" /> }
-         {log.planked && <BlockIcon color="secondary" fontSize="small" /> }
+         {log.planked && <BlockIcon color="dark" fontSize="small" /> }
+       
+         {log.projectId && <LocalOfferIcon color="dark" fontSize="small" /> }
          {log.verified && <WorkspacePremiumIcon color="primary" fontSize="small" /> }
         </div>
         {/* <div style={{ position: 'absolute', top: '8px', right: '20px' }}>

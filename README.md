@@ -1,36 +1,36 @@
 # Sawmill Go - 100% Transparent Forestry Management System
 
-### For the sawmill owner
-An easy-to-use complete stock management system that tracks trees into logs and through to planks. Storage locations, drying data and project assignment. 
+## For the Sawmill Owner
+Sawmill Go offers an easy-to-use complete stock management system that tracks trees into logs and through to planks. It includes detailed management of storage locations, drying data, and project assignments.
 
-### For the customer
-A complete story from forest to end product. Location map of where the tree stood, reports and information from every step of the journey. Creators section with images of products in production. 
+## For the Customer
+Sawmill Go provides a complete story from forest to end product, including:
+- A location map of where the tree stood.
+- Detailed reports and information from every step of the journey.
+- A creators' section featuring images of products in production.
 
-## System OverView
+## System Overview
 
 ### Introduction
-The system is designed to manage items (a tree, log or plank)  that are verified and unverified. Verified is an item can be traced to it's origins (the tree). Unverified is an item (log or plank) that cannot be traced to its origins (a tree).
-It is important to understand this concept before beginning to use the system as it plays a core roll in how you see, manage and assign items within the system. 
+The system is designed to manage items such as trees, logs, or planks, categorized as either verified or unverified. A verified item can be traced back to its origin (the tree), while an unverified item (log or plank) cannot. Understanding this concept is crucial before using the system as it plays a core role in how items are viewed, managed, and assigned.
 
-Verfied items are the only ones that generate our unique 100% transparent reports that you can pass onto your end customer. Unverified items cannot be used to generate report. The system takes care of all of this behind the scenes. yst
+Only verified items can generate our unique 100% transparent reports for your end customers. The system automatically handles the distinction behind the scenes.
 
-### Overview
-The aim was to create a system that is intuative to use and that makes the task of tracking trees, logs and planks extremly simple. Behind the scenes is where much of the work is taking place to ensure that you always know what stock you have and where you can find it. This is the great thing about having the goal to create a 100% transparent and tracable path for your end customers, we need to store the journey of the tree to the end customer, meaning you have access to accurate and detailed data on every step of that journey.
+### System Overview
+Our goal was to create an intuitive system that simplifies tracking trees, logs, and planks. Much of the work occurs behind the scenes to ensure you always know what stock you have and where it is located. By storing each step of a tree’s journey to the end customer, you have access to accurate and detailed data.
 
-We will focus on the verified path from trees to an end product, but please note the system is designed so that you can add and manage unverified logs and planks in a seemless way. The process is broken down into: 
+The system focuses on the verified path from trees to end products, but also allows for seamless management of unverified logs and planks. The process includes:
 
-step 1. Tree.  This is where we tell the story of where the tree stood, why and when it was removed and by who. 
-step 2. Log. When you log the tree you enter each log into the system. We record the date, length and diameter. 
-step 3. Plank. In the sawmill you mill your log. You add a record for each plank produced. Here we hold information such as grade, possible use, images, date and operator. 
-step 4. Moisture content. Each plank can hold records of the moisture content over time. 
+1. **Tree:** We document the story of where the tree stood, reasons and timing for its removal, and details about who removed it.
+2. **Log:** Each logged tree is entered into the system with details like date, length, and diameter recorded.
+3. **Plank:** In the sawmill, each milled log is recorded with information on grade, possible use, images, date, and operator.
+4. **Moisture Content:** Records of the moisture content for each plank are maintained over time.
 
-Interweaved sub-systems
-Projects. Here you manage the avaliablity of a tree, log or plank. A project holds information on the items allocated to it along with start date, deadline, project information. 
-End Reports. These are generated via projects and create the end report for the customer.
-Locations. You create locations where a tree, log or plank will be stored. This can be areas of the forest, drying areas or sawmill processing / storage. 
-Users. Users are those that will use your system. Thier information is stored when they create new items or modify records. 
-
-
+### Interwoven Sub-Systems
+- **Projects:** Manage the availability of a tree, log, or plank. Projects include details on allocated items, start date, deadline, and project information.
+- **End Reports:** Generated from projects to provide the final report for the customer.
+- **Locations:** Manage where each item is stored, including forest areas, drying areas, or sawmill processing/storage locations.
+- **Users:** Store information about system users, their roles, and their activities, such as creating and modifying records.
 
 
 ### Gloabl settings

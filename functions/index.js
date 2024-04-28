@@ -431,6 +431,74 @@ exports.addLog = functions.firestore
     }
   });
 
+  exports.onLogUpdated = functions.firestore
+  .document("sawmill/{sawmillId}/logs/{logId}")
+  .onUpdate(async (change, context) => {
+    const db = admin.firestore();
+    const sawmillId = context.params.sawmillId;
+    const beforeData = change.before.data();
+    const afterData = change.after.data();
+    const projectIdBefore = beforeData.projectId;
+    const projectIdAfter = afterData.projectId;
+    const logRefId = afterData.refId; // Use the refId from the log's data
+
+    let logUpdates = {};
+
+    // Handle project switch or removal
+    if (projectIdAfter !== projectIdBefore) {
+      // Handle removal from the old project
+      if (projectIdBefore) {
+        const oldProjectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectIdBefore);
+        await oldProjectRef.update({
+          logRefIds: admin.firestore.FieldValue.arrayRemove(logRefId)
+        });
+      }
+
+      // Handle addition to the new project
+      if (projectIdAfter) {
+        const newProjectRef = db.collection("sawmill").doc(sawmillId).collection("projects").doc(projectIdAfter);
+        const newProjectSnap = await newProjectRef.get();
+
+        if (!newProjectSnap.exists) {
+          console.log(`Project with ID ${projectIdAfter} does not exist.`);
+          return null;
+        }
+
+        const newProjectData = newProjectSnap.data();
+        let newLogStatus;
+
+        if (["active", "paused"].includes(newProjectData.status)) {
+          newLogStatus = "reserved";
+        } else if (["sold", "with creator"].includes(newProjectData.status)) {
+          newLogStatus = "sold";
+        } else {
+          console.log(`Unhandled project status: ${newProjectData.status}`);
+          return null;
+        }
+
+        // Update the new project with the logRefId
+        await newProjectRef.update({
+          logRefIds: admin.firestore.FieldValue.arrayUnion(logRefId)
+        });
+
+        // Set the new status for the log
+        logUpdates.status = newLogStatus;
+      } else {
+        // If no new project is assigned, set log status to 'available'
+        logUpdates.status = "available";
+      }
+    }
+
+    // Apply updates to the log document
+    if (Object.keys(logUpdates).length > 0) {
+      await change.after.ref.update(logUpdates);
+      console.log(`Log document updated with:`, logUpdates);
+    }
+
+    return null; // End function execution if there's no projectId change
+  });
+
+
 exports.addPlank = functions.firestore
   .document("sawmill/{sawmillId}/planks/{plankId}")
   .onCreate(async (snap, context) => {
