@@ -1,18 +1,18 @@
 const reportTestData = [
     {
       id: "LLPR",
-      date: "2021-10-10T00:00:00.000Z",
+      date: "2021-10-10",
       species: "Pine",
       age: 10,
       reasonForRemoval: "Reason for removal example",
       latitude: 63.8258, // Umea, Sweden
-      longitude: 20.2630, // Umea, Sweden
+      longitude: 20.2630, 
       lumberJack: "John Doe",
       location: "Location 1",
       logs: [
         {
           id: "LLPT",
-          date: "2021-10-10T00:00:00.000Z",
+          date: "2021-10-10",
           length: 10,
           diameter: 10,
           lumberJack: "John Doe",
@@ -20,6 +20,7 @@ const reportTestData = [
           planks: [
             {
               id: "TRSE",
+              milledDate: "2021-10-10",
               operator: "John Doe",
               comments: "Comments for TLLE",
               dimensions: {
@@ -39,7 +40,7 @@ const reportTestData = [
         },
         {
           id: "LLJJ",
-          date: "2021-10-10T00:00:00.000Z",
+          date: "2021-10-10",
           length: 10,
           diameter: 10,
           lumberJack: "John Doe",
@@ -47,6 +48,7 @@ const reportTestData = [
           planks: [
             {
               id: "TRLL",
+              milledDate: "2021-10-10",
               operator: "John Doe",
               comments: "Comments for TLLE",
               dimensions: {
@@ -65,6 +67,7 @@ const reportTestData = [
             {
               id: "XXXX",
               operator: "John Doe",
+              milledDate: "2021-10-10",
               comments: "Comments for TLLE",
               dimensions: {
                 width: 10,
@@ -86,7 +89,7 @@ const reportTestData = [
     // Add two more trees
     {
       id: "LLPR2",
-      date: "2021-10-10T00:00:00.000Z",
+      date: "2021-10-10",
       species: "Oak",
       age: 15,
       reasonForRemoval: "Another reason for removal",
@@ -97,7 +100,7 @@ const reportTestData = [
       logs: [
         {
           id: "LLPT2",
-          date: "2021-10-10T00:00:00.000Z",
+          date: "2021-10-10",
           length: 15,
           diameter: 12,
           lumberJack: "Jane Smith",
@@ -105,6 +108,7 @@ const reportTestData = [
           planks: [
             {
               id: "TRSE2",
+              milledDate: "2021-10-10",
               operator: "Jane Smith",
               comments: "Comments for TLLE2",
               dimensions: {
@@ -126,7 +130,7 @@ const reportTestData = [
     },
     {
       id: "LLPR3",
-      date: "2021-10-10T00:00:00.000Z",
+      date: "2021-10-10",
       species: "Birch",
       age: 8,
       reasonForRemoval: "Yet another reason for removal",
@@ -137,7 +141,7 @@ const reportTestData = [
       logs: [
         {
           id: "LLPT3",
-          date: "2021-10-10T00:00:00.000Z",
+          date: "2021-10-10",
           length: 8,
           diameter: 6,
           lumberJack: "Alice Johnson",
@@ -145,6 +149,7 @@ const reportTestData = [
           planks: [
             {
               id: "TRSE3",
+              milledDate: "2021-10-10",
               operator: "Alice Johnson",
               comments: "Comments for TLLE3",
               dimensions: {
@@ -162,6 +167,7 @@ const reportTestData = [
             },
             {
               id: "TRXX",
+              milledDate: "2021-10-10",
               operator: "Alice Johnson",
               comments: "Comments for TLLE3",
               dimensions: {

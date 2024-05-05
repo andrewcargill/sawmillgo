@@ -14,10 +14,10 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ReactImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css"; // Import default styles
 import reportTestData from "../reportTestData";
-import WorkspacesIcon from '@mui/icons-material/Workspaces';
-import ParkIcon from '@mui/icons-material/Park';
-import DehazeIcon from '@mui/icons-material/Dehaze';
-
+import WorkspacesIcon from "@mui/icons-material/Workspaces";
+import ParkIcon from "@mui/icons-material/Park";
+import DehazeIcon from "@mui/icons-material/Dehaze";
+import PlankReport from "../components/project-report/PlankReport";
 
 const ReportMockUp = ({ onLoad, onUnload }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -91,7 +91,6 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
     const colors = ["#FF5733", "#33FFB8", "#3361FF", "#F4FF33", "#8333FF"];
     return colors[treeIndex % colors.length];
   };
-  
 
   return (
     <>
@@ -146,78 +145,122 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
           </Typography>
         </Grid>
 
-       
         {/* TEST */}
         <Grid container>
-        <Grid item xs={12}>
-          {reportTestData.map((tree, index) => (
-            <Accordion
-              key={tree.id}
-              expanded={expanded === `panel${index}`}
-              onChange={handleChange(`panel${index}`)}
-            >
-              <AccordionSummary
-                expandIcon={<ArrowDownwardIcon />}
-                aria-controls={`panel${index}-content`}
-                id={`panel${index}-header`}
+          {/* <Grid item xs={12}>
+            {reportTestData.map((tree, index) => (
+              <Accordion
+                key={tree.id}
+                expanded={expanded === `panel${index}`}
+                onChange={handleChange(`panel${index}`)}
               >
-                <ParkIcon />
-                <Typography>{tree.id}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Grid container spacing={1}>
-                  <Grid item xs={12}>
-                    <Typography>{tree.date}</Typography>
-                    <Typography>{tree.reasonForRemoval}</Typography>
-
+                <AccordionSummary
+                  expandIcon={<ArrowDownwardIcon />}
+                  aria-controls={`panel${index}-content`}
+                  id={`panel${index}-header`}
+                >
+                  <ParkIcon />
+                  <Typography>REF: {tree.id}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Grid container spacing={1}>
+                    <Grid item xs={12}>
+                      <Typography>{tree.date}</Typography>
+                      <Typography>{tree.reasonForRemoval}</Typography>
                     </Grid>
-                  {tree.logs.map((log) => (
-                    <Grid item xs={12} key={log.id}>
-                      <Accordion>
-                        <AccordionSummary
-                          expandIcon={<ArrowDropDownIcon />}
-                          aria-controls="panel2-content"
-                          id="panel2-header"
-                        >
+                    {tree.logs.map((log) => (
+                      <Grid item xs={12} key={log.id}>
+                        <Accordion>
+                          <AccordionSummary
+                            expandIcon={<ArrowDropDownIcon />}
+                            aria-controls="panel2-content"
+                            id="panel2-header"
+                          >
                             <WorkspacesIcon />
-                          <Typography>{log.id}</Typography>
+                            <Typography>LOG ID: {log.id}</Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <Grid container spacing={1}>
+                              <Grid item xs={12}>
+                                <Typography>{log.date}</Typography>
+                                <Typography>Length: {log.length}cm</Typography>
+                                <Typography>
+                                  Diameter: {log.diameter}cm
+                                </Typography>
+                              </Grid>
+                              {log.planks.map((plank) => (
+                                <Grid item xs={12} key={plank.id}>
+                                  <Paper
+                                    style={{
+                                      border: `2px solid ${getPlankBorderColor(
+                                        index
+                                      )}`,
+                                      padding: "10px",
+                                      marginBottom: "10px",
+                                    }}
+                                  >
+                                    <DehazeIcon />
+                                    <Typography>
+                                      PLANK ID: {plank.id}
+                                    </Typography>
+                                  </Paper>
+                                </Grid>
+                              ))}
+                            </Grid>
+                          </AccordionDetails>
+                        </Accordion>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </AccordionDetails>
+              </Accordion>
+            ))}
+          </Grid> */}
+
+          <Grid item xs={12}>
+            {reportTestData.map((tree, treeIndex) => (
+              <Grid item xs={12} pt={1} pb={1} key={tree.id}>
+                {tree.logs.map((log, logIndex) => (
+                  <div key={log.id}>
+                    {log.planks.map((plank, plankIndex) => (
+                      <Accordion
+                        key={plank.id}
+                        expanded={
+                          expanded ===
+                          `panel${treeIndex}-${logIndex}-${plankIndex}`
+                        }
+                        onChange={handleChange(
+                          `panel${treeIndex}-${logIndex}-${plankIndex}`
+                        )}
+                      >
+                        <AccordionSummary
+                          expandIcon={<ArrowDownwardIcon />}
+                          aria-controls={`panel${treeIndex}-${logIndex}-${plankIndex}-content`}
+                          id={`panel${treeIndex}-${logIndex}-${plankIndex}-header`}
+                        >
+                          <Grid container xs={12} spacing={1}>
+                            <Grid
+                              item
+                              xs={1}
+                              bgcolor={getPlankBorderColor(treeIndex)}
+                            ></Grid>
+                            <Grid item xs={11}>
+                              <Typography>PLANK REF: {plank.id}</Typography>
+                            </Grid>
+                          </Grid>
                         </AccordionSummary>
                         <AccordionDetails>
-
                           <Grid container spacing={1}>
-                            <Grid item xs={12}>
-                              <Typography>{log.date}</Typography>
-                              <Typography>Length: {log.length}cm</Typography>
-                              <Typography>Diameter: {log.diameter}cm</Typography>
-                              </Grid>
-                            {log.planks.map((plank) => (
-                              <Grid item xs={12} key={plank.id}>
-                                <Paper
-                                  style={{
-                                    border: `2px solid ${getPlankBorderColor(
-                                      index
-                                    )}`,
-                                    padding: "10px",
-                                    marginBottom: "10px",
-                                  }}
-                                >
-                                  <DehazeIcon />
-                                  <Typography>{plank.id}</Typography>
-                                </Paper>
-                              </Grid>
-                            ))}
+                          <PlankReport tree={tree} log={log} plank={plank} />
                           </Grid>
                         </AccordionDetails>
                       </Accordion>
-                    </Grid>
-                  ))}
-                </Grid>
-              </AccordionDetails>
-            </Accordion>
-          ))}
-        </Grid>
-
-
+                    ))}
+                  </div>
+                ))}
+              </Grid>
+            ))}
+          </Grid>
 
           {/* <Grid item xs={12}>
             {reportTestData.map((tree, index) => (
