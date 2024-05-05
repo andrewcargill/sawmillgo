@@ -39,17 +39,27 @@ import ReportMockUp from "./pages/ReportMockUp";
 
 function App() {
  
+  const [isReportMockUpLoaded, setIsReportMockUpLoaded] = useState(false);
+
+  useEffect(() => {
+    console.log("isReportMockUpLoaded: ", isReportMockUpLoaded);
+  }
+  , [isReportMockUpLoaded]);
 
   return (
   
     <div className="App">
         <Router>
-        <Navigation />
+        {/* <Navigation /> */}
+        {!isReportMockUpLoaded && <Navigation />}
         <PageContentContainer>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
-        <Route path="/report" element={<ReportMockUp />} />
+        <Route path="/report" element={<ReportMockUp 
+         onLoad={() => setIsReportMockUpLoaded(true)}
+         onUnload={() => setIsReportMockUpLoaded(false)}
+         />} />
 
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<UserHomePage />} />

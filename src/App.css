@@ -29,6 +29,7 @@
 }
 
 
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -36,4 +37,14 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Report CSS - Gallery */
+
+.image-gallery-icon {
+  color: pink;
+}
+
+.image-gallery-thumbnail {
+  border: 1px solid pink;
 }
