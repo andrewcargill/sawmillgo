@@ -1,5 +1,6 @@
 import { Container, Grid } from "@mui/material";
 import React from "react";
+import ForwardIcon from '@mui/icons-material/Forward';
 
 const PlankReport = ({ tree, log, plank }) => {
   return (
@@ -31,19 +32,24 @@ const PlankReport = ({ tree, log, plank }) => {
             sx={{ height: 40 }}
           >
             {/* TimeLine 1 */}
-            <Grid item xs={3} bgcolor={'pink'}>
-            
-            Date Tree Felled: {tree.date}
+            <Grid container item xs={3} bgcolor={'primary'}>
+            <Grid item xs={8} >
+            Tree Felled: {tree.date}
+            </Grid>
+            <Grid item xs={4} >
+            <ForwardIcon />
+            </Grid>
             </Grid>
             {/* TimeLine 2 */}
-            <Grid item xs={3} bgcolor={'red'}>
+            <Grid item xs={3} bgcolor={''}>
             
-            Date Tree Logged: {log.date}
+           Tree Logged: {log.date}
             </Grid>
             {/* TimeLine 3 */}
             <Grid item xs={3} bgcolor={'lightblue'}>
             
-            Date Log Milled: {plank.milledDate}
+           Log Milled: {plank.milledDate}
+
             </Grid>
             {/* TimeLine 4 */}
             <Grid item xs={3} bgcolor={'grey'}>
