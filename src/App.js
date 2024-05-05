@@ -35,6 +35,7 @@ import PlankDetails from "./pages/sub-pages/planks-pages/PlankDetails";
 import EditPlank from "./components/planks/EditPlank";
 import AddPlank from "./components/planks/AddPlank";
 import AddMoistureCheck from "./components/mositure-checks.jsx/AddMoistureCheck";
+import ReportMockUp from "./pages/ReportMockUp";
 
 function App() {
  
@@ -48,6 +49,8 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/report" element={<ReportMockUp />} />
+
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<UserHomePage />} />
         <Route path="/loggedoutpage" element={<LoggedOutPage />} />
