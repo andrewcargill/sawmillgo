@@ -139,6 +139,11 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
           <Typography variant="h5" align="center">
             Specific lumber from trees
           </Typography>
+          <Typography variant="body1" align="center">
+            Selet 15 is a family run forest and sawmill that has been in
+            operation since 1923. We are proud to offer the finest lumber from
+            the most sustainable sources.
+          </Typography>
         </Grid>
 
        
@@ -161,6 +166,11 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
               </AccordionSummary>
               <AccordionDetails>
                 <Grid container spacing={1}>
+                  <Grid item xs={12}>
+                    <Typography>{tree.date}</Typography>
+                    <Typography>{tree.reasonForRemoval}</Typography>
+
+                    </Grid>
                   {tree.logs.map((log) => (
                     <Grid item xs={12} key={log.id}>
                       <Accordion>
@@ -173,7 +183,13 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
                           <Typography>{log.id}</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
+
                           <Grid container spacing={1}>
+                            <Grid item xs={12}>
+                              <Typography>{log.date}</Typography>
+                              <Typography>Length: {log.length}cm</Typography>
+                              <Typography>Diameter: {log.diameter}cm</Typography>
+                              </Grid>
                             {log.planks.map((plank) => (
                               <Grid item xs={12} key={plank.id}>
                                 <Paper
