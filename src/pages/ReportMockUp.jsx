@@ -18,6 +18,11 @@ import WorkspacesIcon from "@mui/icons-material/Workspaces";
 import ParkIcon from "@mui/icons-material/Park";
 import DehazeIcon from "@mui/icons-material/Dehaze";
 import PlankReport from "../components/project-report/PlankReport";
+import image1 from "../media/images/1.png";
+import image2 from "../media/images/2.png";
+import image3 from "../media/images/3.png";
+import image4 from "../media/images/4.png";
+import image5 from "../media/images/5.png";
 
 const ReportMockUp = ({ onLoad, onUnload }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -26,36 +31,44 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
 
   const imageGalleryData = [
     {
-      original: "https://via.placeholder.com/600x400?text=Image+1",
+      original: image1,
       thumbnail: "https://via.placeholder.com/150x100?text=Thumbnail+1",
       altText: "Image 1",
       date: "2024-05-05",
       title: "Title 1",
-      description: "Description for Image 1",
+      description: "Finished table from the finest lumber.",
     },
     {
-      original: "https://via.placeholder.com/600x400?text=Image+1",
+      original: image2,
       thumbnail: "https://via.placeholder.com/150x100?text=Thumbnail+1",
       altText: "Image 2",
       date: "2024-05-06",
       title: "Title 2",
-      description: "Description for Image 2",
+      description: "High quality craftsmanship.",
     },
     {
-      original: "https://via.placeholder.com/600x400?text=Image+1",
+      original: image3,
       thumbnail: "https://via.placeholder.com/150x100?text=Thumbnail+1",
       altText: "Image 3",
       date: "2024-05-07",
       title: "Title 3",
-      description: "Description for Image 3",
+      description: "Unique design. A one of a kind piece.",
     },
     {
-      original: "https://via.placeholder.com/600x400?text=Image+1",
+      original: image4,
       thumbnail: "https://via.placeholder.com/150x100?text=Thumbnail+1",
       altText: "Image 4",
       date: "2024-05-08",
       title: "Title 4",
-      description: "2024-05-08: Description for Image 4",
+      description: "2024-05-08: Cutting to size.",
+    },
+    {
+      original: image5,
+      thumbnail: "https://via.placeholder.com/150x100?text=Thumbnail+1",
+      altText: "Image 4",
+      date: "2024-05-08",
+      title: "Title 4",
+      description: "2024-05-08: Glueing the table top.",
     },
   ];
 
@@ -97,8 +110,13 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
       <Grid container position="relative" top={-70} left={0}>
         {/* Item Title */}
         <Grid item xs={12}>
+          <Typography variant="h1" align="center">
+            Certification of Origin
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
           <Typography variant="h4" align="center">
-            The Peace Chair
+            The Pine Table
           </Typography>
         </Grid>
         {/* product images */}
@@ -147,75 +165,7 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
 
         {/* TEST */}
         <Grid container>
-          {/* <Grid item xs={12}>
-            {reportTestData.map((tree, index) => (
-              <Accordion
-                key={tree.id}
-                expanded={expanded === `panel${index}`}
-                onChange={handleChange(`panel${index}`)}
-              >
-                <AccordionSummary
-                  expandIcon={<ArrowDownwardIcon />}
-                  aria-controls={`panel${index}-content`}
-                  id={`panel${index}-header`}
-                >
-                  <ParkIcon />
-                  <Typography>REF: {tree.id}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Grid container spacing={1}>
-                    <Grid item xs={12}>
-                      <Typography>{tree.date}</Typography>
-                      <Typography>{tree.reasonForRemoval}</Typography>
-                    </Grid>
-                    {tree.logs.map((log) => (
-                      <Grid item xs={12} key={log.id}>
-                        <Accordion>
-                          <AccordionSummary
-                            expandIcon={<ArrowDropDownIcon />}
-                            aria-controls="panel2-content"
-                            id="panel2-header"
-                          >
-                            <WorkspacesIcon />
-                            <Typography>LOG ID: {log.id}</Typography>
-                          </AccordionSummary>
-                          <AccordionDetails>
-                            <Grid container spacing={1}>
-                              <Grid item xs={12}>
-                                <Typography>{log.date}</Typography>
-                                <Typography>Length: {log.length}cm</Typography>
-                                <Typography>
-                                  Diameter: {log.diameter}cm
-                                </Typography>
-                              </Grid>
-                              {log.planks.map((plank) => (
-                                <Grid item xs={12} key={plank.id}>
-                                  <Paper
-                                    style={{
-                                      border: `2px solid ${getPlankBorderColor(
-                                        index
-                                      )}`,
-                                      padding: "10px",
-                                      marginBottom: "10px",
-                                    }}
-                                  >
-                                    <DehazeIcon />
-                                    <Typography>
-                                      PLANK ID: {plank.id}
-                                    </Typography>
-                                  </Paper>
-                                </Grid>
-                              ))}
-                            </Grid>
-                          </AccordionDetails>
-                        </Accordion>
-                      </Grid>
-                    ))}
-                  </Grid>
-                </AccordionDetails>
-              </Accordion>
-            ))}
-          </Grid> */}
+        
 
           <Grid item xs={12}>
             {reportTestData.map((tree, treeIndex) => (
@@ -262,26 +212,6 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
             ))}
           </Grid>
 
-          {/* <Grid item xs={12}>
-            {reportTestData.map((tree, index) => (
-              <Accordion
-                key={tree.id}
-                expanded={expanded === `panel${index}`}
-                onChange={handleChange(`panel${index}`)}
-              >
-                <AccordionSummary
-                  expandIcon={<ArrowDownwardIcon />}
-                  aria-controls={`panel${index}-content`}
-                  id={`panel${index}-header`}
-                >
-                  <Typography>{tree.id}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>{tree.reasonForRemoval}</Typography>
-                </AccordionDetails>
-              </Accordion>
-            ))}
-          </Grid> */}
         </Grid>
       </Grid>
     </>
