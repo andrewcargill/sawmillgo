@@ -1,6 +1,7 @@
 import { Container, Grid } from "@mui/material";
 import React from "react";
-import ForwardIcon from '@mui/icons-material/Forward';
+import ForwardIcon from "@mui/icons-material/Forward";
+import ReportMoistureGraph from "./sub-components/ReportMoistureGraph";
 
 const PlankReport = ({ tree, log, plank }) => {
   return (
@@ -21,9 +22,19 @@ const PlankReport = ({ tree, log, plank }) => {
         xs={12}
         mt={1}
         container
-        sx={{ minWidth: 2000, minHeight: 200, flexWrap: "nowrap" }}
+        sx={{
+          minWidth: {
+            xs: "380vw", // for xs (extra small) view size
+            sm: "385vw", // for sm (small) view size
+            md: "390vw", // for md (medium) view size
+            lg: "380vw", // for lg (large) view size
+            xl: "280vw", // for xl (extra large) view size
+          },
+          minHeight: 200,
+          flexWrap: "nowrap",
+        }}
       >
-        <Grid container flexDirection={"row"} spacing={2}>
+        <Grid container flexDirection={"row"}>
           <Grid
             item
             xs={12}
@@ -31,57 +42,57 @@ const PlankReport = ({ tree, log, plank }) => {
             container
             sx={{ height: 40 }}
           >
-            {/* TimeLine 1 */}
-            <Grid container item xs={3} bgcolor={'primary'}>
-            <Grid item xs={8} >
-            Tree Felled: {tree.date}
+            {/* TimeLine 1 - Tree Felled */}
+            <Grid container item xs={3}>
+              Tree Felled: {tree.date}
             </Grid>
-            <Grid item xs={4} >
-            <ForwardIcon />
+            {/* TimeLine 2 - Logged */}
+            <Grid container item xs={3}>
+              Tree Logged: {log.date}
             </Grid>
+            {/* TimeLine 3 - Milled */}
+            <Grid container item xs={3}>
+              Log Milled: {plank.milledDate}
             </Grid>
-            {/* TimeLine 2 */}
-            <Grid item xs={3} bgcolor={''}>
-            
-           Tree Logged: {log.date}
-            </Grid>
-            {/* TimeLine 3 */}
-            <Grid item xs={3} bgcolor={'lightblue'}>
-            
-           Log Milled: {plank.milledDate}
-
-            </Grid>
-            {/* TimeLine 4 */}
-            <Grid item xs={3} bgcolor={'grey'}>
-            
-            This is the titleThis is the title This is the tits the titleThis is
-            the titleThis is the title
+            {/* TimeLine 4 - Drying */}
+            <Grid container item xs={3}>
+              Drying Information
             </Grid>
           </Grid>
-          <Grid item xs={12} container sx={{ minHeight: 160 }}>
-             {/* Content 1 */}
-             <Grid item xs={3} bgcolor={'pink'}>
-            
-            This is the titleThis is the title This is the tits the titleThis is
-            the titleThis is the title
+          <Grid item xs={12} container sx={{ height: 160 }}>
+            {/* Content 1 - Tree Felled */}
+            <Grid item xs={3} bgcolor={"pink"}>
+              <div>Tree RefID: {tree.id}</div>
+              <div>Lumberjack: {tree.lumberJack}</div>
+              <div>Area of Forest: {tree.location}</div>
+              <div>Latitude: {tree.latitude}</div>
+              <div>Longitude: {tree.longitude}</div>
+              <div>Age: {tree.age}</div>
+              <div>Reason for Removal: {tree.reasonForRemoval}</div>
             </Grid>
-            {/* Content 2 */}
-            <Grid item xs={3} bgcolor={'red'}>
-            
-            This is the titleThis is the title This is the tits the titleThis is
-            the titleThis is the title
+            {/* Content 2 - Logged */}
+            <Grid item xs={3} bgcolor={"red"}>
+              <div>Log ID: {log.id}</div>
+              <div>Logging Date: {log.date}</div>
+              <div>Cut Length: {log.length}</div>
+              <div>Diameter: {log.diameter}</div>
+              <div>Lumberjack: {log.lumberJack}</div>
             </Grid>
-            {/* Content 3 */}
-            <Grid item xs={3} bgcolor={'lightblue'}>
-            
-            This is the titleThis is the title This is the tits the titleThis is
-            the titleThis is the title
+            {/* Content 3 - Milling info */}
+            <Grid item xs={3} bgcolor={"lightblue"}>
+              <div>Plank ID: {plank.id}</div>
+              <div>Milled Date: {plank.milledDate}</div>
+              <div>Operator: {plank.operator}</div>
+              <div>Comments: {plank.comments}</div>
+              <div>
+                Dimensions: {plank.dimensions.width} x {plank.dimensions.depth}{" "}
+                x {plank.dimensions.length}
+              </div>
+              <div>Grade: {plank.grade}</div>
             </Grid>
             {/* Content 4 */}
-            <Grid item xs={3} bgcolor={'grey'}>
-            
-            This is the titleThis is the title This is the tits the titleThis is
-            the titleThis is the title
+            <Grid item xs={3} bgcolor={"grey"}>
+              <ReportMoistureGraph plankData={plank.moistureContent} />
             </Grid>
           </Grid>
         </Grid>
