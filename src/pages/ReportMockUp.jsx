@@ -23,6 +23,8 @@ import {
   FullImageModal,
   ImageCarousel,
 } from "../components/image-components/ImageGalleryComponents";
+import { PlankReportCarousel } from "../components/project-report/sub-components/PlankReportCarousel";
+import { SlideFive, SlideFour, SlideOne, SlideThree, SlideTwo } from "../components/project-report/sub-components/PlankTestData";
 
 const ReportMockUp = ({ onLoad, onUnload }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -203,9 +205,18 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
                           </Grid>
                         </AccordionSummary>
                         <AccordionDetails>
-                          <Grid container spacing={1}>
+                          {/* <Grid container spacing={1}>
                             <PlankReport tree={tree} log={log} plank={plank} />
-                          </Grid>
+                          </Grid> */}
+                          <div>
+                          <PlankReportCarousel>
+                          {SlideOne}
+                          {SlideTwo}
+                          {SlideThree}
+                          {SlideFour}
+                          {SlideFive}
+                          </PlankReportCarousel>
+                          </div>
                         </AccordionDetails>
                       </Accordion>
                     ))}
