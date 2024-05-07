@@ -9,6 +9,7 @@ export function PlankReportCarousel({ children }) {
             autoPlay={false}
             navButtonsAlwaysVisible={true}
             indicators={true}
+            duration={1500}
         >
             {children.map((child, index) => (
                 <Slide key={index} component={child} />
