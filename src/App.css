@@ -48,3 +48,38 @@
 .image-gallery-thumbnail {
   border: 1px solid pink;
 }
+
+
+/* Report Images carousel */
+.report-image-carousel {
+  height: 200px;
+ 
+}
+
+@media only screen and (min-width: 600px) {
+  .report-image-carousel {
+    height: 400px;
+
+  }
+}
+
+/* Medium devices (tablets, 960px and up) */
+@media only screen and (min-width: 960px) {
+  .report-image-carousel {
+    height: 450px;
+  }
+}
+
+/* Large devices (desktops, 1280px and up) */
+@media only screen and (min-width: 1280px) {
+  .report-image-carousel {
+    height: 450px;
+  }
+}
+
+/* Extra Large devices (large desktops, 1920px and up) */
+@media only screen and (min-width: 1920px) {
+  .report-image-carousel {
+    max-height: 600px;
+  }
+}

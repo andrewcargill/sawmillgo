@@ -10,19 +10,19 @@ import {
   Button,
 } from "@mui/material";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ReactImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css"; // Import default styles
 import reportTestData from "../reportTestData";
-import WorkspacesIcon from "@mui/icons-material/Workspaces";
-import ParkIcon from "@mui/icons-material/Park";
-import DehazeIcon from "@mui/icons-material/Dehaze";
 import PlankReport from "../components/project-report/PlankReport";
 import image1 from "../media/images/1.png";
 import image2 from "../media/images/2.png";
 import image3 from "../media/images/3.png";
 import image4 from "../media/images/4.png";
 import image5 from "../media/images/5.png";
+import {
+  FullImageModal,
+  ImageCarousel,
+} from "../components/image-components/ImageGalleryComponents";
 
 const ReportMockUp = ({ onLoad, onUnload }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -109,25 +109,30 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
     <>
       <Grid container position="relative" top={-70} left={0}>
         {/* Item Title */}
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Typography variant="h1" align="center">
             Certification of Origin
           </Typography>
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
           <Typography variant="h4" align="center">
             The Pine Table
           </Typography>
         </Grid>
         {/* product images */}
-        <Grid item xs={12}>
-          <ReactImageGallery
-            items={imageGalleryData}
-            showNav={true} // Show navigation arrows
-            showThumbnails={false} // Show thumbnails
-            showFullscreenButton={true} // Show fullscreen button
-            showPlayButton={false} // Show play button
-          />
+        <Grid
+          item
+          xs={12}
+          style={{   }}
+        >
+          <ImageCarousel items={imageGalleryData} openModal={openModal} />
+          {modalIsOpen && (
+            <FullImageModal
+              isOpen={modalIsOpen}
+              handleClose={closeModal}
+              image={imageGalleryData[selectedImageIndex]}
+            />
+          )}
         </Grid>
         {/* Product Description and avatar */}
         <Grid container spacing={2} alignItems="center">
@@ -165,8 +170,6 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
 
         {/* TEST */}
         <Grid container>
-        
-
           <Grid item xs={12}>
             {reportTestData.map((tree, treeIndex) => (
               <Grid item xs={12} pt={1} pb={1} key={tree.id}>
@@ -201,7 +204,7 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
                         </AccordionSummary>
                         <AccordionDetails>
                           <Grid container spacing={1}>
-                          <PlankReport tree={tree} log={log} plank={plank} />
+                            <PlankReport tree={tree} log={log} plank={plank} />
                           </Grid>
                         </AccordionDetails>
                       </Accordion>
@@ -211,7 +214,6 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
               </Grid>
             ))}
           </Grid>
-
         </Grid>
       </Grid>
     </>
