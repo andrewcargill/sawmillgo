@@ -24,7 +24,13 @@ import {
   ImageCarousel,
 } from "../components/image-components/ImageGalleryComponents";
 import { PlankReportCarousel } from "../components/project-report/sub-components/PlankReportCarousel";
-import { SlideFive, SlideFour, SlideOne, SlideThree, SlideTwo } from "../components/project-report/sub-components/PlankTestData";
+import {
+  SlideFive,
+  SlideFour,
+  SlideOne,
+  SlideThree,
+  SlideTwo,
+} from "../components/project-report/sub-components/PlankTestData";
 
 const ReportMockUp = ({ onLoad, onUnload }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -122,11 +128,7 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
           </Typography>
         </Grid>
         {/* product images */}
-        <Grid
-          item
-          xs={12}
-          style={{   }}
-        >
+        <Grid item xs={12} style={{}}>
           <ImageCarousel items={imageGalleryData} openModal={openModal} />
           {modalIsOpen && (
             <FullImageModal
@@ -209,13 +211,31 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
                             <PlankReport tree={tree} log={log} plank={plank} />
                           </Grid> */}
                           <div>
-                          <PlankReportCarousel>
+                            {/* <PlankReportCarousel>
                           {SlideOne}
-                          {SlideTwo}
+                          < SlideTwo tree={tree} />
                           {SlideThree}
                           {SlideFour}
                           {SlideFive}
-                          </PlankReportCarousel>
+                          </PlankReportCarousel> */}
+                            <PlankReportCarousel
+                              slides={[
+                                (tree) => <SlideOne tree={tree} />, // No props needed for SlideOne
+                                (tree) => <SlideTwo tree={tree} />,
+                                (tree, log) => <SlideThree log={log} />,
+                                (tree, log, plank) => (
+                                  <SlideFour plank={plank} />
+                                ),
+                                (tree, log, plank) => (
+                                  <SlideFive
+                                    moistureContent={plank.moistureContent}
+                                  />
+                                ),
+                              ]}
+                              tree={tree}
+                              log={log}
+                              plank={plank}
+                            />
                           </div>
                         </AccordionDetails>
                       </Accordion>

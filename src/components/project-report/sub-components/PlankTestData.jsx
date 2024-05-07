@@ -1,30 +1,33 @@
 import React from 'react';
 import { Typography, Box, Button } from '@mui/material';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import ReportMoistureGraph from './ReportMoistureGraph';
 
-export function SlideOne() {
+export function SlideOne({ tree }) {
     return (
         <Box textAlign="center">
             <Typography variant="h4">The journey of XXSS</Typography>
-            <Typography variant="body1">begins on Sept 12 2021</Typography>
+            <Typography variant="body1">begins on {tree.date}</Typography>
          
         </Box>
     );
 }
 
-const rows = [
-    { id: 1, name: 'Ref', description: 'TTEL' },
-    { id: 2, name: 'age', description: '80-100' },
-    { id: 3, name: 'speices', description: 'Pine' },
-    { id: 4, name: 'Reason', description: 'To let more light into the forest' },
-    { id: 5, name: 'Location', description: 'Forest 2' }
-  ];
 
-export function SlideTwo() {
+
+export function SlideTwo({ tree }) {
+
+  const treeData = [
+    { id: 1, name: 'Ref', description: tree.id },
+    { id: 2, name: 'age', description: tree.age },
+    { id: 3, name: 'speices', description: tree.species },
+    { id: 4, name: 'Reason', description: tree.reasonForRemoval },
+    { id: 5, name: 'Location', description: tree.location }
+  ];
     return (
         <Box textAlign="center">
         <Typography variant="h4">Tree felled</Typography>
-        <Typography variant="body1">John Doe removed the tree. Here is the data we have:</Typography>
+        <Typography variant="body1">{tree.lumberJack} removed the tree. Here is the data we have:</Typography>
         <TableContainer component={Paper}>
       <Table sx={{ minWidth: 300 }} aria-label="simple table">
         <TableHead>
@@ -34,7 +37,7 @@ export function SlideTwo() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {treeData.map((row) => (
             <TableRow key={row.id}>
               <TableCell component="th" scope="row" sx={{ py: 0.5, px: 1, fontSize: '0.875rem' }}>
                 {row.name}
@@ -50,19 +53,20 @@ export function SlideTwo() {
     );
 }
 
-const logs = [
-    { id: 1, name: 'Log Ref', description: 'TTMM' },
-    { id: 2, name: 'Length', description: '400cm' },
-    { id: 3, name: 'Diameter', description: '30cm' },
+
+
+export function SlideThree({ log }) {
+  const logData = [
+    { id: 1, name: 'Log Ref', description: log.id },
+    { id: 2, name: 'Length', description: log.length },
+    { id: 3, name: 'Diameter', description: log.diameter },
 
     { id: 4, name: 'Location', description: 'Forest 3' }
   ];
-
-export function SlideThree() {
     return (
         <Box textAlign="center">
         <Typography variant="h4">Tree Logged</Typography>
-        <Typography variant="body1">John Doe logged the tree on 20th October 2010.</Typography>
+        <Typography variant="body1">{log.lumberJack} logged the tree on 20th October 2010.</Typography>
         <TableContainer component={Paper}>
       <Table sx={{ minWidth: 300 }} aria-label="simple table">
         <TableHead>
@@ -72,7 +76,7 @@ export function SlideThree() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {logs.map((row) => (
+          {logData.map((row) => (
             <TableRow key={row.id}>
               <TableCell component="th" scope="row" sx={{ py: 0.5, px: 1, fontSize: '0.875rem' }}>
                 {row.name}
@@ -88,20 +92,22 @@ export function SlideThree() {
     );
 }
 
-const planks = [
-    { id: 1, name: 'Plank Ref', description: 'TTFS' },
-    { id: 2, name: 'Width', description: '12cm' },
-    { id: 3, name: 'Depth', description: '2cm' },
-    { id: 4, name: 'Grade', description: '1' },
-    { id: 5, name: 'Notes', description: 'Fresh and clean plank' },
-    { id: 6, name: 'Location', description: 'Sawmill' }
-  ];
 
-export function SlideFour() {
+
+export function SlideFour({ plank }) {
+  const plankData = [
+    { id: 1, name: 'Plank Ref', description: plank.id },
+    { id: 2, name: 'Milled Date', description: plank.milledDate },
+    { id: 3, name: 'Width', description: plank.dimensions.width },
+    { id: 4, name: 'Depth', description: plank.dimensions.depth },
+    { id: 5, name: 'Grade', description: plank.grade },
+    { id: 6, name: 'Notes', description: plank.comments },
+    
+  ];
     return (
         <Box textAlign="center">
         <Typography variant="h4">Sawmill</Typography>
-        <Typography variant="body1">Jens Neyman milled the log on 20th October 2010.</Typography>
+        <Typography variant="body1">{plank.operator} milled the log on 20th October 2010.</Typography>
         <TableContainer component={Paper}>
       <Table sx={{ minWidth: 300 }} aria-label="simple table">
         <TableHead>
@@ -111,7 +117,7 @@ export function SlideFour() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {logs.map((row) => (
+          {plankData.map((row) => (
             <TableRow key={row.id}>
               <TableCell component="th" scope="row" sx={{ py: 0.5, px: 1, fontSize: '0.875rem' }}>
                 {row.name}
@@ -127,12 +133,11 @@ export function SlideFour() {
     );
 }
 
-export function SlideFive() {
+export function SlideFive({ moistureContent }) {
     return (
         <Box textAlign="center">
             <Typography variant="h4">Drying Data</Typography>
-            <Typography variant="body1">This will contain graph of drying data</Typography>
-         
+            <ReportMoistureGraph plankData={moistureContent} />
         </Box>
     );
 }
