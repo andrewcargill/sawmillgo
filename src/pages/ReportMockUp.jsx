@@ -164,8 +164,8 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
         {/* Google Maps API - Showing trees */}
         <Grid item xs={12}>
           <Paper>
-          {/* <GoogleMapsReport trees={reportTestData} /> */}
-          <GoogleMapsTour tourStops={reportTestData} />
+          <GoogleMapsReport trees={reportTestData} />
+          {/* <GoogleMapsTour tourStops={reportTestData} /> */}
           </Paper>
         </Grid>
         <Grid item xs={12}>
