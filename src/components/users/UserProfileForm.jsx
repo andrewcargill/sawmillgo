@@ -148,6 +148,7 @@ const UserProfileForm = () => {
               <option value="operator">Operator</option>
               <option value="admin">Admin</option>
               <option value="siteadmin">SiteAdmin</option>
+              <option value="creator">Creator</option>
               {/* Add other roles as needed */}
             </select>
           </label>

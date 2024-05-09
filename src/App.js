@@ -62,6 +62,7 @@ function App() {
          />} />
 
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUpComponent />} />
         <Route path="/home" element={<UserHomePage />} />
         <Route path="/loggedoutpage" element={<LoggedOutPage />} />
         <Route path="/profile" element={<UserProfilePage />} />
