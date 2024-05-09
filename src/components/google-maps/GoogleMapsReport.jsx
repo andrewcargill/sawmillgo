@@ -38,8 +38,10 @@ const containerStyle = {
 //   lng: 20.2630,
 // };
 
+const colors = ["#FF5733", "#33FFB8", "#3361FF", "#F4FF33", "#8333FF"];
 
-function GoogleMapsTour( { trees }) {
+
+function GoogleMapsTour( { trees, getPlankBorderColor }) {
   const mapRef = useRef(null);
   const [map, setMap] = useState(null);
 
@@ -49,14 +51,14 @@ function GoogleMapsTour( { trees }) {
     loader.load().then((google) => {
       const map = new google.maps.Map(mapRef.current, {
         center: defaultCenter,
-        zoom: 17,
+        zoom: 18,
         mapId: "56127499ee1ce2ef"  // Replace with your actual Map ID
       });
 
       setMap(map);
 
       google.maps.importLibrary("marker").then(() => {
-        trees.forEach(({ position, title, id }, i) => {
+        trees.forEach(({position, title, id }, i) => {
           const { AdvancedMarkerElement, PinElement } = google.maps.marker;
           const marker = new AdvancedMarkerElement({
             position,
@@ -66,7 +68,9 @@ function GoogleMapsTour( { trees }) {
             //   glyph: `${i + 1}`,
               glyph: id,
               scale: 1.5,
-              background: "white",
+            //   background: "white",
+                background: colors[i],
+            
             }).element
           });
 

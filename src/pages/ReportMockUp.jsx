@@ -112,6 +112,8 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
     setModalIsOpen(false);
   };
 
+
+
   const getPlankBorderColor = (treeIndex) => {
     const colors = ["#FF5733", "#33FFB8", "#3361FF", "#F4FF33", "#8333FF"];
     return colors[treeIndex % colors.length];
@@ -164,7 +166,7 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
         {/* Google Maps API - Showing trees */}
         <Grid item xs={12}>
           <Paper>
-          <GoogleMapsReport trees={reportTestData} />
+          <GoogleMapsReport trees={reportTestData} getPlankBorderColor={getPlankBorderColor} />
           {/* <GoogleMapsTour tourStops={reportTestData} /> */}
           </Paper>
         </Grid>
@@ -207,6 +209,7 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
                               item
                               xs={1}
                               bgcolor={getPlankBorderColor(treeIndex)}
+                             
                             ></Grid>
                             <Grid item xs={11}>
                               <Typography>PLANK REF: {plank.id}</Typography>
