@@ -44,6 +44,7 @@ const Login = () => {
         const sawmillName = await fetchSawmillName(userProfileData.sawmillId);
         userProfileData.sawmillName = sawmillName; // Add the sawmill name to the user profile object
       }
+     
       return userProfileData;
     } else {
       console.log("No user profile found!");
@@ -90,6 +91,7 @@ const Login = () => {
         username: userProfile.id,
         displayName: userProfile.username,
         sawmillId: userProfile.sawmillId,
+        role: userProfile.role,
       };
       localStorage.setItem('user', JSON.stringify(dataToStore));
       setLoading(false);

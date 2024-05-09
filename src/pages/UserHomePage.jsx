@@ -13,6 +13,8 @@ import LocationGauge from "./user-homepage/LocationGauge";
 import MovementsGauge from "./user-homepage/Movements";
 import ProjectGauge from "./user-homepage/ProjectGauge";
 import SpeciesGauge from "./user-homepage/SpeicesGauge";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const UserHomePage = () => {
   // Access user information from context
@@ -20,20 +22,48 @@ const UserHomePage = () => {
 const [userInfo, setUserInfo] = useState(null);
 
 
+const navigate = useNavigate();
+
   useEffect(() => {
     // fetch user data from local storage
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
         setUserInfo(user);
+        console.log("user info: ", user);
     }
     }, []);
 
+    const isCreator = userInfo && userInfo.role === "creator";
+
+    const profileButtonClick = () => {
+      const encodedUsername = encodeURIComponent(userInfo.username);
+      navigate(`/creatorprofile/${encodedUsername}`);
+    }
+
 
   return (
+
+
     <Grid container padding={2}>
       <Typography variant="h4" gutterBottom>
         Welcome {userInfo ? userInfo.displayName : "Not Available"}
       </Typography>
+
+      {isCreator ? (
+      <>
+      <Grid item xs={12} border={'2px solid black'}> 
+      <Typography variant="h3" p={2}> * Creator Zone * </Typography>
+      <Typography variant="h5" p={2}> This is where you manage your on going projects </Typography>
+      
+      </Grid>
+      <Grid item xs={12}>
+        You Projects will be displayed here
+        </Grid>
+      <Grid item xs={12} p={3}>
+        <Button variant="contained" color="primary" onClick={profileButtonClick}> View & Update your profile</Button>
+        </Grid>
+      </>
+      ) : (
  
       <Grid container spacing={1}>
         <Grid container item xs={12} spacing={1}>
@@ -66,40 +96,11 @@ const [userInfo, setUserInfo] = useState(null);
        
         </Grid>
 
-        {/* <Grid item xs={12}>
-          <Typography variant="body1">
-            Sawmill: {userProfile ? userProfile.sawmillName : "Not Available"}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="body1">
-            Role: {userProfile ? userProfile.role : "Not Available"}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="body1">
-            About: {userProfile ? userProfile.about : "Not Available"}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="body1">
-            Email: {userProfile ? userProfile.email : "Not Available"}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="body1">
-            Joined: {userProfile ? userProfile.creationTime : "Not Available"}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="body1">
-            ID: {userProfile ? userProfile.id : "Not Available"}
-          </Typography>
-        </Grid> */}
         <Grid item xs={12}>
           <AddSawmillForm />
         </Grid>
       </Grid>
+      )}
     </Grid>
   );
 };

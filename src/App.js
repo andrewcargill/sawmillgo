@@ -36,6 +36,7 @@ import EditPlank from "./components/planks/EditPlank";
 import AddPlank from "./components/planks/AddPlank";
 import AddMoistureCheck from "./components/mositure-checks.jsx/AddMoistureCheck";
 import ReportMockUp from "./pages/ReportMockUp";
+import CreatorProfile from "./components/creators/CreatorProfile";
 
 function App() {
  
@@ -66,6 +67,7 @@ function App() {
         <Route path="/home" element={<UserHomePage />} />
         <Route path="/loggedoutpage" element={<LoggedOutPage />} />
         <Route path="/profile" element={<UserProfilePage />} />
+        <Route path="/creatorprofile/:creatorId" element={<CreatorProfile />} />
 
         <Route path="/addtree" element={<AddTreeForm />} />
         <Route path="/trees" element={<TreesPage />} />
