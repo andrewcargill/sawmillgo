@@ -160,7 +160,7 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
         {/* Tree section title */}
         <Grid item xs={12}>
           <Typography variant="h5" align="center">
-            Transparent Forestry
+            Transparent Forestry - The Source of the Lumber
           </Typography>
         </Grid>
         {/* Google Maps API - Showing trees */}

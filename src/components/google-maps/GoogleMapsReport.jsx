@@ -1,5 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import loader from '../../utils/mapLoader';  // Adjust the path as necessary
 
 
@@ -39,11 +40,14 @@ const containerStyle = {
 // };
 
 const colors = ["#FF5733", "#33FFB8", "#3361FF", "#F4FF33", "#8333FF"];
+const textColors = ["white", "black", "white", "white", "white"];
 
 
 function GoogleMapsTour( { trees, getPlankBorderColor }) {
   const mapRef = useRef(null);
   const [map, setMap] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [selectedTree, setSelectedTree] = useState(null);
 
   const defaultCenter = trees[0].position;
 
@@ -58,23 +62,29 @@ function GoogleMapsTour( { trees, getPlankBorderColor }) {
       setMap(map);
 
       google.maps.importLibrary("marker").then(() => {
-        trees.forEach(({position, title, id }, i) => {
+        trees.forEach(({tree, position, id }, i) => {
           const { AdvancedMarkerElement, PinElement } = google.maps.marker;
           const marker = new AdvancedMarkerElement({
             position,
-            map,
-            title: `${i + 1}. ${title}`,
+            map: map,
+            title: `${i + 1}. ${tree?.title}`,
             content: new PinElement({
-            //   glyph: `${i + 1}`,
+
               glyph: id,
               scale: 1.5,
-            //   background: "white",
+
                 background: colors[i],
+                borderColor: 'white',
+                glyphColor: textColors[i],
+                
             
             }).element
           });
 
-          // Additional logic as necessary
+          marker.addListener('click', () => {
+            setSelectedTree(trees[i]);
+            setOpen(true);
+          });
         });
       });
     }).catch(error => {
@@ -82,7 +92,30 @@ function GoogleMapsTour( { trees, getPlankBorderColor }) {
     });
   }, [trees]);
 
-  return <div ref={mapRef} style={containerStyle} />;
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <div>
+      <div ref={mapRef} style={containerStyle} />
+      {selectedTree && (
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>{selectedTree.title}</DialogTitle>
+          <DialogContent>
+            <p>ID: {selectedTree.id}</p>
+            <p>Position: {selectedTree.position.lat}, {selectedTree.position.lng}</p>
+            <p>Removed by: {selectedTree.lumberJack}, Date: {selectedTree.date}</p>
+            <p>Reason: {selectedTree.reasonForRemoval}</p>
+            <img src={selectedTree.treeImage} alt="Tree" style={{ width: "100%" }} />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Close</Button>
+          </DialogActions>
+        </Dialog>
+      )}
+    </div>
+  );
 }
 
 export default GoogleMapsTour;

@@ -1,8 +1,11 @@
+import treeImage from "./media/images/tree.jpg";
+
 const reportTestData = [
     {
       id: "LLPR",
       date: "2021-10-10",
       species: "Pine",
+      treeImage: treeImage,
       age: 10,
       reasonForRemoval: "Reason for removal example",
       position: { lat: 64.053200, lng: 19.9168798 },
@@ -92,6 +95,7 @@ const reportTestData = [
       id: "LLPR2",
       date: "2021-10-10",
       species: "Oak",
+      treeImage: treeImage,
       age: 15,
       reasonForRemoval: "Another reason for removal",
       position: { lat: 64.0533300, lng: 19.9168798 },
@@ -134,6 +138,7 @@ const reportTestData = [
       id: "LLPR3",
       date: "2021-10-10",
       species: "Birch",
+      treeImage: treeImage,
       age: 8,
       reasonForRemoval: "Yet another reason for removal",
       position: { lat: 64.0533600, lng: 19.9168798 },
