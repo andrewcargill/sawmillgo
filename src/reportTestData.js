@@ -5,8 +5,8 @@ const reportTestData = [
       species: "Pine",
       age: 10,
       reasonForRemoval: "Reason for removal example",
-      latitude: 63.8258, // Umea, Sweden
-      longitude: 20.2630, 
+      latitude: 63.8220, // Umea, Sweden
+      longitude: 20.2600, 
       lumberJack: "John Doe",
       location: "Location 1",
       logs: [
@@ -134,8 +134,8 @@ const reportTestData = [
       species: "Birch",
       age: 8,
       reasonForRemoval: "Yet another reason for removal",
-      latitude: 63.8258, // Umea, Sweden
-      longitude: 20.2630, // Umea, Sweden
+      latitude: 63.8270, // Umea, Sweden
+      longitude: 20.2650, // Umea, Sweden
       lumberJack: "Alice Johnson",
       location: "Location 3",
       logs: [

@@ -31,6 +31,7 @@ import {
   SlideThree,
   SlideTwo,
 } from "../components/project-report/sub-components/PlankTestData";
+import GoogleMapsReport from "../components/google-maps/GoogleMapsReport";
 
 const ReportMockUp = ({ onLoad, onUnload }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -90,6 +91,8 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
       onUnload(); // Call onUnload when component unmounts
     };
   }, [onLoad, onUnload]);
+
+  
 
   const settings = {
     dots: true,
@@ -159,7 +162,9 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
         </Grid>
         {/* Google Maps API - Showing trees */}
         <Grid item xs={12}>
-          <Paper>GOOGLE MAPS API HERE</Paper>
+          <Paper>
+          <GoogleMapsReport trees={reportTestData} />
+          </Paper>
         </Grid>
         <Grid item xs={12}>
           <Typography variant="h5" align="center">
