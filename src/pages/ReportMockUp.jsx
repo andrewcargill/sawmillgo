@@ -32,6 +32,7 @@ import {
   SlideTwo,
 } from "../components/project-report/sub-components/PlankTestData";
 import GoogleMapsReport from "../components/google-maps/GoogleMapsReport";
+import GoogleMapsTour from "../components/google-maps/GoogleMapsTour";
 
 const ReportMockUp = ({ onLoad, onUnload }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -163,7 +164,8 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
         {/* Google Maps API - Showing trees */}
         <Grid item xs={12}>
           <Paper>
-          <GoogleMapsReport trees={reportTestData} />
+          {/* <GoogleMapsReport trees={reportTestData} /> */}
+          <GoogleMapsTour tourStops={reportTestData} />
           </Paper>
         </Grid>
         <Grid item xs={12}>

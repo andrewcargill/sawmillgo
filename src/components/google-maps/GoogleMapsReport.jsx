@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
+import  logImage from '../../media/images/log.png';
+
 
 const containerStyle = {
   width: '100%',
@@ -10,6 +12,7 @@ const defaultCenter = {
   lat: 63.8258,
   lng: 20.2630,
 };
+
 
 function GoogleMapsReport({ trees }) {
   const mapRef = useRef(null);
@@ -38,6 +41,8 @@ function GoogleMapsReport({ trees }) {
             position: { lat: tree.latitude, lng: tree.longitude },
             map: map,
             title: `Tree ID: ${tree.id}`,
+
+            
           });
         });
       });
