@@ -858,6 +858,47 @@ exports.onPlankDeleted = functions.firestore
     }
   });
 
+  exports.handleProjectAssignment = functions.firestore
+    .document('sawmill/{sawmillId}/projects/{projectId}')
+    .onWrite(async (change, context) => {
+        const newData = change.after.exists ? change.after.data() : null;
+        const oldData = change.before.exists ? change.before.data() : null;
+        const { projectId, sawmillId } = context.params;
+
+        // Fetch additional details
+        const sawmillRef = admin.firestore().doc(`sawmill/${sawmillId}`);
+        const sawmillSnap = await sawmillRef.get();
+        const sawmillName = sawmillSnap.exists ? sawmillSnap.data().name : "Unknown Sawmill";
+
+        // If new project is created or updated
+        if (newData) {
+            // Correctly referencing projectName
+            const projectInfo = {
+                projectId: projectId,
+                sawmillId: sawmillId,
+                projectName: newData.projectName,  // Corrected field name
+                sawmillName: sawmillName
+            };
+
+            // If there was a previous creator, remove the project from their list
+            if (oldData && oldData.creatorId && oldData.creatorId !== newData.creatorId) {
+                const oldCreatorRef = admin.firestore().doc(`users/${oldData.creatorId}`);
+                await oldCreatorRef.update({
+                    projects: admin.firestore.FieldValue.arrayRemove(projectInfo)
+                });
+            }
+
+            // Add the project to the new creator's list
+            if (newData.creatorId) {
+                const newCreatorRef = admin.firestore().doc(`users/${newData.creatorId}`);
+                await newCreatorRef.update({
+                    projects: admin.firestore.FieldValue.arrayUnion(projectInfo)
+                });
+            }
+        }
+    });
+
+
 
 exports.initializeSawmillSubcollections = functions.firestore
   .document("sawmill/{sawmillId}")

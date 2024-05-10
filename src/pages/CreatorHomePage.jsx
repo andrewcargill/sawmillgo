@@ -60,9 +60,7 @@ const navigate = useNavigate();
       <Typography variant="h5" p={2}> This is where you manage your on going projects </Typography>
       
       </Grid>
-      <Grid item xs={12}>
-        You Projects will be displayed here
-        </Grid>
+    
       <Grid item xs={12} p={3}>
         <Button variant="contained" color="primary" onClick={profileButtonClick}> View & Update your profile</Button>
         </Grid>

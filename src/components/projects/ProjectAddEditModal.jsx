@@ -78,13 +78,6 @@ function ProjectAddEditModal({ projectDetails, isOpen, onClose }) {
       .finally(() => setIsLoading(false));
   }, []);
 
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormValues(prev => ({
-  //     ...prev,
-  //     [name]: value
-  //   }));
-  // };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
