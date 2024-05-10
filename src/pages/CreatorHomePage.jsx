@@ -17,11 +17,18 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Flag } from "@mui/icons-material";
 import FlagIcon from "../components/country-components/FlagIcon";
+import {doc, getDoc, getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import CreatorsProjectsList from "../components/creators/CreatorsProjectsList";
+
 
 const CreatorHomePage = () => {
   // Access user information from context
 //   const { userProfile } = useContext(UserContext);
 const [userInfo, setUserInfo] = useState(null);
+const [userProfile, setUserProfile] = useState(null);
+const db = getFirestore();
+const auth = getAuth();
 
 
 const navigate = useNavigate();
@@ -33,6 +40,26 @@ const navigate = useNavigate();
         setUserInfo(user);
         console.log("user info: ", user);
     }
+
+    const fetchUserDetails = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const userRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(userRef);
+        if (docSnap.exists()) {
+          setUserProfile(docSnap.data());
+        } else {
+          console.log("No such document!");
+        }
+      } else {
+        // No user is signed in.
+        navigate("/login");
+      }
+    };
+
+    fetchUserDetails();
+
+
     }, []);
 
     const isCreator = userInfo && userInfo.role === "creator";
@@ -58,6 +85,7 @@ const navigate = useNavigate();
       <Grid item xs={12} border={'2px solid black'}> 
       <Typography variant="h3" p={2}> * Creator Zone * </Typography>
       <Typography variant="h5" p={2}> This is where you manage your on going projects </Typography>
+      <CreatorsProjectsList userProfile={userProfile} />
       
       </Grid>
     
