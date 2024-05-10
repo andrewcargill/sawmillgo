@@ -92,6 +92,7 @@ const Login = () => {
         displayName: userProfile.username,
         sawmillId: userProfile.sawmillId,
         role: userProfile.role,
+        country: userProfile.country,
       };
       localStorage.setItem('user', JSON.stringify(dataToStore));
       setLoading(false);

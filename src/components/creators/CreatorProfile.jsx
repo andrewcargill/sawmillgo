@@ -5,6 +5,9 @@ import { app } from "../../firebase-config"; // Ensure you import your Firebase 
 import { Grid } from "@mui/material";
 import { Update } from "@mui/icons-material";
 import UpdateCreatorProfile from "./UpdateCreatorProfile";
+import FlagIcon from "../country-components/FlagIcon";
+import CountryNameFromCode from "../country-components/CountryNameFromCode";
+
 
 const db = getFirestore(app); // Initialize Firestore
 
@@ -52,11 +55,16 @@ const CreatorProfile = () => {
                     <h1>Creator Profile</h1>
                 </Grid>
                 <Grid item xs={12}>
+                    <h3>{creator.companyName}</h3>
+                </Grid>
+                <Grid item xs={12}>
                     <img src={creator?.imageUrl} alt="Creator" />
+                  <FlagIcon countryCode={creator.country} />
                 </Grid>
 
                 <Grid item xs={12}>
                     <p>Creator ID: {creatorId}</p>
+                    
                 </Grid>
                 {creator && (
                     <Grid item xs={12}>
@@ -64,6 +72,9 @@ const CreatorProfile = () => {
                             <p>Username: {creator.username}</p>
                             <p>About: {creator.about}</p>
                             <p>PortfolioUrl: {creator.portfolioUrl}</p>
+                            <p>Social 1: {creator.socialMediaUrl1}</p>
+                            <p>Social 2: {creator.socialMediaUrl2}</p>
+                            <p>Country: <CountryNameFromCode countryCode={creator.country} />    </p>
                         </div>
                     </Grid>
                 )}

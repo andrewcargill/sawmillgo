@@ -15,6 +15,8 @@ import ProjectGauge from "./user-homepage/ProjectGauge";
 import SpeciesGauge from "./user-homepage/SpeicesGauge";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Flag } from "@mui/icons-material";
+import FlagIcon from "../components/country-components/FlagIcon";
 
 const UserHomePage = () => {
   // Access user information from context
@@ -47,6 +49,8 @@ const navigate = useNavigate();
     <Grid container padding={2}>
       <Typography variant="h4" gutterBottom>
         Welcome {userInfo ? userInfo.displayName : "Not Available"}
+        {userInfo?.country && <FlagIcon countryCode={userInfo.country} />}
+
       </Typography>
 
       {isCreator ? (

@@ -14,6 +14,7 @@ import { app } from "../../firebase-config";
 import { Button, Grid, TextField, styled } from "@mui/material";
 import UserContext from "../../Contexts/UserContext";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import CountrySelect from "../country-components/CountrySelect";
 
 const UpdateCreatorProfile = () => {
   const [username, setUsername] = useState("");
@@ -21,6 +22,10 @@ const UpdateCreatorProfile = () => {
   const [role, setRole] = useState("guest");
   const [portfolioUrl, setPortfolioUrl] = useState("");
   const [sawmillId, setSawmillId] = useState("");
+  const [socialMediaUrl1, setSocialMediaUrl1] = useState("");
+    const [socialMediaUrl2, setSocialMediaUrl2] = useState("");
+    const [country, setCountry] = useState("");
+    const [companyName, setCompanyName] = useState("");
   const [image, setImage] = useState(null);
   const [imageFiles, setImageFiles] = useState({
     image1: null,
@@ -42,7 +47,10 @@ const UpdateCreatorProfile = () => {
           setAbout(userData.about || "");
           setRole(userData.role || "guest");
           setSawmillId(userData.sawmillId || "");
-            setPortfolioUrl(userData.portfolioUrl || "");
+        setPortfolioUrl(userData.portfolioUrl || "");
+        setSocialMediaUrl1(userData.socialMediaUrl1 || "");
+        setSocialMediaUrl2(userData.socialMediaUrl2 || "");
+        setCountry(userData.country || "");
         }
       });
     }
@@ -132,6 +140,10 @@ const UpdateCreatorProfile = () => {
         role,
         sawmillId,
         portfolioUrl,
+        socialMediaUrl1,
+        socialMediaUrl2,
+        country,
+        companyName,
       };
 
       try {
@@ -152,13 +164,15 @@ const UpdateCreatorProfile = () => {
   };
 
   return (
-    <Grid Container xs={12}>
-      <form onSubmit={handleSubmit}>
+
+ 
+    <Grid container item xs={12} spacing={2}>
+  
         <Grid item xs={12}>
           <h2>Update User Profile</h2>
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
             type="text"
@@ -168,6 +182,22 @@ const UpdateCreatorProfile = () => {
             onChange={(e) => setUsername(e.target.value)}
           />
         </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            type="text"
+            variant="outlined"
+            label="Company Name"
+            value={companyName}
+            onChange={(e) => setCompanyName(e.target.value)}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+        <CountrySelect country={country} setCountry={setCountry} />
+        </Grid>
+
         <Grid item xs={12}>
           <TextField
             fullWidth
@@ -189,12 +219,13 @@ const UpdateCreatorProfile = () => {
           alignContent={"center"}
           justifyContent={"space-around"}
         >
-          <Grid p={1}>
+          <Grid item p={1}>
             <Button
               component="label"
               role={undefined}
               variant="contained"
               tabIndex={-1}
+              color="secondary"
               startIcon={<CloudUploadIcon />}
             >
               Upload Image1
@@ -204,82 +235,56 @@ const UpdateCreatorProfile = () => {
                 type="file"
               />
             </Button>
-            {/* <Grid>
-              {imageFiles.image1 && <Grid>{imageFiles.image1.name}</Grid>}
-            </Grid> */}
-            <Grid>
+      
+            <Grid item p={2}>
               {imageFiles.image1 && (
                 <>
-                  <Grid>{imageFiles.image1.name}</Grid>
+                 
                   <img
                     src={imageFiles.previewUrl}
                     alt="Preview"
-                    style={{ maxWidth: "100%", height: "auto" }}
+                    style={{ maxWidth: "200px", height: "auto" }}
                   />
                 </>
               )}
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
             type="url"
             variant="outlined"
-            label="portfolioUrl"
+            label="Portfolio URL"
             value={portfolioUrl}
             onChange={(e) => setPortfolioUrl(e.target.value)}
           />
         </Grid>
-
-        {/* <div>
-          <label>
-            Username:
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            About:
-            <textarea
-              value={about}
-              onChange={(e) => setAbout(e.target.value)}
-            />
-          </label>
-        </div> */}
-        <div>
-          <label>
-            Role:
-            <select
-              disabled
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-            >
-              <option value="guest">Guest</option>
-              <option value="operator">Operator</option>
-              <option value="admin">Admin</option>
-              <option value="siteadmin">SiteAdmin</option>
-              <option value="creator">Creator</option>
-              {/* Add other roles as needed */}
-            </select>
-          </label>
-        </div>
-        <div>
-          <label>
-            Image:
-            <input type="file" onChange={handleImageChange} />
-          </label>
-        </div>
-
-        <div>
-          <button type="submit">Update Profile</button>
-        </div>
-      </form>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            type="url"
+            variant="outlined"
+            label="Social Media URL 1"
+            value={socialMediaUrl1}
+            onChange={(e) => setSocialMediaUrl1(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            type="url"
+            variant="outlined"
+            label="Social Media URL 2"
+            value={socialMediaUrl2}
+            onChange={(e) => setSocialMediaUrl2(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={12}>
+        <Button variant="contained" type="submit" onClick={handleSubmit} >Update Profile</Button>
+        </Grid>
     </Grid>
+
   );
 };
 
