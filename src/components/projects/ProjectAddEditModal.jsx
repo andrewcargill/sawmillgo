@@ -19,11 +19,13 @@ import { app } from "../../firebase-config";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { getAuth } from 'firebase/auth';
 import { Form } from "react-router-dom";
+import { fetchCreators } from "../../utils/filestoreOperations";
 
 
 function ProjectAddEditModal({ projectDetails, isOpen, onClose }) {
 
-
+  const [creators, setCreators] = useState([]);
+  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [formValues, setFormValues] = useState({
     sawmillId: '',
@@ -46,10 +48,6 @@ function ProjectAddEditModal({ projectDetails, isOpen, onClose }) {
   const sawmillId = userLocalStorage?.sawmillId;
   const displayName = userLocalStorage?.displayName;
 
-  
-
-
-
   useEffect(() => {
     if (projectDetails) {
       setFormValues({
@@ -66,6 +64,18 @@ function ProjectAddEditModal({ projectDetails, isOpen, onClose }) {
       });
     }
   }, [projectDetails]);
+
+  useEffect(() => {
+    const db = getFirestore(app);
+    setIsLoading(true);
+    fetchCreators(db)
+      .then(setCreators)
+      .catch(error => {
+        console.error("Failed to load creators:", error);
+        setError("Failed to load creators.");
+      })
+      .finally(() => setIsLoading(false));
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -190,6 +200,25 @@ function ProjectAddEditModal({ projectDetails, isOpen, onClose }) {
               onChange={handleChange}
             />
           </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="creator-label">Creator</InputLabel>
+              <Select
+                labelId="creator-label"
+                id="creator-select"
+                name="creatorId"
+                value={formValues.creatorId}
+                label="Creator"
+                onChange={handleChange}
+              >
+                {creators.map(creator => (
+                  <MenuItem key={creator.id} value={creator.id}>
+                    {creator.username}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            </Grid>
           <Grid item xs={12}>
             <TextField
               fullWidth

@@ -21,21 +21,6 @@ export const fetchLocationsForSawmill = async (db, sawmillId) => {
   }
 };
 
-// export const fetchProjectsForSawmill = async (db, sawmillId) => {
-//     try {
-//       const projectsQuery = query(collection(db, `sawmill/${sawmillId}/projects`));
-//       const querySnapshot = await getDocs(projectsQuery);
-//       const projects = querySnapshot.docs.map(doc => ({
-//         id: doc.id,
-//         ...doc.data(),
-//       }));
-//       return projects;
-//     } catch (error) {
-//       console.error("Error fetching projects:", error);
-//       throw new Error("Failed to fetch projects.");
-//     }
-//   };
-
 export const fetchVerifiedProjectsForSawmill = async (db, sawmillId) => {
   try {
       const projectsQuery = query(
@@ -83,5 +68,23 @@ export const fetchSpeciesForSawmill = async (db, sawmillId) => {
     } catch (error) {
       console.error("Error fetching species:", error);
       throw new Error("Failed to fetch species.");
+    }
+  };
+
+  export const fetchCreators = async (db) => {
+    try {
+      const usersQuery = query(
+        collection(db, "users"),
+        where("role", "==", "creator")
+      );
+      const querySnapshot = await getDocs(usersQuery);
+      const creators = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      return creators;
+    } catch (error) {
+      console.error("Error fetching creators:", error);
+      throw new Error("Failed to fetch creators.");
     }
   };
