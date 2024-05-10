@@ -13,6 +13,7 @@ import {
   MenuItem,
   FormControlLabel,
   Switch,
+  Menu,
 } from "@mui/material";
 import { doc, setDoc, updateDoc, addDoc, collection, getFirestore } from "firebase/firestore";
 import { app } from "../../firebase-config";
@@ -77,12 +78,43 @@ function ProjectAddEditModal({ projectDetails, isOpen, onClose }) {
       .finally(() => setIsLoading(false));
   }, []);
 
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormValues(prev => ({
+  //     ...prev,
+  //     [name]: value
+  //   }));
+  // };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormValues(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  
+    // Check if the change is for the creatorId select input
+    if (name === 'creatorId') {
+      if (value === '') {
+        setFormValues(prev => ({
+          ...prev,
+          creatorId: '',  // Clear the creator ID
+          creatorUsername: ''  // Clear the createdBy field
+        }));
+      } else {
+      const selectedCreator = creators.find(creator => creator.id === value);
+      if (selectedCreator) {
+        setFormValues(prev => ({
+          ...prev,
+          creatorId: selectedCreator.id,  // Store the creator's ID
+          creatorUsername: selectedCreator.username  // Store the creator's username in the createdBy field
+        }));
+      }
+    }
+   
+    } else {
+      // Handle other inputs normally
+      setFormValues(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -191,7 +223,7 @@ function ProjectAddEditModal({ projectDetails, isOpen, onClose }) {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <TextField
               fullWidth
               label="Creator ID"
@@ -199,7 +231,7 @@ function ProjectAddEditModal({ projectDetails, isOpen, onClose }) {
               value={formValues.creatorId}
               onChange={handleChange}
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12}>
             <FormControl fullWidth>
               <InputLabel id="creator-label">Creator</InputLabel>
@@ -210,7 +242,9 @@ function ProjectAddEditModal({ projectDetails, isOpen, onClose }) {
                 value={formValues.creatorId}
                 label="Creator"
                 onChange={handleChange}
+
               >
+              <MenuItem value="">No Creator</MenuItem>
                 {creators.map(creator => (
                   <MenuItem key={creator.id} value={creator.id}>
                     {creator.username}

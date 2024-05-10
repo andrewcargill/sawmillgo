@@ -39,6 +39,7 @@ const FilteredProjectsTable = ({ projects, title, openProjectModal, dynamicView 
                     </TableCell>
                     <TableCell>Customer</TableCell>
                     <TableCell>Manager</TableCell>
+                    <TableCell>Creator</TableCell>
                     <TableCell>Start Date</TableCell>
                     <TableCell>Deadline</TableCell>
                   </TableRow>
@@ -66,6 +67,7 @@ const FilteredProjectsTable = ({ projects, title, openProjectModal, dynamicView 
                       </TableCell>
                       <TableCell>{project.customerName}</TableCell>
                       <TableCell>{project.createdBy}</TableCell>
+                      <TableCell>{project.creatorUsername}</TableCell>
                       <TableCell>{project.date}</TableCell>
                       <TableCell>{project.deadline}</TableCell>
                     </TableRow>

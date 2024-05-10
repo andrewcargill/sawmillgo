@@ -284,14 +284,25 @@ const Navigation = () => {
                   </MenuItem>
                 </>
               ) : (
+                <>
                 <MenuItem onClick={handleCloseUserMenu}>
                   <Link
                     to="/login"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
-                    <Typography textAlign="center">Login</Typography>
+                    <Typography textAlign="center">Sawmill Login</Typography>
                   </Link>
+                 
                 </MenuItem>
+                <MenuItem onClick={handleCloseUserMenu}>
+                <Link
+                    to="/creatorlogin"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    <Typography textAlign="center">Creator Login</Typography>
+                  </Link>
+                  </MenuItem>
+                </>
               )}
             </Menu>
           </Box>

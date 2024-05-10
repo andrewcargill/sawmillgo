@@ -17,7 +17,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import PageContentContainer from "./components/customContainers/PageContentContainer";
 import AboutPage from "./pages/AboutPage";
-import { Login } from "./components/userAuth/LoginLogOut";
+import { CreatorLogin, Login } from "./components/userAuth/LoginLogOut";
 import UserHomePage from "./pages/UserHomePage";
 import LoggedOutPage from "./pages/LoggedOutPage";
 import UserProfilePage from "./pages/UserProfilePage";
@@ -37,6 +37,7 @@ import AddPlank from "./components/planks/AddPlank";
 import AddMoistureCheck from "./components/mositure-checks.jsx/AddMoistureCheck";
 import ReportMockUp from "./pages/ReportMockUp";
 import CreatorProfile from "./components/creators/CreatorProfile";
+import CreatorHomePage from "./pages/CreatorHomePage";
 
 function App() {
  
@@ -63,8 +64,11 @@ function App() {
          />} />
 
         <Route path="/login" element={<Login />} />
+        <Route path="/creatorlogin" element={<CreatorLogin />} />
         <Route path="/signup" element={<SignUpComponent />} />
         <Route path="/home" element={<UserHomePage />} />
+        <Route path="/creatorhome" element={<CreatorHomePage />} />
+
         <Route path="/loggedoutpage" element={<LoggedOutPage />} />
         <Route path="/profile" element={<UserProfilePage />} />
         <Route path="/creatorprofile/:creatorId" element={<CreatorProfile />} />
