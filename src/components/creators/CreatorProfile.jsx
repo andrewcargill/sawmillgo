@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 import { app } from "../../firebase-config"; // Ensure you import your Firebase config appropriately
+import { Grid } from "@mui/material";
+import { Update } from "@mui/icons-material";
+import UpdateCreatorProfile from "./UpdateCreatorProfile";
 
 const db = getFirestore(app); // Initialize Firestore
 
@@ -43,16 +46,31 @@ const CreatorProfile = () => {
     }
 
     return (
-        <div>
-            <h1>Creator Profile</h1>
-            <p>Creator ID: {creatorId}</p>
-            {creator && (
-                <div>
-                    <p>Username: {creator.username}</p>
-                    <p>About: {creator.about}</p>
-                </div>
-            )}
-        </div>
+        <>
+            <Grid container>
+                <Grid item xs={12}>
+                    <h1>Creator Profile</h1>
+                </Grid>
+                <Grid item xs={12}>
+                    <img src={creator?.imageUrl} alt="Creator" />
+                </Grid>
+
+                <Grid item xs={12}>
+                    <p>Creator ID: {creatorId}</p>
+                </Grid>
+                {creator && (
+                    <Grid item xs={12}>
+                        <div>
+                            <p>Username: {creator.username}</p>
+                            <p>About: {creator.about}</p>
+                            <p>PortfolioUrl: {creator.portfolioUrl}</p>
+                        </div>
+                    </Grid>
+                )}
+                <UpdateCreatorProfile />
+            </Grid>
+            
+        </>
     );
 };
 
