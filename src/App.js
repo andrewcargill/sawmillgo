@@ -38,6 +38,7 @@ import AddMoistureCheck from "./components/mositure-checks.jsx/AddMoistureCheck"
 import ReportMockUp from "./pages/ReportMockUp";
 import CreatorProfile from "./components/creators/CreatorProfile";
 import CreatorHomePage from "./pages/CreatorHomePage";
+import ProductForm from "./components/creators/creator-product-management/ProductForm";
 
 function App() {
  
@@ -72,6 +73,7 @@ function App() {
         <Route path="/loggedoutpage" element={<LoggedOutPage />} />
         <Route path="/profile" element={<UserProfilePage />} />
         <Route path="/creatorprofile/:creatorId" element={<CreatorProfile />} />
+        <Route path="/product/:projectId" element={<ProductForm />} />
 
         <Route path="/addtree" element={<AddTreeForm />} />
         <Route path="/trees" element={<TreesPage />} />

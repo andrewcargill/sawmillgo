@@ -44,6 +44,7 @@ const Navigation = () => {
         setLocalUser(null); // Ensure local user state is cleared on logout
         localStorage.removeItem("user"); // Optionally clear local storage here as well
       }
+      console.log("localUser: ", localUser);
     });
   
     return () => unsubscribe();
@@ -147,33 +148,42 @@ const Navigation = () => {
                 boxShadow: "none",
               }}
             >
-              {isAuth ? (
-                <>
-                  {sawmillPages.map((page) => (
-                    <MenuItem key={page} onClick={handleMenuClose}>
-                      <Link
-                        to={`/${page.toLowerCase()}`}
-                        style={{ textDecoration: "none", color: "inherit" }}
-                      >
-                        <Typography textAlign="center">{page}</Typography>
-                      </Link>
-                    </MenuItem>
-                  ))}
-                </>
-              ) : (
-                <>
-                  {pages.map((page) => (
-                    <MenuItem key={page} onClick={handleMenuClose}>
-                      <Link
-                        to={`/${page.toLowerCase()}`}
-                        style={{ textDecoration: "none", color: "inherit" }}
-                      >
-                        <Typography textAlign="center">{page}</Typography>
-                      </Link>
-                    </MenuItem>
-                  ))}
-                </>
-              )}
+     {isAuth && localUser ? (
+  localUser?.role === 'creator' ? (
+    <MenuItem onClick={handleMenuClose}>
+      <Link
+        to="/creatorhome"
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <Typography textAlign="center">Home</Typography>
+      </Link>
+    </MenuItem>
+  ) : (
+    sawmillPages.map((page) => (
+      <MenuItem key={page} onClick={handleMenuClose}>
+        <Link
+          to={`/${page.toLowerCase()}`}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          <Typography textAlign="center">{page}</Typography>
+        </Link>
+      </MenuItem>
+      
+    ))
+  )
+) : (
+  pages.map((page) => (
+    <MenuItem key={page} onClick={handleMenuClose}>
+      <Link
+        to={`/${page.toLowerCase()}`}
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <Typography textAlign="center">{page}</Typography>
+      </Link>
+    </MenuItem>
+  ))
+)}
+
             </Menu>
           </Box>
 
@@ -198,55 +208,85 @@ const Navigation = () => {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {isAuth ? (
-              <>
-                {sawmillPages.map((page) => (
-                  <Button
-                    key={page}
-                    component={Link}
-                    to={`/${page.toLowerCase()}`}
-                    sx={{
-                      my: 2,
-                      color: "white",
-                      display: "block",
-                      textDecoration: "none",
-                    }}
-                  >
-                    {page}
-                  </Button>
-                ))}
-                <Button
-                  component={Link}
-                  onClick={handleLogout}
-                  sx={{
-                    my: 2,
-                    color: "white",
-                    display: "block",
-                    textDecoration: "none",
-                  }}
-                >
-                  Logout
-                </Button>
-              </>
-            ) : (
-              <>
-                {pages.map((page) => (
-                  <Button
-                    key={page}
-                    component={Link}
-                    to={`/${page.toLowerCase()}`}
-                    sx={{
-                      my: 2,
-                      color: "white",
-                      display: "block",
-                      textDecoration: "none",
-                    }}
-                  >
-                    {page}
-                  </Button>
-                ))}
-              </>
-            )}
+          {isAuth ? (
+  localUser?.role === 'creator' ? (
+    <>
+      <Button
+        component={Link}
+        to="/creatorhome"
+        sx={{
+          my: 2,
+          color: "white",
+          display: "block",
+          textDecoration: "none",
+        }}
+      >
+        Home
+      </Button>
+      <Button
+        component={Link}
+        onClick={handleLogout}
+        sx={{
+          my: 2,
+          color: "white",
+          display: "block",
+          textDecoration: "none",
+        }}
+      >
+        Logout
+      </Button>
+    </>
+  ) : (
+    <>
+      {sawmillPages.map((page) => (
+        <Button
+          key={page}
+          component={Link}
+          to={`/${page.toLowerCase()}`}
+          sx={{
+            my: 2,
+            color: "white",
+            display: "block",
+            textDecoration: "none",
+          }}
+        >
+          {page}
+        </Button>
+      ))}
+      <Button
+        component={Link}
+        onClick={handleLogout}
+        sx={{
+          my: 2,
+          color: "white",
+          display: "block",
+          textDecoration: "none",
+        }}
+      >
+        Logout
+      </Button>
+    </>
+  )
+) : (
+  <>
+    {pages.map((page) => (
+      <Button
+        key={page}
+        component={Link}
+        to={`/${page.toLowerCase()}`}
+        sx={{
+          my: 2,
+          color: "white",
+          display: "block",
+          textDecoration: "none",
+        }}
+      >
+        {page}
+      </Button>
+    ))}
+  </>
+)}
+
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
