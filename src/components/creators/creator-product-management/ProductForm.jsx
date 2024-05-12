@@ -13,7 +13,15 @@ import { useParams } from "react-router-dom";
 import PostCreator from "./PostCreator";
 import PostsList from "./PostsList";
 import ProductDetailsAddEdit from "./ProductDetailsAddEdit";
-import { Button, Grid, Dialog, Typography, Paper, DialogContent, DialogActions } from "@mui/material";
+import {
+  Button,
+  Grid,
+  Dialog,
+  Typography,
+  Paper,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
 
 const ProductForm = () => {
   const [title, setTitle] = useState("");
@@ -103,7 +111,6 @@ const ProductForm = () => {
   };
 
   const handleAddPostClick = () => {
-  
     setOpenAddPostDialog(true);
   };
 
@@ -112,11 +119,10 @@ const ProductForm = () => {
       <Grid>
         <Grid item xs={12} p={2}>
           <Paper>
-            
             <Grid item container xs={12}>
               <Grid item container xs={12} sm={6}>
                 <Grid item xs={12} p={1}>
-                <Typography variant="h5">{title}</Typography>
+                  <Typography variant="h5">{title}</Typography>
                 </Grid>
                 <Grid item xs={12} p={1}>
                   {description}
@@ -156,26 +162,30 @@ const ProductForm = () => {
 
       {/* Dialog component to display edit product detials content */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-    <DialogContent>
-    <ProductDetailsAddEdit
-        title={title}
-        description={description}
-        setTitle={setTitle}
-        setDescription={setDescription}
-        handleSubmit={handleSubmit}
-      />
+        <DialogContent>
+          <ProductDetailsAddEdit
+            title={title}
+            description={description}
+            setTitle={setTitle}
+            setDescription={setDescription}
+            handleSubmit={handleSubmit}
+          />
         </DialogContent>
         <DialogActions>
-            <Button variant="contained" onClick={handleSubmit}>Save</Button>
-            </DialogActions>
+          <Button variant="contained" onClick={handleSubmit}>
+            Save
+          </Button>
+        </DialogActions>
       </Dialog>
 
       {/* Dialog component to add edit posts content */}
-      <Dialog open={openAddPostDialog} onClose={() => setOpenAddPostDialog(false)}>
-    <DialogContent>
-    <PostCreator db={db} userId={userId} projectId={projectId} />
+      <Dialog
+        open={openAddPostDialog}
+        onClose={() => setOpenAddPostDialog(false)}
+      >
+        <DialogContent>
+          <PostCreator db={db} userId={userId} projectId={projectId} />
         </DialogContent>
-      
       </Dialog>
 
       <PostsList db={db} userId={userId} projectId={projectId} />
