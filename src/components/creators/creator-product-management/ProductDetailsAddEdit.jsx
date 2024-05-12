@@ -5,37 +5,43 @@ import {
   Chip,
   DialogContent,
   TextField,
-    Button,
-    styled,
+  Button,
+  styled,
+  Paper,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+
 
 const ProductDetailsAddEdit = ({
   title,
   description,
   imageFiles,
+  imageTitle,
+  imageDescription,
   setTitle,
   setDescription,
   setImageFiles,
+  setImageTitle,
+  setImageDescription,
+
 
   handleSubmit,
 }) => {
+  const handleImageChange = (e) => {
+    if (e.target.files[0]) {
+      const file = e.target.files[0];
 
-    const handleImageChange = (e) => {
-        if (e.target.files[0]) {
-          const file = e.target.files[0];
-    
-          // Create a URL for the image file
-          const previewUrl = URL.createObjectURL(file);
-    
-          setImageFiles({
-            image1: file,
-            previewUrl,
-          });
-        }
-      };
+      // Create a URL for the image file
+      const previewUrl = URL.createObjectURL(file);
 
-      /* Image button hidden content */
+      setImageFiles({
+        image1: file,
+        previewUrl,
+      });
+    }
+  };
+
+  /* Image button hidden content */
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -96,35 +102,69 @@ const ProductDetailsAddEdit = ({
             required
           />
         </Grid>
-        <Grid item container xs={12} mb={2}>
-          <Grid item xs={6}>
-            <Button
-              component="label"
-              role={undefined}
-              variant="contained"
-              tabIndex={-1}
-              color="secondary"
-              startIcon={<CloudUploadIcon />}
-            >
-              Upload Image
-              <VisuallyHiddenInput
-                name="image1"
-                onChange={handleImageChange}
-                type="file"
-              />
-            </Button>
-          </Grid>
-          <Grid item xs={6}>
-            {imageFiles.image1 && (
-              <>
-                <img
-                  src={imageFiles.previewUrl}
-                  alt="Preview"
-                  style={{ maxWidth: "200px", height: "auto" }}
-                />
-              </>
-            )}
-          </Grid>
+        <Grid xs={12} mb={2}>
+          <Paper>
+            <Grid container xs={12}  p={2}>
+            <Typography variant="h6" color={'secondary'}>Product Image</Typography>
+                </Grid>
+            <Grid container xs={12} mb={2} p={2}>
+              
+              <Grid item container xs={12} sm={6}>
+                <Grid item xs={12}  mb={2}>
+                <Button
+                fullWidth
+                  component="label"
+                  role={undefined}
+                  variant="contained"
+                  tabIndex={-1}
+                  color="secondary"
+                  startIcon={<CloudUploadIcon />}
+                >
+                  Upload Image
+                  <VisuallyHiddenInput
+                    name="image1"
+                    onChange={handleImageChange}
+                    type="file"
+                  />
+                </Button>
+                </Grid>
+                <Grid item xs={12}  mb={2}>
+                <TextField
+            fullWidth
+            type="text"
+            variant="outlined"
+            label="Title"
+            value={imageTitle}
+            onChange={(e) => setImageTitle(e.target.value)}
+            required
+          />
+                </Grid>
+                <Grid item xs={12} mb={1}>
+                <TextField
+            fullWidth
+            type="text"
+            variant="outlined"
+            label="Description"
+            value={imageDescription}
+            onChange={(e) => setImageDescription(e.target.value)}
+            required
+          />
+                </Grid>
+            
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                {imageFiles.image1 && (
+                  <>
+                    <img
+                      src={imageFiles.previewUrl}
+                      alt="Preview"
+                      style={{ maxWidth: "200px", height: "auto" }}
+                    />
+                  </>
+                )}
+              </Grid>
+            </Grid>
+          </Paper>
         </Grid>
       </Grid>
 

@@ -86,14 +86,10 @@ const PostsList = ({ db, userId, projectId }) => {
   }
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <Typography variant="h4" gutterBottom>
-          Posts
-        </Typography>
-      </Grid>
+    <Grid container border={"solid 1px #ffb501"} mt={2} borderRadius={3} p={3}>
+     
       {posts.map((post) => (
-        <Grid item xs={12} sm={6} md={4} key={post.id}>
+        <Grid item xs={12} sm={6} md={4} key={post.id} p={1}>
           <Card>
             {post.image && (
               <CardMedia
