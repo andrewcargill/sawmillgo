@@ -1,10 +1,17 @@
 import React, { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { Timestamp } from "firebase/firestore";
-import { DialogContent, Grid, Typography, Chip, Button, TextField, styled } from "@mui/material";
+import {
+  DialogContent,
+  Grid,
+  Typography,
+  Chip,
+  Button,
+  TextField,
+  styled,
+} from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-
 
 const PostCreator = ({ db, userId, projectId }) => {
   const [postTitle, setPostTitle] = useState("");
@@ -16,65 +23,38 @@ const PostCreator = ({ db, userId, projectId }) => {
     previewUrl: null,
   });
 
-//   const handlePostSubmit = async (event) => {
-//     event.preventDefault();
-//     if (!userId || !projectId) {
-//       alert("Missing user or project ID.");
-//       return;
-//     }
 
-//     const postsCollectionRef = collection(
-//       db,
-//       `users/${userId}/detailedProjects/${projectId}/posts`
-//     );
-//     try {
-//       await addDoc(postsCollectionRef, {
-//         title: postTitle,
-//         description: postDescription,
-//         image: postImage,
-//         date: postDate,
-//         createdAt: Timestamp.now()
-//       });
-//       alert("Post added successfully!");
-//       setPostTitle("");
-//       setPostDescription("");
-//       setPostImage("");
-//       setPostDate("");
-//     } catch (error) {
-//       console.error("Error adding post: ", error);
-//       alert("Failed to add post.");
-//     }
-//   };
-
-const handlePostSubmit = async (event) => {
+  const handlePostSubmit = async (event) => {
     event.preventDefault();
     if (!userId || !projectId) {
       alert("Missing user or project ID.");
       return;
     }
-  
+
     const storage = getStorage();
     // Create a unique file name with a timestamp
-    const uniqueName = `${imageFiles.image1.name.split('.')[0]}_${Date.now()}.${imageFiles.image1.name.split('.').pop()}`;
+    const uniqueName = `${
+      imageFiles.image1.name.split(".")[0]
+    }_${Date.now()}.${imageFiles.image1.name.split(".").pop()}`;
     const imageRef = ref(storage, `projectImages/${projectId}/${uniqueName}`);
-  
+
     try {
       const snapshot = await uploadBytes(imageRef, imageFiles.image1);
       const imageUrl = await getDownloadURL(snapshot.ref);
-  
+
       const postsCollectionRef = collection(
         db,
         `users/${userId}/detailedProjects/${projectId}/posts`
       );
-  
+
       await addDoc(postsCollectionRef, {
         title: postTitle,
         description: postDescription,
         image: imageUrl,
         date: postDate,
-        createdAt: Timestamp.now()
+        createdAt: Timestamp.now(),
       });
-  
+
       alert("Post added successfully!");
       setPostTitle("");
       setPostDescription("");
@@ -86,8 +66,6 @@ const handlePostSubmit = async (event) => {
       alert("Failed to add post.");
     }
   };
-  
-  
 
   /* Image button hidden content */
   const VisuallyHiddenInput = styled("input")({
@@ -112,49 +90,48 @@ const handlePostSubmit = async (event) => {
 
       setImageFiles({
         image1: file,
-        previewUrl, 
+        previewUrl,
       });
     }
   };
 
   return (
     <DialogContent>
-      {/* <form onSubmit={handlePostSubmit}> */}
-        <Grid container>
-          <Grid container item xs={12} mb={2}>
-            <Grid item xs={8}>
-              <Typography
-                id="tree-details-title"
-                variant="h6"
-                component="h2"
-                color={"primary"}
-                style={{ textTransform: "capitalize" }}
-              >
-                Add New Post
-              </Typography>
-            </Grid>
-            <Grid container item xs={4} justifyContent={"end"}>
-              <Chip
-                size="small"
-                color="secondary"
-                style={{ textTransform: "capitalize" }}
-                label={"Active"}
-              />
-            </Grid>
+      <Grid container>
+        <Grid container item xs={12} mb={2}>
+          <Grid item xs={8}>
+            <Typography
+              id="tree-details-title"
+              variant="h6"
+              component="h2"
+              color={"primary"}
+              style={{ textTransform: "capitalize" }}
+            >
+              Add New Post
+            </Typography>
           </Grid>
-          <Grid item xs={12} mb={2}>
-          <TextField
-              label="Date"
-              type="date"
-              name="date"
-              InputLabelProps={{ shrink: true }}
-              value={postDate.date}
-              onChange={(e) => setPostDate(e.target.value)}
-              fullWidth
-              required
+          <Grid container item xs={4} justifyContent={"end"}>
+            <Chip
+              size="small"
+              color="secondary"
+              style={{ textTransform: "capitalize" }}
+              label={"Active"}
             />
           </Grid>
-          <Grid item xs={12} mb={2}>
+        </Grid>
+        <Grid item xs={12} mb={2}>
+          <TextField
+            label="Date"
+            type="date"
+            name="date"
+            InputLabelProps={{ shrink: true }}
+            value={postDate.date}
+            onChange={(e) => setPostDate(e.target.value)}
+            fullWidth
+            required
+          />
+        </Grid>
+        <Grid item xs={12} mb={2}>
           <TextField
             fullWidth
             type="text"
@@ -164,9 +141,9 @@ const handlePostSubmit = async (event) => {
             onChange={(e) => setPostTitle(e.target.value)}
             required
           />
-          </Grid>
-          <Grid item xs={12} mb={2}>
-            <TextField
+        </Grid>
+        <Grid item xs={12} mb={2}>
+          <TextField
             fullWidth
             label="Description"
             type="text"
@@ -177,9 +154,9 @@ const handlePostSubmit = async (event) => {
             rows={2}
             required
           />
-          </Grid>
-          <Grid item container xs={12} mb={2}>
-            <Grid item xs={6}>
+        </Grid>
+        <Grid item container xs={12} mb={2}>
+          <Grid item xs={6}>
             <Button
               component="label"
               role={undefined}
@@ -195,62 +172,31 @@ const handlePostSubmit = async (event) => {
                 type="file"
               />
             </Button>
-                </Grid>
-            <Grid item xs={6}>
-            {imageFiles.image1 && (
-                <>
-                 
-                  <img
-                    src={imageFiles.previewUrl}
-                    alt="Preview"
-                    style={{ maxWidth: "200px", height: "auto" }}
-                  />
-                </>
-              )}
-                </Grid>
-
-            
           </Grid>
-          <Grid item xs={12} mb={2}>
-            <Button fullWidth variant="contained" color="primary" type="submit" onClick={handlePostSubmit}>
-                Save
-            </Button>
+          <Grid item xs={6}>
+            {imageFiles.image1 && (
+              <>
+                <img
+                  src={imageFiles.previewUrl}
+                  alt="Preview"
+                  style={{ maxWidth: "200px", height: "auto" }}
+                />
+              </>
+            )}
           </Grid>
         </Grid>
-
-        {/* <label>
-          Title:
-          <input
-            type="text"
-            value={postTitle}
-            onChange={(e) => setPostTitle(e.target.value)}
-          />
-        </label>
-        <label>
-          Description:
-          <textarea
-            value={postDescription}
-            onChange={(e) => setPostDescription(e.target.value)}
-          />
-        </label>
-        <label>
-          Image URL:
-          <input
-            type="text"
-            value={postImage}
-            onChange={(e) => setPostImage(e.target.value)}
-          />
-        </label>
-        <label>
-          Date:
-          <input
-            type="date"
-            value={postDate}
-            onChange={(e) => setPostDate(e.target.value)}
-          />
-        </label>
-        <button type="submit">Add Post</button>
-      </form> */}
+        <Grid item xs={12} mb={2}>
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            type="submit"
+            onClick={handlePostSubmit}
+          >
+            Save
+          </Button>
+        </Grid>
+      </Grid>
     </DialogContent>
   );
 };

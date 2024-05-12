@@ -22,12 +22,17 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 const ProductForm = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
   const [openAddPostDialog, setOpenAddPostDialog] = useState(false);
+  const [imageFiles, setImageFiles] = useState({
+    image1: null,
+    previewUrl: null,
+  });
   const [dialogContent, setDialogContent] = useState(null);
 
   const db = getFirestore(app);
@@ -51,18 +56,37 @@ const ProductForm = () => {
     return () => unsubscribe(); // Clean up the subscription
   }, []);
 
+  // const fetchProjectDetails = async (uid) => {
+  //   if (uid && projectId) {
+  //     const projectDocRef = doc(
+  //       db,
+  //       `users/${uid}/detailedProjects/${projectId}`
+  //     );
+  //     try {
+  //       const docSnap = await getDoc(projectDocRef);
+  //       if (docSnap.exists()) {
+  //         const projectData = docSnap.data();
+  //         setTitle(projectData.title || "");
+  //         setDescription(projectData.description || "");
+  //       } else {
+  //         console.log("No such project!");
+  //       }
+  //     } catch (error) {
+  //       console.error("Failed to fetch project details: ", error);
+  //     }
+  //   }
+  // };
+
   const fetchProjectDetails = async (uid) => {
     if (uid && projectId) {
-      const projectDocRef = doc(
-        db,
-        `users/${uid}/detailedProjects/${projectId}`
-      );
+      const projectDocRef = doc(db, `users/${uid}/detailedProjects/${projectId}`);
       try {
         const docSnap = await getDoc(projectDocRef);
         if (docSnap.exists()) {
           const projectData = docSnap.data();
           setTitle(projectData.title || "");
           setDescription(projectData.description || "");
+          setImageFiles({ ...imageFiles, previewUrl: projectData.imageUrl || null }); // Set image URL if available
         } else {
           console.log("No such project!");
         }
@@ -71,40 +95,75 @@ const ProductForm = () => {
       }
     }
   };
+  
+
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault(); // Prevent the default form submit action
+  //   if (!userId) {
+  //     alert("No user logged in."); // Alert if no user ID is available
+  //     return; // Stop the function if no user is logged in
+  //   }
+
+  //   // Define the Firestore document reference for the project details
+  //   const projectDocRef = doc(
+  //     db,
+  //     `users/${userId}/detailedProjects/${projectId}`
+  //   );
+
+  //   try {
+  //     // Attempt to set the document with title and description
+  //     await setDoc(
+  //       projectDocRef,
+  //       {
+  //         title,
+  //         description,
+  //       },
+  //       { merge: true }
+  //     ); // Use merge to avoid overwriting other fields that might exist
+
+  //     // Notify the user of successful update
+  //     alert("Product information created successfully.");
+  //   } catch (error) {
+  //     // Log any errors to the console and alert the user
+  //     console.error("Error creating product info: ", error);
+  //     alert("Failed to create product information.");
+  //   }
+  //   setOpenDialog(false);
+  // };
 
   const handleSubmit = async (event) => {
-    event.preventDefault(); // Prevent the default form submit action
+    event.preventDefault();
     if (!userId) {
-      alert("No user logged in."); // Alert if no user ID is available
-      return; // Stop the function if no user is logged in
+      alert("No user logged in.");
+      return;
     }
-
-    // Define the Firestore document reference for the project details
-    const projectDocRef = doc(
-      db,
-      `users/${userId}/detailedProjects/${projectId}`
-    );
-
+  
+    let imageUrl = imageFiles.previewUrl; // Default to the current preview URL
+  
+    if (imageFiles.image1) {
+      const storage = getStorage();
+      const storageRef = ref(storage, `projectImages/${projectId}/${imageFiles.image1.name}`);
+      try {
+        const snapshot = await uploadBytes(storageRef, imageFiles.image1);
+        imageUrl = await getDownloadURL(snapshot.ref); // Update imageUrl with the new URL
+      } catch (error) {
+        console.error("Error uploading image: ", error);
+        alert("Failed to upload new image.");
+        return;
+      }
+    }
+  
+    const projectDocRef = doc(db, `users/${userId}/detailedProjects/${projectId}`);
     try {
-      // Attempt to set the document with title and description
-      await setDoc(
-        projectDocRef,
-        {
-          title,
-          description,
-        },
-        { merge: true }
-      ); // Use merge to avoid overwriting other fields that might exist
-
-      // Notify the user of successful update
-      alert("Product information created successfully.");
+      await setDoc(projectDocRef, { title, description, imageUrl }, { merge: true });
+      alert("Product information updated successfully.");
     } catch (error) {
-      // Log any errors to the console and alert the user
-      console.error("Error creating product info: ", error);
-      alert("Failed to create product information.");
+      console.error("Error updating product info: ", error);
+      alert("Failed to update product information.");
     }
     setOpenDialog(false);
   };
+  
 
   const handleEditClick = () => {
     setOpenDialog(true);
@@ -131,7 +190,9 @@ const ProductForm = () => {
 
               <Grid item container xs={12} sm={6}>
                 <Grid item xs={12} p={2}>
-                  Image
+                {imageFiles.previewUrl && (
+      <img src={imageFiles.previewUrl} alt="Project Image" style={{ width: "auto", height: "200px" }} />
+    )}
                 </Grid>
               </Grid>
             </Grid>
@@ -166,8 +227,10 @@ const ProductForm = () => {
           <ProductDetailsAddEdit
             title={title}
             description={description}
+            imageFiles={imageFiles}
             setTitle={setTitle}
             setDescription={setDescription}
+            setImageFiles={setImageFiles}
             handleSubmit={handleSubmit}
           />
         </DialogContent>
