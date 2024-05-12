@@ -32,7 +32,7 @@ import {
   SlideTwo,
 } from "../components/project-report/sub-components/PlankTestData";
 import GoogleMapsReport from "../components/google-maps/GoogleMapsReport";
-import GoogleMapsTour from "../components/google-maps/GoogleMapsTour";
+
 
 const ReportMockUp = ({ onLoad, onUnload }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);

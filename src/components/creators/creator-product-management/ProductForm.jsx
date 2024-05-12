@@ -13,12 +13,13 @@ import { useParams } from "react-router-dom";
 import PostCreator from "./PostCreator";
 import PostsList from "./PostsList";
 import ProductDetailsAddEdit from "./ProductDetailsAddEdit";
-import { Button, Grid, Dialog, Typography, Paper } from "@mui/material";
+import { Button, Grid, Dialog, Typography, Paper, DialogContent, DialogActions } from "@mui/material";
 
 const ProductForm = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
+  const [openAddPostDialog, setOpenAddPostDialog] = useState(false);
   const [dialogContent, setDialogContent] = useState(null);
 
   const db = getFirestore(app);
@@ -94,26 +95,16 @@ const ProductForm = () => {
       console.error("Error creating product info: ", error);
       alert("Failed to create product information.");
     }
+    setOpenDialog(false);
   };
 
   const handleEditClick = () => {
-    setDialogContent(
-      <ProductDetailsAddEdit
-        title={title}
-        description={description}
-        setTitle={setTitle}
-        setDescription={setDescription}
-        handleSubmit={handleSubmit}
-      />
-    );
     setOpenDialog(true);
   };
 
   const handleAddPostClick = () => {
-    setDialogContent(
-      <PostCreator db={db} userId={userId} projectId={projectId} />
-    );
-    setOpenDialog(true);
+  
+    setOpenAddPostDialog(true);
   };
 
   return (
@@ -163,9 +154,28 @@ const ProductForm = () => {
         </Grid>
       </Grid>
 
-      {/* Dialog component to display dynamic content */}
+      {/* Dialog component to display edit product detials content */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        {dialogContent}
+    <DialogContent>
+    <ProductDetailsAddEdit
+        title={title}
+        description={description}
+        setTitle={setTitle}
+        setDescription={setDescription}
+        handleSubmit={handleSubmit}
+      />
+        </DialogContent>
+        <DialogActions>
+            <Button variant="contained" onClick={handleSubmit}>Save</Button>
+            </DialogActions>
+      </Dialog>
+
+      {/* Dialog component to add edit posts content */}
+      <Dialog open={openAddPostDialog} onClose={() => setOpenAddPostDialog(false)}>
+    <DialogContent>
+    <PostCreator db={db} userId={userId} projectId={projectId} />
+        </DialogContent>
+      
       </Dialog>
 
       <PostsList db={db} userId={userId} projectId={projectId} />
