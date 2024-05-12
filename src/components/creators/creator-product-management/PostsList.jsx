@@ -51,7 +51,7 @@ const PostsList = ({ db, userId, projectId }) => {
     };
 
     fetchPosts();
-  }, [db, userId, projectId]); // Depend on userId and projectId to refetch when they change
+  }, [db, userId, projectId]);
 
   const handleDelete = async (postId) => {
     // Display a confirmation dialog
@@ -66,7 +66,7 @@ const PostsList = ({ db, userId, projectId }) => {
       );
       try {
         await deleteDoc(postDocRef);
-        setPosts(posts.filter((post) => post.id !== postId)); // Update UI immediately
+        setPosts(posts.filter((post) => post.id !== postId));
         alert("Post deleted successfully!");
       } catch (error) {
         console.error("Error deleting post:", error);
@@ -83,11 +83,10 @@ const PostsList = ({ db, userId, projectId }) => {
   const handleEditPostClose = () => {
     setOpenEditPostDialog(false);
     setCurrentPost(null);
-  }
+  };
 
   return (
     <Grid container border={"solid 1px #ffb501"} mt={2} borderRadius={3} p={3}>
-     
       {posts.map((post) => (
         <Grid item xs={12} sm={6} md={4} key={post.id} p={1}>
           <Card>
@@ -114,13 +113,13 @@ const PostsList = ({ db, userId, projectId }) => {
               </Typography>
             </CardContent>
             <CardActions>
-            <Button
-  size="small"
-  color="primary"
-  onClick={() => handleEditPostClick(post)}
->
-  Edit
-</Button>
+              <Button
+                size="small"
+                color="primary"
+                onClick={() => handleEditPostClick(post)}
+              >
+                Edit
+              </Button>
 
               <Button
                 size="small"
@@ -145,7 +144,7 @@ const PostsList = ({ db, userId, projectId }) => {
                   userId={userId}
                   projectId={projectId}
                   post={currentPost}
-                handleClose={handleEditPostClose}
+                  handleClose={handleEditPostClose}
                 />
               )}
             </DialogContent>

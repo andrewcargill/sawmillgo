@@ -3,14 +3,12 @@ import {
   Grid,
   Typography,
   Chip,
-  DialogContent,
   TextField,
   Button,
   styled,
   Paper,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-
 
 const ProductDetailsAddEdit = ({
   title,
@@ -24,8 +22,6 @@ const ProductDetailsAddEdit = ({
   setImageTitle,
   setImageDescription,
 
-
-  handleSubmit,
 }) => {
   const handleImageChange = (e) => {
     if (e.target.files[0]) {
@@ -104,53 +100,53 @@ const ProductDetailsAddEdit = ({
         </Grid>
         <Grid xs={12} mb={2}>
           <Paper>
-            <Grid container xs={12}  p={2}>
-            <Typography variant="h6" color={'secondary'}>Product Image</Typography>
-                </Grid>
+            <Grid container xs={12} p={2}>
+              <Typography variant="h6" color={"secondary"}>
+                Product Image
+              </Typography>
+            </Grid>
             <Grid container xs={12} mb={2} p={2}>
-              
               <Grid item container xs={12} sm={6}>
-                <Grid item xs={12}  mb={2}>
-                <Button
-                fullWidth
-                  component="label"
-                  role={undefined}
-                  variant="contained"
-                  tabIndex={-1}
-                  color="secondary"
-                  startIcon={<CloudUploadIcon />}
-                >
-                  Upload Image
-                  <VisuallyHiddenInput
-                    name="image1"
-                    onChange={handleImageChange}
-                    type="file"
-                  />
-                </Button>
+                <Grid item xs={12} mb={2}>
+                  <Button
+                    fullWidth
+                    component="label"
+                    role={undefined}
+                    variant="contained"
+                    tabIndex={-1}
+                    color="secondary"
+                    startIcon={<CloudUploadIcon />}
+                  >
+                    Upload Image
+                    <VisuallyHiddenInput
+                      name="image1"
+                      onChange={handleImageChange}
+                      type="file"
+                    />
+                  </Button>
                 </Grid>
-                <Grid item xs={12}  mb={2}>
-                <TextField
-            fullWidth
-            type="text"
-            variant="outlined"
-            label="Title"
-            value={imageTitle}
-            onChange={(e) => setImageTitle(e.target.value)}
-            required
-          />
+                <Grid item xs={12} mb={2}>
+                  <TextField
+                    fullWidth
+                    type="text"
+                    variant="outlined"
+                    label="Title"
+                    value={imageTitle}
+                    onChange={(e) => setImageTitle(e.target.value)}
+                    required
+                  />
                 </Grid>
                 <Grid item xs={12} mb={1}>
-                <TextField
-            fullWidth
-            type="text"
-            variant="outlined"
-            label="Description"
-            value={imageDescription}
-            onChange={(e) => setImageDescription(e.target.value)}
-            required
-          />
+                  <TextField
+                    fullWidth
+                    type="text"
+                    variant="outlined"
+                    label="Description"
+                    value={imageDescription}
+                    onChange={(e) => setImageDescription(e.target.value)}
+                    required
+                  />
                 </Grid>
-            
               </Grid>
               <Grid item xs={12} sm={6}>
                 {imageFiles.image1 && (
@@ -167,11 +163,6 @@ const ProductDetailsAddEdit = ({
           </Paper>
         </Grid>
       </Grid>
-
-      {/* <form onSubmit={handleSubmit}> */}
-
-      {/* <button type="submit">Save Product Info</button> */}
-      {/* </form> */}
     </>
   );
 };

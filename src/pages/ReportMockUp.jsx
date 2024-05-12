@@ -33,7 +33,6 @@ import {
 } from "../components/project-report/sub-components/PlankTestData";
 import GoogleMapsReport from "../components/google-maps/GoogleMapsReport";
 
-
 const ReportMockUp = ({ onLoad, onUnload }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -93,8 +92,6 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
     };
   }, [onLoad, onUnload]);
 
-  
-
   const settings = {
     dots: true,
     infinite: true,
@@ -112,8 +109,6 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
     setModalIsOpen(false);
   };
 
-
-
   const getPlankBorderColor = (treeIndex) => {
     const colors = ["#FF5733", "#33FFB8", "#3361FF", "#F4FF33", "#8333FF"];
     return colors[treeIndex % colors.length];
@@ -122,12 +117,6 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
   return (
     <>
       <Grid container position="relative" top={-70} left={0}>
-        {/* Item Title */}
-        {/* <Grid item xs={12}>
-          <Typography variant="h1" align="center">
-            Certification of Origin
-          </Typography>
-        </Grid> */}
         <Grid item xs={12}>
           <Typography variant="h4" align="center">
             The Pine Table
@@ -166,8 +155,11 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
         {/* Google Maps API - Showing trees */}
         <Grid item xs={12}>
           <Paper>
-          <GoogleMapsReport trees={reportTestData} getPlankBorderColor={getPlankBorderColor} />
-          {/* <GoogleMapsTour tourStops={reportTestData} /> */}
+            <GoogleMapsReport
+              trees={reportTestData}
+              getPlankBorderColor={getPlankBorderColor}
+            />
+            {/* <GoogleMapsTour tourStops={reportTestData} /> */}
           </Paper>
         </Grid>
         <Grid item xs={12}>
@@ -209,7 +201,6 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
                               item
                               xs={1}
                               bgcolor={getPlankBorderColor(treeIndex)}
-                             
                             ></Grid>
                             <Grid item xs={11}>
                               <Typography>PLANK REF: {plank.id}</Typography>
@@ -217,17 +208,7 @@ const ReportMockUp = ({ onLoad, onUnload }) => {
                           </Grid>
                         </AccordionSummary>
                         <AccordionDetails>
-                          {/* <Grid container spacing={1}>
-                            <PlankReport tree={tree} log={log} plank={plank} />
-                          </Grid> */}
                           <div>
-                            {/* <PlankReportCarousel>
-                          {SlideOne}
-                          < SlideTwo tree={tree} />
-                          {SlideThree}
-                          {SlideFour}
-                          {SlideFive}
-                          </PlankReportCarousel> */}
                             <PlankReportCarousel
                               slides={[
                                 (tree) => <SlideOne tree={tree} />, // No props needed for SlideOne

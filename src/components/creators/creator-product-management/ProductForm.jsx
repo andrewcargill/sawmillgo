@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  addDoc,
-  collection,
   getDoc,
   doc,
   setDoc,
@@ -27,7 +25,6 @@ import {
 } from "@mui/material";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import InfoIcon from "@mui/icons-material/Info";
-import ReadMoreIcon from "@mui/icons-material/ReadMore";
 
 const ProductForm = () => {
   const [title, setTitle] = useState("");
