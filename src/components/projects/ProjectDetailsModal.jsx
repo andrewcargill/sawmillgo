@@ -20,12 +20,15 @@ import {
 } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import TagFacesIcon from '@mui/icons-material/TagFaces';
+import { useNavigate } from "react-router-dom";
 
 function ProjectDetailsModal({ projectDetails, onClose, setMode }) {
   const userLocalStorage = JSON.parse(localStorage.getItem("user"));
   const db = getFirestore(app);
   const sawmillId = userLocalStorage?.sawmillId;
   const projectUid = projectDetails?.id;
+
+  const navigate = useNavigate();
 
   const handleDelete = async () => {
     console.log("handleDelete....");
@@ -53,6 +56,11 @@ function ProjectDetailsModal({ projectDetails, onClose, setMode }) {
 
   const handleEditButtonClick = () => {
     setMode("edit");
+  };
+
+  const handleViewReport = (projectId) => {
+    navigate(`/report/${projectId}`);
+    console.log("From Project Details: ", projectId);
   };
 
   return (
@@ -235,6 +243,7 @@ function ProjectDetailsModal({ projectDetails, onClose, setMode }) {
               flexDirection={"row"}
               justifyContent={"space-around"}
             >
+              
               <Button variant="contained" onClick={handleEditButtonClick}>
                 Edit
               </Button>
@@ -244,7 +253,7 @@ function ProjectDetailsModal({ projectDetails, onClose, setMode }) {
                 Delete
               </Button>
 
-              <Button variant="outlined" onClick=''>
+              <Button variant="outlined"  onClick={() => handleViewReport(projectDetails.id)}>
                 Generate Report
               </Button>
 

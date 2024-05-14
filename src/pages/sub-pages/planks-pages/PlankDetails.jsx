@@ -92,6 +92,8 @@ const PlankDetails = () => {
           <p>Location: {plankDetails.locationName}</p>
           <p>Status: {plankDetails.status}</p>
           <p>Species: {plankDetails.speciesName}</p>
+          <p>LogId: {plankDetails.logId}</p>
+          <p>TreeId: {plankDetails.treeId}</p>
           <br />
           <Grid container>
           <Grid

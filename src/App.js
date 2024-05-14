@@ -39,6 +39,7 @@ import ReportMockUp from "./pages/ReportMockUp";
 import CreatorProfile from "./components/creators/CreatorProfile";
 import CreatorHomePage from "./pages/CreatorHomePage";
 import ProductForm from "./components/creators/creator-product-management/ProductForm";
+import ProjectComponent from "./components/project-report/report-data-testing/ProjectComponent";
 
 function App() {
  
@@ -88,6 +89,8 @@ function App() {
         <Route path="/monitorplank/:plankId" element={<AddMoistureCheck />} />
         <Route path="/locations" element={<LocationsPage />} />
         <Route path="/projects" element={<ProjectsPage />} />
+        <Route path="/report/:projectId" element={<ProjectComponent />} />
+
         <Route path="/species" element={<SpeciesPage />} />
 
       </Routes>
