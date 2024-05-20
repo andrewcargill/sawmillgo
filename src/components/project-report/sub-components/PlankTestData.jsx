@@ -54,7 +54,6 @@ export function SlideTwo({ tree }) {
 }
 
 
-
 export function SlideThree({ log }) {
   const logData = [
     { id: 1, name: 'Log Ref', description: log.id },
@@ -98,8 +97,8 @@ export function SlideFour({ plank }) {
   const plankData = [
     { id: 1, name: 'Plank Ref', description: plank.id },
     { id: 2, name: 'Milled Date', description: plank.milledDate },
-    { id: 3, name: 'Width', description: plank.dimensions.width },
-    { id: 4, name: 'Depth', description: plank.dimensions.depth },
+    { id: 3, name: 'Width', description: plank.width },
+    { id: 4, name: 'Depth', description: plank.depth },
     { id: 5, name: 'Grade', description: plank.grade },
     { id: 6, name: 'Notes', description: plank.comments },
     

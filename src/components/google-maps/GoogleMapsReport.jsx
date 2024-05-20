@@ -62,7 +62,7 @@ function GoogleMapsTour( { trees, getPlankBorderColor }) {
       setMap(map);
 
       google.maps.importLibrary("marker").then(() => {
-        trees.forEach(({tree, position, id }, i) => {
+        trees.forEach(({tree, position, id, refId }, i) => {
           const { AdvancedMarkerElement, PinElement } = google.maps.marker;
           const marker = new AdvancedMarkerElement({
             position,
@@ -70,7 +70,7 @@ function GoogleMapsTour( { trees, getPlankBorderColor }) {
             title: `${i + 1}. ${tree?.title}`,
             content: new PinElement({
 
-              glyph: id,
+              glyph: refId,
               scale: 1.5,
 
                 background: colors[i],
@@ -105,8 +105,9 @@ function GoogleMapsTour( { trees, getPlankBorderColor }) {
           <DialogContent>
             <p>ID: {selectedTree.id}</p>
             <p>Position: {selectedTree.position.lat}, {selectedTree.position.lng}</p>
-            <p>Removed by: {selectedTree.lumberJack}, Date: {selectedTree.date}</p>
-            <p>Reason: {selectedTree.reasonForRemoval}</p>
+            <p>Removed by: {selectedTree.lumberjackName}, Date: {selectedTree.date}</p>
+            <p>Reason: {selectedTree.reason}</p>
+            <p>Species: {selectedTree.speciesName}</p>
             <img src={selectedTree.treeImage} alt="Tree" style={{ width: "100%" }} />
           </DialogContent>
           <DialogActions>

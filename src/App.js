@@ -60,7 +60,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
-        <Route path="/report" element={<ReportMockUp 
+        <Route path="/authreport/:reportId" element={<ReportMockUp 
          onLoad={() => setIsReportMockUpLoaded(true)}
          onUnload={() => setIsReportMockUpLoaded(false)}
          />} />

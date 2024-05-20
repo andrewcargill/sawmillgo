@@ -1,10 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from 'react-router-dom';
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import { Paper, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import {
+  Paper,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Avatar,
+  Button,
+} from "@mui/material";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import "react-image-gallery/styles/css/image-gallery.css"; // Import default styles
+import reportTestData from "../reportTestData";
+import image1 from "../media/images/1.png";
+import image2 from "../media/images/2.png";
+import image3 from "../media/images/3.png";
+import image4 from "../media/images/4.png";
+import image5 from "../media/images/5.png";
 import {
   FullImageModal,
   ImageCarousel,
@@ -17,39 +29,12 @@ import {
   SlideThree,
   SlideTwo,
 } from "../components/project-report/sub-components/PlankTestData";
-import { app } from "../firebase-config";
 import GoogleMapsReport from "../components/google-maps/GoogleMapsReport";
-import image1 from "../media/images/1.png";
-import image2 from "../media/images/2.png";
-import image3 from "../media/images/3.png";
-import image4 from "../media/images/4.png";
-import image5 from "../media/images/5.png";
 
-const ReportMockUp = () => {
-  const { reportId } = useParams();
-  const [reportData, setReportData] = useState(null);
+const ReportMockUp = ({ onLoad, onUnload }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [expanded, setExpanded] = useState(null);
-
-  const db = getFirestore(app);
-
-  useEffect(() => {
-    console.log("useEffect", reportId);
-    const fetchReportData = async () => {
-      const reportRef = doc(db, `public_reports`, reportId);
-      const reportDoc = await getDoc(reportRef);
-      if (reportDoc.exists()) {
-        const reportData = reportDoc.data().reportData;
-        console.log("Fetched report data:", reportData);
-        setReportData(reportData);
-      } else {
-        console.log("No such document!");
-      }
-    };
-
-    fetchReportData();
-  }, [reportId, db]);
 
   const imageGalleryData = [
     {
@@ -98,6 +83,21 @@ const ReportMockUp = () => {
     setExpanded(isExpanded ? panel : null);
   };
 
+  useEffect(() => {
+    onLoad(); // Call onLoad when component mounts
+    return () => {
+      onUnload(); // Call onUnload when component unmounts
+    };
+  }, [onLoad, onUnload]);
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+
   const openModal = (index) => {
     setSelectedImageIndex(index);
     setModalIsOpen(true);
@@ -111,8 +111,6 @@ const ReportMockUp = () => {
     const colors = ["#FF5733", "#33FFB8", "#3361FF", "#F4FF33", "#8333FF"];
     return colors[treeIndex % colors.length];
   };
-
-  if (!reportData) return <div>Loading...</div>;
 
   return (
     <>
@@ -137,6 +135,7 @@ const ReportMockUp = () => {
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} m={1}>
             {/* Product Description */}
+
             <Typography variant="body1" align="left">
               This product is made from the finest lumber and was handcrafted by
               'Artisan Name'. It is a beautiful piece of furniture that will
@@ -155,9 +154,10 @@ const ReportMockUp = () => {
         <Grid item xs={12}>
           <Paper>
             <GoogleMapsReport
-              trees={reportData}
+              trees={reportTestData}
               getPlankBorderColor={getPlankBorderColor}
             />
+            {/* <GoogleMapsTour tourStops={reportTestData} /> */}
           </Paper>
         </Grid>
         <Grid item xs={12}>
@@ -171,15 +171,16 @@ const ReportMockUp = () => {
           </Typography>
         </Grid>
 
+        {/* TEST */}
         <Grid container>
           <Grid item xs={12}>
-            {reportData.map((tree, treeIndex) => (
-              <Grid item xs={12} pt={1} pb={1} key={tree.refId}>
+            {reportTestData.map((tree, treeIndex) => (
+              <Grid item xs={12} pt={1} pb={1} key={tree.id}>
                 {tree.logs.map((log, logIndex) => (
-                  <div key={log.refId}>
+                  <div key={log.id}>
                     {log.planks.map((plank, plankIndex) => (
                       <Accordion
-                        key={plank.refId}
+                        key={plank.id}
                         expanded={
                           expanded ===
                           `panel${treeIndex}-${logIndex}-${plankIndex}`
@@ -200,7 +201,7 @@ const ReportMockUp = () => {
                               bgcolor={getPlankBorderColor(treeIndex)}
                             ></Grid>
                             <Grid item xs={11}>
-                              <Typography>PLANK REF: {plank.refId}</Typography>
+                              <Typography>PLANK REF: {plank.id}</Typography>
                             </Grid>
                           </Grid>
                         </AccordionSummary>
@@ -208,7 +209,7 @@ const ReportMockUp = () => {
                           <div>
                             <PlankReportCarousel
                               slides={[
-                                (tree) => <SlideOne tree={tree} />,
+                                (tree) => <SlideOne tree={tree} />, // No props needed for SlideOne
                                 (tree) => <SlideTwo tree={tree} />,
                                 (tree, log) => <SlideThree log={log} />,
                                 (tree, log, plank) => (

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Typography, Grid } from "@mui/material";
-import { collection, query, where, getDocs, doc, getDoc, updateDoc, getFirestore, addDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, getDoc, updateDoc, addDoc, getFirestore } from "firebase/firestore";
 import NotificationModal from './NotificationModal'; // Adjust the import path as needed
 import { app } from "../../../firebase-config";
 import TreeComponent from "./TreeComponenet";
@@ -56,18 +56,29 @@ const ProjectComponent = () => {
     const planksWithLogsAndTrees = await fetchLogsAndTrees(planks);
     console.log("Fetched logs and trees:", planksWithLogsAndTrees);
     const reportData = compileReportData(planksWithLogsAndTrees);
+    console.log("Compiled report data:", reportData);
 
-    // Save the report data to a new document in the public_reports collection
-    const publicReportsRef = collection(db, "public_reports");
-    const reportDoc = await addDoc(publicReportsRef, {
+    const sanitizedReportData = removeUndefinedFields(reportData);
+    console.log("Sanitized report data:", sanitizedReportData);
+
+    try {
+      // Create a new report document in the public_reports collection
+      const reportRef = await addDoc(collection(db, `public_reports`), {
         projectId,
-        sawmillId,
-        reportData,
-        createdAt: new Date().toISOString(),
-    });
+        reportData: sanitizedReportData,
+        createdAt: new Date(),
+      });
 
-    console.log("Report generated successfully and saved to public_reports:", reportDoc.id);
-    return reportData;
+      console.log("Report document created successfully:", reportRef.id);
+
+      // Optionally, you can update the project with a reference to the report document
+      await updateDoc(doc(db, `sawmill/${sawmillId}/projects`, projectId), { reportId: reportRef.id });
+
+      return sanitizedReportData;
+    } catch (error) {
+      console.error("Error creating report document:", error);
+      throw error;
+    }
   };
 
   const fetchPlanks = async (projectId) => {
@@ -77,10 +88,10 @@ const ProjectComponent = () => {
     if (projectDoc.exists()) {
       const projectData = projectDoc.data();
       console.log("Project data for planks:", projectData);
-
+  
       const plankRefIds = projectData.plankRefIds;
       const planks = [];
-
+  
       for (const plankRefId of plankRefIds) {
         const planksQuery = query(
           collection(db, `sawmill/${sawmillId}/planks`),
@@ -91,7 +102,7 @@ const ProjectComponent = () => {
           planks.push({ id: doc.id, ...doc.data() });
         });
       }
-
+  
       console.log("Planks fetched:", planks);
       return planks;
     } else {
@@ -103,6 +114,7 @@ const ProjectComponent = () => {
   const fetchLogsAndTrees = async (planks) => {
     console.log("Fetching logs and trees...");
     const logPromises = planks.map(async (plank) => {
+      // Fetch the log using logId (which is actually log.refId)
       const logsQuery = query(
         collection(db, `sawmill/${sawmillId}/logs`),
         where("refId", "==", plank.logId)
@@ -110,7 +122,8 @@ const ProjectComponent = () => {
       const logsSnapshot = await getDocs(logsQuery);
       const logDoc = logsSnapshot.docs[0]; // Assume there's only one matching document
       const log = logDoc.data();
-
+  
+      // Fetch the tree using treeId (which is actually tree.refId)
       const treesQuery = query(
         collection(db, `sawmill/${sawmillId}/trees`),
         where("refId", "==", log.treeId)
@@ -118,17 +131,56 @@ const ProjectComponent = () => {
       const treesSnapshot = await getDocs(treesQuery);
       const treeDoc = treesSnapshot.docs[0]; // Assume there's only one matching document
       const tree = treeDoc.data();
-
+  
       return {
-        plank,
-        log: { id: logDoc.id, ...log },
-        tree: { id: treeDoc.id, ...tree },
+        plank: removeUnnecessaryFields(plank),
+        log: { id: logDoc.id, ...removeUnnecessaryFields(log) },
+        tree: { id: treeDoc.id, ...removeUnnecessaryFields(tree) }
       };
     });
-
+  
     const logsAndTrees = await Promise.all(logPromises);
     console.log("Logs and trees fetched:", logsAndTrees);
     return logsAndTrees;
+  };
+
+  const removeUnnecessaryFields = (data) => {
+    const fieldsToKeep = {
+      tree: ["refId", "date", "speciesName", "age", "reason", "lumberjackName", "latitude", "longitude"],
+      log: ["refId", "date", "length", "diameter", "lumberjackName", "milledDate"],
+      plank: ["refId", "date", "length", "width", "depth", "grade", "image1", "image2", "notes", "furniture", "construction", "liveEdge", "general"]
+    };
+    
+    const entityType = data.speciesName ? "tree" : data.length ? "log" : "plank";
+    const filteredData = {};
+    
+    fieldsToKeep[entityType].forEach(field => {
+      if (data[field] !== undefined) {
+        filteredData[field] = data[field];
+      }
+    });
+
+    if (entityType === "tree") {
+      filteredData.position = { lat: data.latitude, lng: data.longitude };
+      delete filteredData.latitude;
+      delete filteredData.longitude;
+    }
+
+    return filteredData;
+  };
+
+  const removeUndefinedFields = (data) => {
+    if (Array.isArray(data)) {
+      return data.map(item => removeUndefinedFields(item));
+    } else if (typeof data === 'object' && data !== null) {
+      return Object.keys(data).reduce((acc, key) => {
+        if (data[key] !== undefined) {
+          acc[key] = removeUndefinedFields(data[key]);
+        }
+        return acc;
+      }, {});
+    }
+    return data;
   };
 
   const compileReportData = (planksWithLogsAndTrees) => {
@@ -136,9 +188,9 @@ const ProjectComponent = () => {
     const reportData = planksWithLogsAndTrees.reduce((acc, item) => {
       const { plank, log, tree } = item;
 
-      const existingTree = acc.find(t => t.id === tree.id);
+      const existingTree = acc.find(t => t.refId === tree.refId);
       if (existingTree) {
-        const existingLog = existingTree.logs.find(l => l.id === log.id);
+        const existingLog = existingTree.logs.find(l => l.refId === log.refId);
         if (existingLog) {
           existingLog.planks.push(plank);
         } else {
@@ -182,7 +234,7 @@ const ProjectComponent = () => {
       {reportData && (
         <Grid container>
           {reportData.map((tree, index) => (
-            <TreeComponent key={tree.id} tree={tree} color={getPlankBorderColor(index)} />
+            <TreeComponent key={tree.refId} tree={tree} color={getPlankBorderColor(index)} />
           ))}
         </Grid>
       )}
