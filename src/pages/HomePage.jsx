@@ -14,7 +14,7 @@ const HomePage = () => {
   return (
     <>
     <Grid container pb={4}>
-     <Typography variant="h2" color="initial">A cloud based forestry management system that delivers complete transparency and the story behind your wood products.</Typography>
+     <Typography variant="h4" color="initial">A cloud based forestry management system that delivers the story behind your wood products.</Typography>
     </Grid>
 
     <Grid container p={3} bgcolor={'primary.main'} color={'primary.contrastText'}  justifyContent={'center'}>
@@ -26,7 +26,8 @@ const HomePage = () => {
             </ListItemAvatar>
             <ListItemText 
             primary="Source Transparency" 
-            secondary=" Each tree is logged with details like the lumberjack's name, removal reason, exact GPS location, and a photo." />
+            secondary=" Each tree is logged with details like the lumberjack's name, removal reason, exact GPS location, and a photo." 
+            />
           </ListItem>
   
         <ListItem>
@@ -35,7 +36,8 @@ const HomePage = () => {
             </ListItemAvatar>
             <ListItemText 
             primary="Processing Insight" 
-            secondary=" From logging to milling, every step is timestamped with operator details and visuals from the sawmill." />
+            secondary=" From logging to milling, every step is timestamped with operator details and visuals from the sawmill." 
+            />
           </ListItem>
         <ListItem>
           <ListItemAvatar>
@@ -43,7 +45,8 @@ const HomePage = () => {
             </ListItemAvatar>
             <ListItemText 
             primary="Quality Assurance" 
-            secondary=" Follow the wood's drying process through comprehensive data and drying history graphs." />
+            secondary=" Follow the wood's drying process through comprehensive data and drying history graphs." 
+            />
           </ListItem>
         <ListItem>
           <ListItemAvatar>
@@ -51,7 +54,8 @@ const HomePage = () => {
             </ListItemAvatar>
             <ListItemText 
             primary="Craftsmanship Tracking" 
-            secondary=" Artisans document their creative process, turning planks into unique products." />
+            secondary=" Artisans document their creative process, turning planks into unique products." 
+            />
           </ListItem>
         <ListItem>
           <ListItemAvatar>
@@ -59,7 +63,8 @@ const HomePage = () => {
             </ListItemAvatar>
             <ListItemText 
             primary="Final Product Traceability" 
-            secondary="Every product comes with a QR code that links to a detailed report about the wood’s journey and origins." />
+            secondary="Every product comes with a QR code that links to a detailed report about the wood’s journey and origins." 
+            />
           </ListItem>
         </List>
         </Paper>

@@ -81,16 +81,17 @@ const navigate = useNavigate();
             <PlankGauge />
           </Grid>
           <Grid item xs={6} md={3}>
-            <WaterGauge />
-          </Grid>
-        </Grid>
-        <Grid container item xs={12} spacing={1}>
-        <Grid item xs={6} md={3}>
             <LocationGauge />
           </Grid>
-          <Grid item xs={6} md={3}>
+          {/* <Grid item xs={6} md={3}>
+            <WaterGauge />
+          </Grid> */}
+        </Grid>
+        <Grid container item xs={12} spacing={1}>
+   
+          {/* <Grid item xs={6} md={3}>
             <MovementsGauge />
-          </Grid>
+          </Grid> */}
           <Grid item xs={6} md={3}>
             <ProjectGauge />
           </Grid>
