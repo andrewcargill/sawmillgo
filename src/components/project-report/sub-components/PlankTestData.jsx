@@ -3,10 +3,10 @@ import { Typography, Box, Button } from '@mui/material';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import ReportMoistureGraph from './ReportMoistureGraph';
 
-export function SlideOne({ tree }) {
+export function SlideOne({ tree, plank }) {
     return (
         <Box textAlign="center">
-            <Typography variant="h4">The journey of XXSS</Typography>
+            <Typography variant="h4">The journey of {plank.refIdß}</Typography>
             <Typography variant="body1">begins on {tree.date}</Typography>
          
         </Box>
@@ -18,16 +18,17 @@ export function SlideOne({ tree }) {
 export function SlideTwo({ tree }) {
 
   const treeData = [
-    { id: 1, name: 'Ref', description: tree.id },
+    { id: 1, name: 'Ref', description: tree.refId },
     { id: 2, name: 'age', description: tree.age },
-    { id: 3, name: 'speices', description: tree.species },
-    { id: 4, name: 'Reason', description: tree.reasonForRemoval },
+    { id: 3, name: 'speices', description: tree.speciesName },
+    { id: 4, name: 'Reason', description: tree.reason
+     },
     { id: 5, name: 'Location', description: tree.location }
   ];
     return (
         <Box textAlign="center">
         <Typography variant="h4">Tree felled</Typography>
-        <Typography variant="body1">{tree.lumberJack} removed the tree. Here is the data we have:</Typography>
+        <Typography variant="body1">{tree.lumberjackName} removed the tree. Here is the data we have:</Typography>
         <TableContainer component={Paper}>
       <Table sx={{ minWidth: 300 }} aria-label="simple table">
         <TableHead>
@@ -56,7 +57,7 @@ export function SlideTwo({ tree }) {
 
 export function SlideThree({ log }) {
   const logData = [
-    { id: 1, name: 'Log Ref', description: log.id },
+    { id: 1, name: 'Log Ref', description: log.refId },
     { id: 2, name: 'Length', description: log.length },
     { id: 3, name: 'Diameter', description: log.diameter },
 

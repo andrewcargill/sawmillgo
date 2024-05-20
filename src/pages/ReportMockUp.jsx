@@ -208,7 +208,7 @@ const ReportMockUp = () => {
                           <div>
                             <PlankReportCarousel
                               slides={[
-                                (tree) => <SlideOne tree={tree} />,
+                                (tree, plank) => <SlideOne tree={tree} plank={plank}/>,
                                 (tree) => <SlideTwo tree={tree} />,
                                 (tree, log) => <SlideThree log={log} />,
                                 (tree, log, plank) => (
