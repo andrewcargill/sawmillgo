@@ -108,7 +108,7 @@ function GoogleMapsTour( { trees, getPlankBorderColor }) {
             <p>Removed by: {selectedTree.lumberjackName}, Date: {selectedTree.date}</p>
             <p>Reason: {selectedTree.reason}</p>
             <p>Species: {selectedTree.speciesName}</p>
-            <img src={selectedTree.treeImage} alt="Tree" style={{ width: "100%" }} />
+            <img src={selectedTree.image} alt="Tree" style={{ width: "100%" }} />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Close</Button>

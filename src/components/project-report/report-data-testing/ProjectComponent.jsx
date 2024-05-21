@@ -133,9 +133,9 @@ const ProjectComponent = () => {
       const tree = treeDoc.data();
   
       return {
-        plank: removeUnnecessaryFields(plank),
-        log: { id: logDoc.id, ...removeUnnecessaryFields(log) },
-        tree: { id: treeDoc.id, ...removeUnnecessaryFields(tree) }
+        plank: removeUnnecessaryFields(plank, "plank"),
+        log: { id: logDoc.id, ...removeUnnecessaryFields(log, "log") },
+        tree: { id: treeDoc.id, ...removeUnnecessaryFields(tree, "tree") }
       };
     });
   
@@ -144,23 +144,22 @@ const ProjectComponent = () => {
     return logsAndTrees;
   };
 
-  const removeUnnecessaryFields = (data) => {
+  const removeUnnecessaryFields = (data, type) => {
     const fieldsToKeep = {
-      tree: ["refId", "date", "speciesName", "age", "reason", "lumberjackName", "latitude", "longitude"],
+      tree: ["refId", "date", "speciesName", "age", "reason", "lumberjackName", "latitude", "longitude", "image"],
       log: ["refId", "date", "length", "diameter", "lumberjackName", "milledDate"],
       plank: ["refId", "date", "length", "width", "depth", "grade", "image1", "image2", "notes", "furniture", "construction", "liveEdge", "general"]
     };
-    
-    const entityType = data.speciesName ? "tree" : data.length ? "log" : "plank";
+
     const filteredData = {};
     
-    fieldsToKeep[entityType].forEach(field => {
+    fieldsToKeep[type].forEach(field => {
       if (data[field] !== undefined) {
         filteredData[field] = data[field];
       }
     });
 
-    if (entityType === "tree") {
+    if (type === "tree") {
       filteredData.position = { lat: data.latitude, lng: data.longitude };
       delete filteredData.latitude;
       delete filteredData.longitude;
