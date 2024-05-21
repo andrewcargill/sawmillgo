@@ -1,13 +1,14 @@
 import React from 'react';
-import { Typography, Box, Button } from '@mui/material';
+import { Typography, Box, Button, Grid } from '@mui/material';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import ReportMoistureGraph from './ReportMoistureGraph';
 
-export function SlideOne({ tree, plank }) {
+export function SlideOne({ tree, plank, log }) {
     return (
         <Box textAlign="center">
-            <Typography variant="h4">The journey of {plank.refIdß}</Typography>
+            <Typography variant="h4">The journey of {plank.refId}</Typography>
             <Typography variant="body1">begins on {tree.date}</Typography>
+            <Typography variant="body1">log id {log.refId}</Typography>
          
         </Box>
     );
@@ -56,6 +57,7 @@ export function SlideTwo({ tree }) {
 
 
 export function SlideThree({ log }) {
+  console.log("SlideThree log data:", log);
   const logData = [
     { id: 1, name: 'Log Ref', description: log.refId },
     { id: 2, name: 'Lumberjack', description: log.lumberjackName },
@@ -133,11 +135,36 @@ export function SlideFour({ plank }) {
     );
 }
 
-export function SlideFive({ moistureContent }) {
+export function SlideFive({ plank }) {
+    return (
+        <Box textAlign="center">
+           <Typography variant="h4">{plank.refId} @ Sawmill</Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <img src={plank.image1} style={{maxHeight: "150px"}} alt={`plank image 1 ${plank.refId}`} />
+                </Grid>
+              <Grid item xs={6}>
+                <img src={plank.image2} style={{maxHeight: "150px"}} alt={`plank image 2 ${plank.refId}`} />
+                </Grid>
+              </Grid>
+          
+        </Box>
+    );
+}
+export function SlideSix({ moistureContent }) {
     return (
         <Box textAlign="center">
             <Typography variant="h4">Drying Data</Typography>
             <ReportMoistureGraph plankData={moistureContent} />
+        </Box>
+    );
+}
+
+export function SlideSeven({ log }) {
+    return (
+        <Box textAlign="center">
+            <Typography variant="h4">Log Id : {log.refId} </Typography>
+           
         </Box>
     );
 }

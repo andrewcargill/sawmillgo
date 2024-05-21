@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import { Paper, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import {
+  Paper,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from "@mui/material";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import {
@@ -14,6 +19,8 @@ import {
   SlideFive,
   SlideFour,
   SlideOne,
+  SlideSeven,
+  SlideSix,
   SlideThree,
   SlideTwo,
 } from "../components/project-report/sub-components/PlankTestData";
@@ -198,9 +205,13 @@ const ReportMockUp = () => {
                               item
                               xs={1}
                               bgcolor={getPlankBorderColor(treeIndex)}
+                              height={30}
                             ></Grid>
-                            <Grid item xs={11}>
-                              <Typography>PLANK REF: {plank.refId}</Typography>
+                            <Grid item xs={10}>
+                              <Typography variant="h6">
+                                PLANK {plank.refId}
+                              
+                              </Typography>
                             </Grid>
                           </Grid>
                         </AccordionSummary>
@@ -208,17 +219,23 @@ const ReportMockUp = () => {
                           <div>
                             <PlankReportCarousel
                               slides={[
-                                (tree, plank) => <SlideOne tree={tree} plank={plank}/>,
-                                (tree) => <SlideTwo tree={tree} />,
+                                (tree, log, plank) => (
+                                  <SlideOne tree={tree} plank={plank} log={log}/>
+                                ),
+                                (tree, log) => <SlideTwo tree={tree} />,
                                 (tree, log) => <SlideThree log={log} />,
                                 (tree, log, plank) => (
                                   <SlideFour plank={plank} />
                                 ),
                                 (tree, log, plank) => (
-                                  <SlideFive
+                                  <SlideFive plank={plank} />
+                                ),
+                                (tree, log, plank) => (
+                                  <SlideSix
                                     moistureContent={plank.moistureContent}
                                   />
-                                ),
+                                )
+                               
                               ]}
                               tree={tree}
                               log={log}

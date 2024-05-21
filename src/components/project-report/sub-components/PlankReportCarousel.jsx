@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Carousel from 'react-material-ui-carousel';
 import { Paper } from '@mui/material';
 
 
 
 export function PlankReportCarousel({ slides, tree, log, plank }) {
+
+    useEffect(() => {
+        console.log("PlankReportCarousel rendered with tree:", tree, "log:", log, "plank:", plank);
+    }, [tree, log, plank]);
+
     return (
         <Carousel
             animation="slide"

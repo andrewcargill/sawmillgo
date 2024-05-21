@@ -147,7 +147,7 @@ const ProjectComponent = () => {
   const removeUnnecessaryFields = (data, type) => {
     const fieldsToKeep = {
       tree: ["refId", "date", "speciesName", "age", "reason", "lumberjackName", "latitude", "longitude", "image"],
-      log: ["refId", "date", "length", "diameter", "lumberjackName", "milledDate"],
+      log: ["refId", "date", "length", "diameter", "lumberjackName", "milledDate", "locationName"],
       plank: ["refId", "date", "length", "width", "depth", "grade", "image1", "image2", "notes", "furniture", "construction", "liveEdge", "general"]
     };
 
