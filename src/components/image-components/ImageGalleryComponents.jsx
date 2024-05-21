@@ -61,39 +61,84 @@ export function ImageCarousel({ items, openModal }) {
   );
 }
 
-export function FullImageModal({ isOpen, handleClose, image }) {
+// export function FullImageModal({ isOpen, handleClose, image }) {
+//   return (
+//     <Modal
+//       open={isOpen}
+//       onClose={handleClose}
+//       aria-labelledby="modal-modal-title"
+//       aria-describedby="modal-modal-description"
+//     >
+//       <Box
+//         style={{
+//           position: "absolute",
+//           top: "50%",
+//           left: "50%",
+//           transform: "translate(-50%, -50%)",
+//           bgcolor: "background.paper",
+//           border: "2px solid #000",
+//           boxShadow: 24,
+//           p: 2,
+//           outline: 0,
+//         }}
+//       >
+//         <IconButton
+//           onClick={handleClose}
+//           style={{ position: "absolute", right: 8, top: 8 }}
+//         >
+//           <CloseIcon />
+//         </IconButton>
+//         <img
+//           src={image.original}
+//           alt={image.altText}
+//           style={{ width: "100%", height: "auto" }}
+//         />
+//       </Box>
+//     </Modal>
+//   );
+// }
+
+
+
+const FullImageModal = ({ isOpen, handleClose, image }) => {
   return (
-    <Modal
-      open={isOpen}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
+    <Modal open={isOpen} 
+    onClose={handleClose}
+    aria-labelledby="modal-modal-title"
+    aria-describedby="modal-modal-description">
       <Box
-        style={{
+        sx={{
           position: "absolute",
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
+          width: "80%",
           bgcolor: "background.paper",
-          border: "2px solid #000",
           boxShadow: 24,
-          p: 2,
-          outline: 0,
+          p: 4,
+          outline: "none",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
         <IconButton
           onClick={handleClose}
-          style={{ position: "absolute", right: 8, top: 8 }}
+          style={{ position: "absolute", right: 8, bottom: 8 }}
         >
-          <CloseIcon />
-        </IconButton>
-        <img
-          src={image.original}
-          alt={image.altText}
-          style={{ width: "100%", height: "auto" }}
-        />
+              <CloseIcon />
+         </IconButton>
+         <Grid bgcolor={'lightgrey'} p={1} style={{ position: "absolute", top: 8, width: '100%', opacity: 0.8 }}>
+         <Typography  variant="h6" >{image.date ? image.date : ''}</Typography>
+         </Grid>
+        
+        <img src={image.original} alt={image.altText} style={{ maxWidth: "90vw", height: "auto" }} />
+        <Typography variant="h6" mt={2}> {image.title}</Typography>
+        <Typography variant="body1" mt={1}>{image.description}</Typography>
       </Box>
     </Modal>
   );
-}
+};
+
+export default FullImageModal;
+

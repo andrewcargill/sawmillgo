@@ -8,7 +8,7 @@ export function SlideOne({ tree, plank, log }) {
         <Box textAlign="center">
             <Typography variant="h4">The journey of {plank.refId}</Typography>
             <Typography variant="body1">begins on {tree.date}</Typography>
-            <Typography variant="body1">log id {log.refId}</Typography>
+      
          
         </Box>
     );

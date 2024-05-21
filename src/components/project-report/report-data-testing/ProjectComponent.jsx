@@ -55,7 +55,14 @@ const ProjectComponent = () => {
     console.log("Fetched planks:", planks);
     const planksWithLogsAndTrees = await fetchLogsAndTrees(planks);
     console.log("Fetched logs and trees:", planksWithLogsAndTrees);
-    const reportData = compileReportData(planksWithLogsAndTrees);
+
+    // Fetch creator profile and project data
+    const creatorProfileData = await fetchCreatorProfileData(project.creatorId);
+    const creatorProjectData = await fetchCreatorProjectData(project.creatorId, projectId);
+    console.log("Fetched creator profile data:", creatorProfileData);
+    console.log("Fetched creator project data:", creatorProjectData);
+
+    const reportData = compileReportData(planksWithLogsAndTrees, creatorProfileData, creatorProjectData);
     console.log("Compiled report data:", reportData);
 
     const sanitizedReportData = removeUndefinedFields(reportData);
@@ -144,6 +151,40 @@ const ProjectComponent = () => {
     return logsAndTrees;
   };
 
+  const fetchCreatorProfileData = async (creatorId) => {
+    const userRef = doc(db, `users`, creatorId);
+    const userDoc = await getDoc(userRef);
+    
+    if (userDoc.exists()) {
+      return userDoc.data();
+    } else {
+      console.log("No such user document!");
+      return null;
+    }
+  };
+
+  const fetchCreatorProjectData = async (creatorId, projectId) => {
+    const projectRef = doc(db, `users/${creatorId}/detailedProjects`, projectId);
+    const projectDoc = await getDoc(projectRef);
+
+    if (projectDoc.exists()) {
+      const projectData = projectDoc.data();
+
+      // Fetch posts within the project
+      const postsQuery = collection(db, `users/${creatorId}/detailedProjects/${projectId}/posts`);
+      const postsSnapshot = await getDocs(postsQuery);
+      const posts = postsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+      return { ...projectData, posts };
+    } else {
+      console.log("No such project document!");
+      return null;
+    }
+  };
+
   const removeUnnecessaryFields = (data, type) => {
     const fieldsToKeep = {
       tree: ["refId", "date", "speciesName", "age", "reason", "lumberjackName", "latitude", "longitude", "image"],
@@ -182,7 +223,7 @@ const ProjectComponent = () => {
     return data;
   };
 
-  const compileReportData = (planksWithLogsAndTrees) => {
+  const compileReportData = (planksWithLogsAndTrees, creatorProfileData, creatorProjectData) => {
     console.log("Compiling report data...");
     const reportData = planksWithLogsAndTrees.reduce((acc, item) => {
       const { plank, log, tree } = item;
@@ -205,8 +246,11 @@ const ProjectComponent = () => {
       return acc;
     }, []);
 
-    console.log("Compiled report data:", reportData);
-    return reportData;
+    return {
+      creatorProfile: creatorProfileData,
+      creatorProject: creatorProjectData,
+      reportData
+    };
   };
 
   const navigateToConversion = (path) => {
@@ -231,11 +275,18 @@ const ProjectComponent = () => {
       />
 
       {reportData && (
-        <Grid container>
-          {reportData.map((tree, index) => (
-            <TreeComponent key={tree.refId} tree={tree} color={getPlankBorderColor(index)} />
-          ))}
-        </Grid>
+        <>
+          <Typography variant="h5" align="center">Creator Profile</Typography>
+          <pre>{JSON.stringify(reportData.creatorProfile, null, 2)}</pre>
+          <Typography variant="h5" align="center">Creator Project</Typography>
+          <pre>{JSON.stringify(reportData.creatorProject, null, 2)}</pre>
+          <Typography variant="h5" align="center">Report Data</Typography>
+          <Grid container>
+            {reportData.reportData.map((tree, index) => (
+              <TreeComponent key={tree.refId} tree={tree} color={getPlankBorderColor(index)} />
+            ))}
+          </Grid>
+        </>
       )}
     </Grid>
   );

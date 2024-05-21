@@ -4,29 +4,6 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/
 import loader from '../../utils/mapLoader';  // Adjust the path as necessary
 
 
-// const tourStops = [
-//     {
-//       position: { lat: 34.8791806, lng: -111.8265049 },
-//       title: "Boynton Pass",
-//     },
-//     {
-//       position: { lat: 34.8559195, lng: -111.7988186 },
-//       title: "Airport Mesa",
-//     },
-//     {
-//       position: { lat: 34.832149, lng: -111.7695277 },
-//       title: "Chapel of the Holy Cross",
-//     },
-//     {
-//       position: { lat: 34.823736, lng: -111.8001857 },
-//       title: "Red Rock Crossing",
-//     },
-//     {
-//       position: { lat: 34.800326, lng: -111.7665047 },
-//       title: "Bell Rock",
-//     },
-//   ];
-
 
 
 const containerStyle = {
@@ -34,10 +11,6 @@ const containerStyle = {
   height: '400px',
 };
 
-// const defaultCenter = {
-//   lat: 63.8258,
-//   lng: 20.2630,
-// };
 
 const colors = ["#FF5733", "#33FFB8", "#3361FF", "#F4FF33", "#8333FF"];
 const textColors = ["white", "black", "white", "white", "white"];
@@ -56,7 +29,15 @@ function GoogleMapsTour( { trees, getPlankBorderColor }) {
       const map = new google.maps.Map(mapRef.current, {
         center: defaultCenter,
         zoom: 18,
-        mapId: "56127499ee1ce2ef"  // Replace with your actual Map ID
+        mapId: "56127499ee1ce2ef",  // Replace with your actual Map ID
+        mapTypeId: "satellite",
+        styles: [
+          {
+            featureType: "all",
+            elementType: "labels",
+            stylers: [{ visibility: "off" }]
+          }
+        ]
       });
 
       setMap(map);

@@ -7,11 +7,11 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Avatar,
 } from "@mui/material";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
-import {
-  FullImageModal,
+import FullImageModal, {
   ImageCarousel,
 } from "../components/image-components/ImageGalleryComponents";
 import { PlankReportCarousel } from "../components/project-report/sub-components/PlankReportCarousel";
@@ -19,7 +19,6 @@ import {
   SlideFive,
   SlideFour,
   SlideOne,
-  SlideSeven,
   SlideSix,
   SlideThree,
   SlideTwo,
@@ -31,6 +30,8 @@ import image2 from "../media/images/2.png";
 import image3 from "../media/images/3.png";
 import image4 from "../media/images/4.png";
 import image5 from "../media/images/5.png";
+import { set } from "firebase/database";
+import CustomBox from "../components/customContainers/CustomBox";
 
 const ReportMockUp = () => {
   const { reportId } = useParams();
@@ -38,6 +39,8 @@ const ReportMockUp = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [expanded, setExpanded] = useState(null);
+  const [imageGalleryData, setImageGalleryData] = useState([]);
+  const [creatorProfile, setCreatorProfile] = useState([]);
 
   const db = getFirestore(app);
 
@@ -50,56 +53,47 @@ const ReportMockUp = () => {
         const reportData = reportDoc.data().reportData;
         console.log("Fetched report data:", reportData);
         setReportData(reportData);
+        setCreatorProfile(reportDoc.data().reportData.creatorProfile);
+  
+        // Process and set the image gallery data
+        const galleryData = [];
+  
+        // Add the creator project data
+        if (reportData.creatorProject) {
+          galleryData.push({
+            original: reportData.creatorProject.imageUrl,
+            thumbnail: reportData.creatorProject.imageUrl,
+            altText: reportData.creatorProject.title,
+            date: reportData.creatorProject.date, // You might need to adjust this if date is available
+            title: reportData.creatorProject.imageTitle,
+            description: reportData.creatorProject.imageDescription,
+          });
+        }
+  
+        // Add the posts data
+        if (reportData.creatorProject && reportData.creatorProject.posts) {
+          reportData.creatorProject.posts.forEach(post => {
+            galleryData.push({
+              original: post.image,
+              thumbnail: post.image,
+              altText: post.title,
+              date: post.date,
+              title: post.title,
+              description: post.description,
+            });
+          });
+        }
+  
+        setImageGalleryData(galleryData);
       } else {
         console.log("No such document!");
       }
     };
-
+  
     fetchReportData();
   }, [reportId, db]);
+  
 
-  const imageGalleryData = [
-    {
-      original: image1,
-      thumbnail: "https://via.placeholder.com/150x100?text=Thumbnail+1",
-      altText: "Image 1",
-      date: "2024-05-05",
-      title: "Title 1",
-      description: "Finished table from the finest lumber.",
-    },
-    {
-      original: image2,
-      thumbnail: "https://via.placeholder.com/150x100?text=Thumbnail+1",
-      altText: "Image 2",
-      date: "2024-05-06",
-      title: "Title 2",
-      description: "High quality craftsmanship.",
-    },
-    {
-      original: image3,
-      thumbnail: "https://via.placeholder.com/150x100?text=Thumbnail+1",
-      altText: "Image 3",
-      date: "2024-05-07",
-      title: "Title 3",
-      description: "Unique design. A one of a kind piece.",
-    },
-    {
-      original: image4,
-      thumbnail: "https://via.placeholder.com/150x100?text=Thumbnail+1",
-      altText: "Image 4",
-      date: "2024-05-08",
-      title: "Title 4",
-      description: "2024-05-08: Cutting to size.",
-    },
-    {
-      original: image5,
-      thumbnail: "https://via.placeholder.com/150x100?text=Thumbnail+1",
-      altText: "Image 4",
-      date: "2024-05-08",
-      title: "Title 4",
-      description: "2024-05-08: Glueing the table top.",
-    },
-  ];
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : null);
@@ -123,10 +117,11 @@ const ReportMockUp = () => {
 
   return (
     <>
-      <Grid container position="relative" top={-70} left={0}>
+    {/* Creator Profile - container should be -70 when nav hidden */}
+      <Grid container position="relative" top={0} left={0}>
         <Grid item xs={12}>
           <Typography variant="h4" align="center">
-            The Pine Table
+            {reportData.creatorProject.title}
           </Typography>
         </Grid>
         {/* product images */}
@@ -145,10 +140,18 @@ const ReportMockUp = () => {
           <Grid item xs={12} m={1}>
             {/* Product Description */}
             <Typography variant="body1" align="left">
-              This product is made from the finest lumber and was handcrafted by
-              'Artisan Name'. It is a beautiful piece of furniture that will
-              last for generations.
+             {reportData.creatorProject.description}
             </Typography>
+          </Grid>
+          <Grid item xs={12} m={1}>
+                  {/* Creator Thumbnail */}
+          <Avatar src={creatorProfile.imageUrl} alt={`avatar for creator called ${creatorProfile.username}`} />
+      
+            <Typography variant="h6" align="left">
+             {reportData.creatorProfile.companyName} ({creatorProfile.username}) {creatorProfile.country}
+            </Typography>
+          
+          
           </Grid>
         </Grid>
 
@@ -162,7 +165,7 @@ const ReportMockUp = () => {
         <Grid item xs={12}>
           <Paper>
             <GoogleMapsReport
-              trees={reportData}
+              trees={reportData.reportData}
               getPlankBorderColor={getPlankBorderColor}
             />
           </Paper>
@@ -180,7 +183,7 @@ const ReportMockUp = () => {
 
         <Grid container>
           <Grid item xs={12}>
-            {reportData.map((tree, treeIndex) => (
+            {reportData.reportData.map((tree, treeIndex) => (
               <Grid item xs={12} pt={1} pb={1} key={tree.refId}>
                 {tree.logs.map((log, logIndex) => (
                   <div key={log.refId}>
@@ -250,6 +253,23 @@ const ReportMockUp = () => {
               </Grid>
             ))}
           </Grid>
+        </Grid>
+        <Grid container p={3} bgcolor={'primary.main'} color={'primary.contrastText'}  justifyContent={'center'}>
+      <Paper>
+        <Typography variant="h5" align="center">
+          Why is it important to know the source of your wood?
+          </Typography>
+          <Typography variant="body1" align="center" pt={1}>
+            The product that you own is honest and transparent. It is made with craftmanship and care from the start to the end. We believe 
+            in promoting sustainable forestry and the importance of knowing where your wood comes from. 
+          </Typography>
+          <Typography variant="body1" align="center" pt={1}>
+           True sustainable forestry is selective cutting and encouraging mixed species forests. It is the practice of cutting down trees in a way that allows the forest to regenerate itself.
+          </Typography>
+          <Typography variant="body1" align="center" pt={1}>
+          Clear-cut forestry is the practice of cutting down all the trees in an area. This is not sustainable and can lead to deforestation.         
+</Typography>
+        </Paper>
         </Grid>
       </Grid>
     </>
