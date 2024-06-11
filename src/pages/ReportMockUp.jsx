@@ -9,7 +9,10 @@ import {
   AccordionDetails,
   Avatar,
 } from "@mui/material";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import FingerprintIcon from "@mui/icons-material/Fingerprint";
+
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import FullImageModal, {
   ImageCarousel,
@@ -54,10 +57,10 @@ const ReportMockUp = () => {
         console.log("Fetched report data:", reportData);
         setReportData(reportData);
         setCreatorProfile(reportDoc.data().reportData.creatorProfile);
-  
+
         // Process and set the image gallery data
         const galleryData = [];
-  
+
         // Add the creator project data
         if (reportData.creatorProject) {
           galleryData.push({
@@ -69,10 +72,10 @@ const ReportMockUp = () => {
             description: reportData.creatorProject.imageDescription,
           });
         }
-  
+
         // Add the posts data
         if (reportData.creatorProject && reportData.creatorProject.posts) {
-          reportData.creatorProject.posts.forEach(post => {
+          reportData.creatorProject.posts.forEach((post) => {
             galleryData.push({
               original: post.image,
               thumbnail: post.image,
@@ -83,17 +86,15 @@ const ReportMockUp = () => {
             });
           });
         }
-  
+
         setImageGalleryData(galleryData);
       } else {
         console.log("No such document!");
       }
     };
-  
+
     fetchReportData();
   }, [reportId, db]);
-  
-
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : null);
@@ -117,15 +118,15 @@ const ReportMockUp = () => {
 
   return (
     <>
-    {/* Creator Profile - container should be -70 when nav hidden */}
+      {/* Creator Profile - container should be -70 when nav hidden */}
       <Grid container position="relative" top={0} left={0}>
-        <Grid item xs={12}>
-          <Typography variant="h4" align="center">
+        <Grid item xs={12} pb={6}>
+          <Typography variant="h2" align="center">
             {reportData.creatorProject.title}
           </Typography>
         </Grid>
         {/* product images */}
-        <Grid item xs={12} style={{}}>
+        <Grid item xs={12} pb={6} style={{}}>
           <ImageCarousel items={imageGalleryData} openModal={openModal} />
           {modalIsOpen && (
             <FullImageModal
@@ -136,30 +137,64 @@ const ReportMockUp = () => {
           )}
         </Grid>
         {/* Product Description and avatar */}
-        <Grid container spacing={2} alignItems="center">
+        <Grid container spacing={2} alignItems="center" pb={6}>
           <Grid item xs={12} m={1}>
             {/* Product Description */}
             <Typography variant="body1" align="left">
-             {reportData.creatorProject.description}
+              {reportData.creatorProject.description}
             </Typography>
           </Grid>
           <Grid item xs={12} m={1}>
-                  {/* Creator Thumbnail */}
-          <Avatar src={creatorProfile.imageUrl} alt={`avatar for creator called ${creatorProfile.username}`} />
-      
-            <Typography variant="h6" align="left">
-             {reportData.creatorProfile.companyName} ({creatorProfile.username}) {creatorProfile.country}
+            {/* Creator Thumbnail */}
+            <Avatar
+              src={creatorProfile.imageUrl}
+              alt={`avatar for creator called ${creatorProfile.username}`}
+            />
+
+            <Typography variant="body1" fontWeight={500} align="left">
+              {reportData.creatorProfile.companyName} ({creatorProfile.username}
+              ) {creatorProfile.country}
             </Typography>
-          
-          
           </Grid>
         </Grid>
 
         {/* Tree section title */}
-        <Grid item xs={12}>
+        <Grid item xs={12} p={3}>
           <Typography variant="h5" align="center">
-            Transparent Forestry - The Source of the Lumber
+            <FingerprintIcon /> THE STORY BEHIND YOUR WOOD
           </Typography>
+        </Grid>
+
+        <Grid
+          container
+          p={3}
+          bgcolor={"primary.main"}
+          color={"primary.contrastText"}
+          justifyContent={"center"}
+          mb={6}
+        >
+          <Paper>
+            <Grid container p={2}>
+            <Typography variant="h5" >
+              Why is it important to know the source of your wood?
+            </Typography>
+            <Typography variant="body1" align="center" pt={1}>
+              The product that you own is honest and transparent. It is made
+              with craftmanship and care from the start to the end. We believe
+              in promoting sustainable forestry and the importance of knowing
+              where your wood comes from.
+            </Typography>
+            <Typography variant="body1" align="center" pt={1}>
+              True sustainable forestry is selective cutting and encouraging
+              mixed species forests. It is the practice of cutting down trees in
+              a way that allows the forest to regenerate itself.
+            </Typography>
+            <Typography variant="body1" align="center" pt={1}>
+              Clear-cut forestry is the practice of cutting down all the trees
+              in an area. This is not sustainable and can lead to deforestation.
+            </Typography>
+            </Grid>
+          </Paper>
         </Grid>
         {/* Google Maps API - Showing trees */}
         <Grid item xs={12}>
@@ -199,7 +234,7 @@ const ReportMockUp = () => {
                         )}
                       >
                         <AccordionSummary
-                          expandIcon={<ArrowDownwardIcon />}
+                          expandIcon={<ExpandMoreIcon />}
                           aria-controls={`panel${treeIndex}-${logIndex}-${plankIndex}-content`}
                           id={`panel${treeIndex}-${logIndex}-${plankIndex}-header`}
                         >
@@ -213,7 +248,6 @@ const ReportMockUp = () => {
                             <Grid item xs={10}>
                               <Typography variant="h6">
                                 PLANK {plank.refId}
-                              
                               </Typography>
                             </Grid>
                           </Grid>
@@ -223,7 +257,11 @@ const ReportMockUp = () => {
                             <PlankReportCarousel
                               slides={[
                                 (tree, log, plank) => (
-                                  <SlideOne tree={tree} plank={plank} log={log}/>
+                                  <SlideOne
+                                    tree={tree}
+                                    plank={plank}
+                                    log={log}
+                                  />
                                 ),
                                 (tree, log) => <SlideTwo tree={tree} />,
                                 (tree, log) => <SlideThree log={log} />,
@@ -237,8 +275,7 @@ const ReportMockUp = () => {
                                   <SlideSix
                                     moistureContent={plank.moistureContent}
                                   />
-                                )
-                               
+                                ),
                               ]}
                               tree={tree}
                               log={log}
@@ -254,23 +291,7 @@ const ReportMockUp = () => {
             ))}
           </Grid>
         </Grid>
-        <Grid container p={3} bgcolor={'primary.main'} color={'primary.contrastText'}  justifyContent={'center'}>
-      <Paper>
-        <Typography variant="h5" align="center">
-          Why is it important to know the source of your wood?
-          </Typography>
-          <Typography variant="body1" align="center" pt={1}>
-            The product that you own is honest and transparent. It is made with craftmanship and care from the start to the end. We believe 
-            in promoting sustainable forestry and the importance of knowing where your wood comes from. 
-          </Typography>
-          <Typography variant="body1" align="center" pt={1}>
-           True sustainable forestry is selective cutting and encouraging mixed species forests. It is the practice of cutting down trees in a way that allows the forest to regenerate itself.
-          </Typography>
-          <Typography variant="body1" align="center" pt={1}>
-          Clear-cut forestry is the practice of cutting down all the trees in an area. This is not sustainable and can lead to deforestation.         
-</Typography>
-        </Paper>
-        </Grid>
+        
       </Grid>
     </>
   );
