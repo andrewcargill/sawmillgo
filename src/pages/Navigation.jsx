@@ -19,6 +19,14 @@ import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import UserContext from "../Contexts/UserContext";
 
+import ParkIcon from '@mui/icons-material/Park';
+import WorkspacesIcon from '@mui/icons-material/Workspaces';
+import TableRowsIcon from '@mui/icons-material/TableRows';
+import EventNoteIcon from '@mui/icons-material/EventNote';
+
+
+
+
 const Navigation = () => {
   const [isAuth, setIsAuth] = useState(false);
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -167,10 +175,15 @@ const Navigation = () => {
         >
           <Typography textAlign="center">{page}</Typography>
         </Link>
+
+        
       </MenuItem>
       
-    ))
+      
+      
+    ))  
   )
+  
 ) : (
   pages.map((page) => (
     <MenuItem key={page} onClick={handleMenuClose}>
@@ -235,6 +248,7 @@ const Navigation = () => {
       >
         Logout
       </Button>
+      
     </>
   ) : (
     <>
@@ -252,6 +266,7 @@ const Navigation = () => {
         >
           {page}
         </Button>
+  
       ))}
       <Button
         component={Link}
@@ -265,6 +280,19 @@ const Navigation = () => {
       >
         Logout
       </Button>
+      <IconButton>
+       <ParkIcon fontSize='large' color="primary.main" />
+      </IconButton>
+      <IconButton>
+       <WorkspacesIcon fontSize='large' color="primary.main" />
+      </IconButton>
+      <IconButton>
+       <TableRowsIcon fontSize='large' color="primary.main" />
+      </IconButton>
+      <IconButton>
+       <EventNoteIcon fontSize='large' color="primary.main" />
+      </IconButton>
+ 
     </>
   )
 ) : (

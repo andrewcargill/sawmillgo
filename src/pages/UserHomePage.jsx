@@ -17,6 +17,7 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Flag } from "@mui/icons-material";
 import FlagIcon from "../components/country-components/FlagIcon";
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const UserHomePage = () => {
   // Access user information from context
@@ -69,7 +70,7 @@ const navigate = useNavigate();
       </>
       ) : (
  
-      <Grid container spacing={1}>
+      <Grid container>
         <Grid container item xs={12} spacing={1}>
           <Grid item xs={6} md={3}>
             <TreeGauge />
@@ -81,21 +82,19 @@ const navigate = useNavigate();
             <PlankGauge />
           </Grid>
           <Grid item xs={6} md={3}>
-            <LocationGauge />
-          </Grid>
-          {/* <Grid item xs={6} md={3}>
-            <WaterGauge />
-          </Grid> */}
-        </Grid>
-        <Grid container item xs={12} spacing={1}>
-   
-          {/* <Grid item xs={6} md={3}>
-            <MovementsGauge />
-          </Grid> */}
-          <Grid item xs={6} md={3}>
             <ProjectGauge />
           </Grid>
-          <Grid item xs={6} md={3}>
+        </Grid>
+        
+        <Grid container item xs={12} p={3} mt={2} mb={2} bgcolor={'lightgray'} >
+         <Grid item container xs={12} p={1} alignContent={'flex-start'}>
+          <SettingsIcon fontSize='large'/> 
+          </Grid>
+        <Grid item xs={6} md={3} p={1}>
+            <LocationGauge />
+          </Grid>
+      
+          <Grid item xs={6} md={3} p={1}>
             <SpeciesGauge />
           </Grid>
        

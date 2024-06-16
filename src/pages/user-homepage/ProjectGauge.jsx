@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import { app } from '../../firebase-config'; // Make sure this path is correct
 import { useNavigate } from "react-router-dom";
+import EventNoteIcon from '@mui/icons-material/EventNote';
 
 const ProjectGauge = () => {
   const [projects, setProjects] = useState([]);
@@ -45,9 +46,10 @@ const ProjectGauge = () => {
   };
 
   return (
-    <Grid border={1} p={2} bgcolor={'primary.main'}>
-    <Typography color="initial">Projects Gauge</Typography>
-    <Typography>Total Projects: {projects.length}</Typography>
+    <Grid border={1} p={2} borderRadius={3} boxShadow={5} bgcolor={'primary.main'}>
+      <EventNoteIcon fontSize='large'/>
+    <Typography color="initial">PROJECTS</Typography>
+    <Typography>Entries: {projects.length}</Typography>
     <Grid>
       <Button variant="contained" color="primary" onClick={handleAddClick}>View more</Button>
     </Grid>

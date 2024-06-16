@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import { app } from '../../firebase-config'; // Make sure this path is correct
 import { useNavigate } from "react-router-dom";
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 const LocationGauge = () => {
   const [locations, setLocations] = useState([]);
@@ -46,8 +47,9 @@ const LocationGauge = () => {
 
   return (
     <Grid border={1} p={2} bgcolor={'primary.main'}>
-      <Typography color="initial">Locations Gauge</Typography>
-      <Typography>Total Locations: {locations.length}</Typography>
+      <LocationOnIcon fontSize='large'/>
+      <Typography color="initial">LOCATIONS</Typography>
+      <Typography>Entries: {locations.length}</Typography>
       <Grid>
         <Button variant="contained" color="primary" onClick={handleAddClick}>View more</Button>
       </Grid>

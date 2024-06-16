@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import { app } from '../../firebase-config'; // Make sure this path is correct
 import { useNavigate } from "react-router-dom";
+import ForestIcon from '@mui/icons-material/Forest';
 
 const SpeciesGauge = () => {
   const [species, setSpecies] = useState([]); // Updated variable name to 'species'
@@ -46,8 +47,9 @@ const SpeciesGauge = () => {
 
   return (
     <Grid border={1} p={2} bgcolor={'primary.main'}>
-      <Typography color="initial">Species Gauge</Typography>
-      <Typography>Total Species: {species.length}</Typography> {/* Updated text to 'Total Species' */}
+      <ForestIcon fontSize='large'/>
+      <Typography color="initial">SPECIES</Typography>
+      <Typography>Entries: {species.length}</Typography> {/* Updated text to 'Total Species' */}
       <Grid>
         <Button variant="contained" color="primary" onClick={handleAddClick}>View more</Button>
       </Grid>

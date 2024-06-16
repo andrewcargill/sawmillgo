@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { app } from '../../firebase-config'; // Make sure this path is correct
 import { useNavigate } from "react-router-dom";
+import ParkIcon from '@mui/icons-material/Park';
 
 const TreeGauge = () => {
   const [trees, setTrees] = useState([]);
@@ -42,9 +43,10 @@ const TreeGauge = () => {
   };
 
   return (
-    <Grid border={1} p={2} bgcolor={'primary.main'}>
-      <Typography color="initial">Tree Gauge</Typography>
-      <Typography>Total Trees: {trees.length}</Typography>
+    <Grid border={1} borderRadius={3} p={2} boxShadow={5} bgcolor={'primary.main'}>
+      <ParkIcon fontSize='large'/>
+      <Typography color="initial">TREES</Typography>
+      <Typography>Entries: {trees.length}</Typography>
       <Grid>
         <Button variant="contained" color="primary" onClick={handleAddClick}>View more</Button>
       </Grid>

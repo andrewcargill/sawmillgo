@@ -81,19 +81,31 @@ const AboutSystem = () => {
         <ListItemIcon>
           <CheckCircleIcon color="primary" />
         </ListItemIcon>
-        <ListItemText primary="Categorize your stock" />
+        <ListItemText primary="Log stock stores information such as diameter, species and length" />
       </ListItem>
       <ListItem>
         <ListItemIcon>
           <CheckCircleIcon color="primary" />
         </ListItemIcon>
-        <ListItemText primary="Keep track of stock via customised locations" />
+        <ListItemText primary="Plank stock stores information such as dimensions, grade, species and customized notes" />
       </ListItem>
       <ListItem>
         <ListItemIcon>
           <CheckCircleIcon color="primary" />
         </ListItemIcon>
-        <ListItemText primary="Search and filter stock with ease" />
+        <ListItemText primary="Stores pictures of each plank from the sawmill" />
+      </ListItem>
+      <ListItem>
+        <ListItemIcon>
+          <CheckCircleIcon color="primary" />
+        </ListItemIcon>
+        <ListItemText primary="Know the location of stock via customised locations" />
+      </ListItem>
+      <ListItem>
+        <ListItemIcon>
+          <CheckCircleIcon color="primary" />
+        </ListItemIcon>
+        <ListItemText primary="Comprehensive search and filter functions" />
       </ListItem>
     </List>
   </Grid>
