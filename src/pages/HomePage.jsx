@@ -46,8 +46,8 @@ const HomePage = () => {
         >
 
         <Typography variant="h4" color="initial">
-          The cloud based forestry management system that delivers the story
-          behind your wood products.
+          The innovative forestry management system that brings together forest owners, sawmills and craftsmen to deliver the unique story
+          behind every wood product.
         </Typography>
         </Grid>
       </Grid>
@@ -79,8 +79,8 @@ const HomePage = () => {
                 <HandymanIcon />
               </ListItemAvatar>
               <ListItemText
-                primary="Craftsmanship Tracking"
-                secondary=" Artisans document their creative process, turning planks into unique products."
+                primary="Craftsmanship Diary"
+                secondary=" Artisans document their creative process of turning planks into unique products."
               />
             </ListItem>
 
@@ -110,7 +110,7 @@ const HomePage = () => {
               </ListItemAvatar>
               <ListItemText
                 primary="Source Transparency"
-                secondary=" Each tree is logged with details like the lumberjack's name, removal reason, exact GPS location, and a photo."
+                secondary=" Each tree is logged with details such as the lumberjack's name, removal reason, exact GPS location and a photo."
               />
             </ListItem>
 
