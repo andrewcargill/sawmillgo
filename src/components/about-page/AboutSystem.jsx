@@ -6,14 +6,63 @@ const AboutSystem = () => {
     return (
 
 
-<Grid container spacing={4} direction="column">
-  <Grid item>
+<Grid container spacing={4} >
+
+  <Grid item xs={12}>
     <Typography variant="h4" align='left' color="primary">
      Key Features
     </Typography>
   </Grid>
-  
-  <Grid item>
+
+
+  <Grid item xs={12} md={6}>
+    <Typography variant="h5" align='left' color="primary">
+      Wood Source Transparency (Verified Stock)
+    </Typography>
+    <Typography variant="body1" align='left' color="textSecondary">
+      Follow the lifecycle of your stock from tree to plank, ensuring traceability and transparency.
+    </Typography>
+    <List>
+      <ListItem>
+        <ListItemIcon>
+          <CheckCircleIcon color="primary" />
+        </ListItemIcon>
+        <ListItemText primary="Stores GPS Location of trees & image before felling" />
+      </ListItem>
+      <ListItem>
+        <ListItemIcon>
+          <CheckCircleIcon color="primary" />
+        </ListItemIcon>
+        <ListItemText primary="Commit a reason for felling (e.g thinning, wind-fallen)" />
+      </ListItem>
+      <ListItem>
+        <ListItemIcon>
+          <CheckCircleIcon color="primary" />
+        </ListItemIcon>
+        <ListItemText primary="Revolutionary software that keeps track of tree, log and plank relationships" />
+      </ListItem>
+      <ListItem>
+        <ListItemIcon>
+          <CheckCircleIcon color="primary" />
+        </ListItemIcon>
+        <ListItemText primary="Automatically updates the movement of stock between locations" />
+      </ListItem>
+      <ListItem>
+        <ListItemIcon>
+          <CheckCircleIcon color="primary" />
+        </ListItemIcon>
+        <ListItemText primary="Achieve 100% traceability with verified stock" />
+      </ListItem>
+      <ListItem>
+        <ListItemIcon>
+          <CheckCircleIcon color="primary" />
+        </ListItemIcon>
+        <ListItemText primary="Provide the end customer with a transparent report full of rich data" />
+      </ListItem>
+    </List>
+  </Grid>
+
+  <Grid item xs={12} md={6} >
     <Typography variant="h5" align='left' color="primary">
       Track Your Stock
     </Typography>
@@ -27,6 +76,7 @@ const AboutSystem = () => {
         </ListItemIcon>
         <ListItemText primary="Easily Add Stock via mobile or laptop" />
       </ListItem>
+    
       <ListItem>
         <ListItemIcon>
           <CheckCircleIcon color="primary" />
@@ -48,7 +98,7 @@ const AboutSystem = () => {
     </List>
   </Grid>
 
-  <Grid item>
+  <Grid item xs={12} md={6}>
     <Typography variant="h5" align='left' color="primary">
       Stock Locations
     </Typography>
@@ -83,7 +133,9 @@ const AboutSystem = () => {
     </List>
   </Grid>
 
-  <Grid item>
+
+
+  <Grid item xs={12} md={6}>
     <Typography variant="h5" align='left' color="primary">
      Moisture Content Monitoring
     </Typography>
@@ -119,7 +171,7 @@ const AboutSystem = () => {
     </List>
   </Grid>
   
-  <Grid item>
+  <Grid item xs={12} md={6}>
     <Typography variant="h5" align='left' color="primary">
       Project Management
     </Typography>
@@ -148,36 +200,8 @@ const AboutSystem = () => {
     </List>
   </Grid>
   
-  <Grid item>
-    <Typography variant="h5" align='left' color="primary">
-      Full Lifecycle Tracking (Verified Stock)
-    </Typography>
-    <Typography variant="body1" align='left' color="textSecondary">
-      Follow the lifecycle of your stock from tree to plank, ensuring traceability and transparency.
-    </Typography>
-    <List>
-      <ListItem>
-        <ListItemIcon>
-          <CheckCircleIcon color="primary" />
-        </ListItemIcon>
-        <ListItemText primary="Revolutionary software that keeps track of tree, log and plank relationships" />
-      </ListItem>
-      <ListItem>
-        <ListItemIcon>
-          <CheckCircleIcon color="primary" />
-        </ListItemIcon>
-        <ListItemText primary="Automatically update movements of stock between locations" />
-      </ListItem>
-      <ListItem>
-        <ListItemIcon>
-          <CheckCircleIcon color="primary" />
-        </ListItemIcon>
-        <ListItemText primary="Achieve 100% traceability with verified stock" />
-      </ListItem>
-    </List>
-  </Grid>
   
-  <Grid item>
+  <Grid item xs={12} md={6}>
     <Typography variant="h5" align='left' color="primary">
      Collaborate with Creators
     </Typography>
@@ -207,7 +231,7 @@ const AboutSystem = () => {
     </List>
   </Grid>
   
-  <Grid item>
+  <Grid item xs={12} md={6}>
     <Typography variant="h5" align='left' color="primary">
      Interactive End Reports
     </Typography>

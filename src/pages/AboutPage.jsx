@@ -11,8 +11,9 @@ const AboutPage = () => {
     <>
  
     
-
+<Grid container p={5}>
 <AboutSystem />
+</Grid>
 
       </>
 
