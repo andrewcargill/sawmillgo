@@ -23,7 +23,7 @@ import ParkIcon from '@mui/icons-material/Park';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import TableRowsIcon from '@mui/icons-material/TableRows';
 import EventNoteIcon from '@mui/icons-material/EventNote';
-
+import HomeIcon from '@mui/icons-material/Home';
 
 
 
@@ -161,27 +161,60 @@ const Navigation = () => {
     <MenuItem onClick={handleMenuClose}>
       <Link
         to="/creatorhome"
-        style={{ textDecoration: "none", color: "inherit" }}
+        style={{ textDecoration: "none", color: "inherit"}}
       >
         <Typography textAlign="center">Home</Typography>
       </Link>
     </MenuItem>
   ) : (
-    sawmillPages.map((page) => (
-      <MenuItem key={page} onClick={handleMenuClose}>
-        <Link
-          to={`/${page.toLowerCase()}`}
-          style={{ textDecoration: "none", color: "inherit" }}
-        >
-          <Typography textAlign="center">{page}</Typography>
-        </Link>
+    // sawmillPages.map((page) => (
+    //   <MenuItem key={page} onClick={handleMenuClose}>
+    //     <Link
+    //       to={`/${page.toLowerCase()}`}
+    //       style={{ textDecoration: "none", color: "inherit" }}
+    //     >
+    //       <Typography textAlign="center">{page}</Typography>
+    //     </Link>
 
         
+    //   </MenuItem>
+      
+      
+      
+    // ))  
+    <>
+    <MenuItem>
+   
+      <IconButton component={Link} to={'/home'} onClick={handleMenuClose}>
+       <HomeIcon sx={{ color: 'primary.main' }} />
+      </IconButton>
+
       </MenuItem>
-      
-      
-      
-    ))  
+
+      <MenuItem>
+      <IconButton component={Link} to={'/trees'} onClick={handleMenuClose}>
+       <ParkIcon sx={{ color: 'primary.main' }} />
+      </IconButton>
+      </MenuItem>
+
+      <MenuItem>
+      <IconButton component={Link} to={'/logs'} onClick={handleMenuClose}>
+       <WorkspacesIcon sx={{ color: 'primary.main' }} />
+      </IconButton>
+      </MenuItem>
+
+      <MenuItem>
+      <IconButton component={Link} to={'/planks'} onClick={handleMenuClose}>
+       <TableRowsIcon  sx={{ color: 'primary.main' }} />
+      </IconButton>
+      </MenuItem>
+
+      <MenuItem>
+      <IconButton component={Link} to={'/projects'} onClick={handleMenuClose}>
+      <EventNoteIcon sx={{ color: 'primary.main' }} />
+      </IconButton>
+      </MenuItem>
+    </>
   )
   
 ) : (
@@ -252,7 +285,7 @@ const Navigation = () => {
     </>
   ) : (
     <>
-      {sawmillPages.map((page) => (
+      {/* {sawmillPages.map((page) => (
         <Button
           key={page}
           component={Link}
@@ -267,8 +300,8 @@ const Navigation = () => {
           {page}
         </Button>
   
-      ))}
-      <Button
+      ))} */}
+      {/* <Button
         component={Link}
         onClick={handleLogout}
         sx={{
@@ -279,19 +312,36 @@ const Navigation = () => {
         }}
       >
         Logout
-      </Button>
-      <IconButton>
-       <ParkIcon fontSize='large' color="primary.main" />
+      </Button> */}
+      <Tooltip title="Home">
+      <IconButton component={Link} to={'/home'}>
+      <HomeIcon sx={{ color: 'primary.main' }} />
       </IconButton>
-      <IconButton>
-       <WorkspacesIcon fontSize='large' color="primary.main" />
+      </Tooltip>
+
+      <Tooltip title="Trees">
+      <IconButton component={Link} to={'/trees'}>
+       <ParkIcon  sx={{ color: 'primary.main' }} />
       </IconButton>
-      <IconButton>
-       <TableRowsIcon fontSize='large' color="primary.main" />
+      </Tooltip>
+
+      <Tooltip title="Logs">
+      <IconButton component={Link} to={'/logs'}>
+       <WorkspacesIcon  sx={{ color: 'primary.main' }} />
       </IconButton>
-      <IconButton>
-       <EventNoteIcon fontSize='large' color="primary.main" />
+      </Tooltip>
+
+      <Tooltip title="Planks">
+      <IconButton component={Link} to={'/planks'}>
+       <TableRowsIcon  sx={{ color: 'primary.main' }} />
       </IconButton>
+      </Tooltip>
+
+      <Tooltip title="Projects">
+      <IconButton component={Link} to={'/projects'}>
+      <EventNoteIcon sx={{ color: 'primary.main' }} />
+      </IconButton>
+      </Tooltip>
  
     </>
   )

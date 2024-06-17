@@ -11,6 +11,7 @@ import BlockIcon from '@mui/icons-material/Block';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import { Tooltip } from "@mui/material";
 
 const ListAllLogs = () => {
   const [logs, setLogs] = useState([]);
@@ -125,11 +126,28 @@ const ListAllLogs = () => {
         {/* Position the icon absolutely within its parent Grid container */}
         <div style={{ position: 'absolute', top: '8px', right: '8px' }}>
 
-         {log.plankIds && log.plankIds.length > 0 && <CarpenterIcon color="dark" fontSize="small" /> }
-         {log.planked && <BlockIcon color="dark" fontSize="small" /> }
+         {log.plankIds && log.plankIds.length > 0 && (
+          <Tooltip title={`${log.plankIds.length} Planks`} arrow>
+         <CarpenterIcon color="dark" fontSize="small" /> 
+          </Tooltip>
+         )}
+
+         {log.planked && (
+          <Tooltip title="Planked" arrow>
+          <BlockIcon color="dark" fontSize="small" /> 
+          </Tooltip>
+        )}
        
-         {log.projectId && <LocalOfferIcon color="dark" fontSize="small" /> }
-         {log.verified && <WorkspacePremiumIcon color="primary" fontSize="small" /> }
+         {log.projectId && (
+          <Tooltip title={`Project: ${log.projectName}`} arrow>
+          <LocalOfferIcon color="dark" fontSize="small" /> 
+          </Tooltip>
+        )}
+         {log.verified && (
+          <Tooltip title="Verified" arrow>
+          <WorkspacePremiumIcon color="primary" fontSize="small" /> 
+          </Tooltip>
+        )}
         </div>
         {/* <div style={{ position: 'absolute', top: '8px', right: '20px' }}>
        

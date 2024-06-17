@@ -18,9 +18,7 @@ const LogsPage = () => {
 
   return (
     <>
-    <Box container color={'primary'} p={1} >
-      Navigation
-      </Box>
+  
     <Grid p={1} >
       <ListAllLogs />
       </Grid>

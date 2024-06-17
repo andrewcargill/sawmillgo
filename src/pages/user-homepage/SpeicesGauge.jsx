@@ -7,6 +7,7 @@ import { app } from '../../firebase-config'; // Make sure this path is correct
 import { useNavigate } from "react-router-dom";
 import ForestIcon from '@mui/icons-material/Forest';
 
+
 const SpeciesGauge = () => {
   const [species, setSpecies] = useState([]); // Updated variable name to 'species'
   const db = getFirestore(app);
@@ -47,6 +48,7 @@ const SpeciesGauge = () => {
 
   return (
     <Grid border={1} p={2} bgcolor={'primary.main'}>
+
       <ForestIcon fontSize='large'/>
       <Typography color="initial">SPECIES</Typography>
       <Typography>Entries: {species.length}</Typography> {/* Updated text to 'Total Species' */}
