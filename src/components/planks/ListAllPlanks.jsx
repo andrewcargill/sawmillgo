@@ -31,6 +31,8 @@ import {
   Chip,
   Modal,
   Box,
+  ButtonGroup,
+  IconButton,
 } from "@mui/material";
 import FilterModal from "./sub-components/filter-components/FilterModal";
 
@@ -302,6 +304,9 @@ const ListAllPlanks = () => {
     }
   };
 
+  const currentViewIcon = views.find((v) => v.view === dynamicView)?.icon || <AddIcon />;
+
+
   return (
     <Grid container spacing={2} p={2}>
 
@@ -313,7 +318,18 @@ const ListAllPlanks = () => {
         alignItems="center"
       >
         <Typography variant="h4">Planks</Typography>
-        <Button
+
+
+        <ButtonGroup variant="contained" color="primary">
+    <IconButton size="small" color="inherit" onClick={handleDynamicViewClick}>
+      {currentViewIcon}
+    </IconButton>
+    <Button color="white" onClick={handleAddPlankClick}>
+      Add Plank
+    </Button>
+  </ButtonGroup>
+
+        {/* <Button
           variant="outlined"
           color="primary"
           onClick={handleDynamicViewClick}
@@ -328,7 +344,7 @@ const ListAllPlanks = () => {
           startIcon={<AddIcon />}
         >
           Add Plank
-        </Button>
+        </Button> */}
       </Grid>
 
       <Grid item xs={12}>

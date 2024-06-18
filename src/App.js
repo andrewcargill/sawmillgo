@@ -76,6 +76,8 @@ function App() {
         <Route path="/creatorprofile/:creatorId" element={<CreatorProfile />} />
         <Route path="/product/:projectId" element={<ProductForm />} />
 
+        <Route path="/addsawmill" element={<AddSawmillForm />} />
+
         <Route path="/addtree" element={<AddTreeForm />} />
         <Route path="/trees" element={<TreesPage />} />
         <Route path="/logs" element={<LogsPage />} />

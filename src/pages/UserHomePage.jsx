@@ -18,7 +18,9 @@ import { useNavigate } from "react-router-dom";
 import { Flag } from "@mui/icons-material";
 import FlagIcon from "../components/country-components/FlagIcon";
 import SettingsIcon from "@mui/icons-material/Settings";
-import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import ViewModuleIcon from "@mui/icons-material/ViewModule";
+import AddSawmillGauge from "./user-homepage/AddSawmillGauge";
+import KeyIcon from '@mui/icons-material/Key';
 
 const UserHomePage = () => {
   // Access user information from context
@@ -87,7 +89,7 @@ const UserHomePage = () => {
             mb={2}
             borderRadius={3}
             border="solid black 1px"
-            sx={{ backgroundColor: '#f5f5f5' }}
+            sx={{ backgroundColor: "#f5f5f5" }}
           >
             <Grid item container xs={12} p={1} alignContent={"flex-start"}>
               <ViewModuleIcon fontSize="large" />
@@ -136,8 +138,27 @@ const UserHomePage = () => {
               <SpeciesGauge />
             </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <AddSawmillForm />
+
+          <Grid
+            container
+            borderRadius={3}
+            item
+            xs={12}
+            p={1}
+            mt={2}
+            mb={2}
+            border="solid black 1px"
+          >
+            <Grid item container xs={12} p={1} alignContent={"flex-start"}>
+              <KeyIcon fontSize="large" />
+              <Typography variant="body1" p={1}>
+                {" "}
+                Superuser Settings{" "}
+              </Typography>
+            </Grid>
+            <Grid item xs={6} sm={3} md={3} lg={2} p={1}>
+              <AddSawmillGauge />
+            </Grid>
           </Grid>
         </Grid>
       )}
