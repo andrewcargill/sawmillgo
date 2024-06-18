@@ -6,6 +6,8 @@ import Button from '@mui/material/Button'
 import { app } from '../../firebase-config'; // Make sure this path is correct
 import { useNavigate } from "react-router-dom";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { IconButton } from "@mui/material";
 
 const LocationGauge = () => {
   const [locations, setLocations] = useState([]);
@@ -46,14 +48,31 @@ const LocationGauge = () => {
   };
 
   return (
-    <Grid border={1} p={2} bgcolor={'primary.main'}>
-      <LocationOnIcon fontSize='large'/>
-      <Typography color="initial">LOCATIONS</Typography>
-      <Typography>Entries: {locations.length}</Typography>
-      <Grid>
-        <Button variant="contained" color="primary" onClick={handleAddClick}>View more</Button>
-      </Grid>
-    </Grid>
+
+<Grid
+        border={1}
+        borderRadius={3}
+        p={2}
+        boxShadow={5}
+        bgcolor={"white.main"}
+        textAlign="center"
+        onClick={handleAddClick}
+        sx={{
+          cursor: "pointer",
+          "&:hover": {
+            backgroundColor: "primary.main",
+          },
+          transition: "background-color 0.5s",
+        }}
+      >    
+    <LocationOnIcon fontSize='large'/>
+    <Typography color="initial">LOCATIONS
+    <Typography component="span" variant="body2" color="initial"> ({locations.length})</Typography>
+    </Typography>
+
+   
+  </Grid>
+
   );
 };
 

@@ -17,93 +17,129 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Flag } from "@mui/icons-material";
 import FlagIcon from "../components/country-components/FlagIcon";
-import SettingsIcon from '@mui/icons-material/Settings';
+import SettingsIcon from "@mui/icons-material/Settings";
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
 
 const UserHomePage = () => {
   // Access user information from context
-//   const { userProfile } = useContext(UserContext);
-const [userInfo, setUserInfo] = useState(null);
+  //   const { userProfile } = useContext(UserContext);
+  const [userInfo, setUserInfo] = useState(null);
 
-
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // fetch user data from local storage
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
-        setUserInfo(user);
-        console.log("user info: ", user);
+      setUserInfo(user);
+      console.log("user info: ", user);
     }
-    }, []);
+  }, []);
 
-    const isCreator = userInfo && userInfo.role === "creator";
+  const isCreator = userInfo && userInfo.role === "creator";
 
-    const profileButtonClick = () => {
-      const encodedUsername = encodeURIComponent(userInfo.username);
-      navigate(`/creatorprofile/${encodedUsername}`);
-    }
-
+  const profileButtonClick = () => {
+    const encodedUsername = encodeURIComponent(userInfo.username);
+    navigate(`/creatorprofile/${encodedUsername}`);
+  };
 
   return (
-
-
     <Grid container padding={2}>
-      <Typography variant="h4" gutterBottom>
-        Welcome {userInfo ? userInfo.displayName : "Not Available"}
+      {/* <Typography variant="h6" gutterBottom>
+        {userInfo ? userInfo.displayName : "Not Available"}
         {userInfo?.country && <FlagIcon countryCode={userInfo.country} />}
-
-      </Typography>
+      </Typography> */}
 
       {isCreator ? (
-      <>
-      <Grid item xs={12} border={'2px solid black'}> 
-      <Typography variant="h3" p={2}> * Creator Zone * </Typography>
-      <Typography variant="h5" p={2}> This is where you manage your on going projects </Typography>
-      
-      </Grid>
-      <Grid item xs={12}>
-        You Projects will be displayed here
-        </Grid>
-      <Grid item xs={12} p={3}>
-        <Button variant="contained" color="primary" onClick={profileButtonClick}> View & Update your profile</Button>
-        </Grid>
-      </>
+        <>
+          <Grid item xs={12} border={"2px solid black"}>
+            <Typography variant="h3" p={2}>
+              {" "}
+              * Creator Zone *{" "}
+            </Typography>
+            <Typography variant="h5" p={2}>
+              {" "}
+              This is where you manage your on going projects{" "}
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            You Projects will be displayed here
+          </Grid>
+          <Grid item xs={12} p={3}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={profileButtonClick}
+            >
+              {" "}
+              View & Update your profile
+            </Button>
+          </Grid>
+        </>
       ) : (
- 
-      <Grid container>
-        <Grid container item xs={12} justifyContent="space-around">
-          <Grid item xs={6} md={2}>
-            <TreeGauge />
-          </Grid>
-          <Grid item xs={6} md={2}>
-            <LogGauge />
-          </Grid>
-          <Grid item xs={6} md={2}>
-            <PlankGauge />
-          </Grid>
-          <Grid item xs={6} md={2}>
-            <ProjectGauge />
-          </Grid>
-        </Grid>
-        
-        <Grid container item xs={12} p={3} mt={2} mb={2} bgcolor={'lightgray'} >
-         <Grid item container xs={12} p={1} alignContent={'flex-start'}>
-          <SettingsIcon fontSize='large'/> 
-          </Grid>
-        <Grid item xs={6} md={3} p={1}>
-            <LocationGauge />
-          </Grid>
-      
-          <Grid item xs={6} md={3} p={1}>
-            <SpeciesGauge />
-          </Grid>
-       
-        </Grid>
+        <Grid container>
+          <Grid
+            container
+            item
+            xs={12}
+            p={1}
+            mt={2}
+            mb={2}
+            borderRadius={3}
+            border="solid black 1px"
+            sx={{ backgroundColor: '#f5f5f5' }}
+          >
+            <Grid item container xs={12} p={1} alignContent={"flex-start"}>
+              <ViewModuleIcon fontSize="large" />
+              <Typography variant="body1" p={1}>
+                {" "}
+                Modules{" "}
+              </Typography>
+            </Grid>
 
-        <Grid item xs={12}>
-          <AddSawmillForm />
+            <Grid item xs={6} md={2} p={1}>
+              <TreeGauge />
+            </Grid>
+            <Grid item xs={6} md={2} p={1}>
+              <LogGauge />
+            </Grid>
+            <Grid item xs={6} md={2} p={1}>
+              <PlankGauge />
+            </Grid>
+            <Grid item xs={6} md={2} p={1}>
+              <ProjectGauge />
+            </Grid>
+          </Grid>
+
+          <Grid
+            container
+            borderRadius={3}
+            item
+            xs={12}
+            p={1}
+            mt={2}
+            mb={2}
+            border="solid black 1px"
+          >
+            <Grid item container xs={12} p={1} alignContent={"flex-start"}>
+              <SettingsIcon fontSize="large" />
+              <Typography variant="body1" p={1}>
+                {" "}
+                Sawmill Settings{" "}
+              </Typography>
+            </Grid>
+            <Grid item xs={6} sm={3} md={3} lg={2} p={1}>
+              <LocationGauge />
+            </Grid>
+
+            <Grid item xs={6} sm={3} md={3} lg={2} p={1}>
+              <SpeciesGauge />
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <AddSawmillForm />
+          </Grid>
         </Grid>
-      </Grid>
       )}
     </Grid>
   );

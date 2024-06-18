@@ -47,17 +47,28 @@ const LogGauge = () => {
 
   return (
     <>
-  <Grid border={1} borderRadius={3} p={2} boxShadow={5} bgcolor={'primary.main'} textAlign="center">
-  <WorkspacesIcon fontSize='large'/>
+<Grid
+        border={1}
+        borderRadius={3}
+        p={2}
+        boxShadow={5}
+        bgcolor={"primary.main"}
+        textAlign="center"
+        onClick={handleAddClick}
+        sx={{
+          cursor: "pointer",
+          "&:hover": {
+            backgroundColor: "white.main",
+          },
+          transition: "background-color 0.5s",
+        }}
+      >
+          <WorkspacesIcon fontSize='large'/>
   <Typography color="initial">
     LOGS 
     <Typography component="span" variant="body2" color="initial"> ({logs.length})</Typography>
   </Typography>
-  <Grid item padding={1}>
-    <IconButton size="small" color="dark" onClick={handleAddClick}>
-      <ArrowForwardIcon />
-    </IconButton>
-  </Grid>
+ 
 </Grid>
     {/* <Grid textAlign="center">
       <WorkspacesIcon fontSize='large' sx={{ color: 'dark.main' }} />

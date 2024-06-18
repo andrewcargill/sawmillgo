@@ -6,6 +6,9 @@ import { getFirestore, collection, query, where, getDocs } from 'firebase/firest
 import { app } from '../../firebase-config'; // Make sure this path is correct
 import { useNavigate } from "react-router-dom";
 import TableRowsIcon from '@mui/icons-material/TableRows';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { IconButton } from '@mui/material';
+
 
 const PlankGauge = () => {
   const [trees, setTrees] = useState([]);
@@ -45,15 +48,30 @@ const PlankGauge = () => {
 
   return (
     <>
-    {/* <Grid border={1} p={2} borderRadius={3} boxShadow={5} bgcolor={'primary.main'}>
-      <TableRowsIcon fontSize='large'/>
-      <Typography color="initial">LUMBER</Typography>
-      <Typography>Entries: {planks.length}</Typography>
-      <Grid>
-        <Button variant="contained" color="primary" onClick={handleAddClick}>View more</Button>
-      </Grid>
-    </Grid> */}
-   <Grid textAlign="center">
+  <Grid
+        border={1}
+        borderRadius={3}
+        p={2}
+        boxShadow={5}
+        bgcolor={"primary.main"}
+        textAlign="center"
+        onClick={handleAddClick}
+        sx={{
+          cursor: "pointer",
+          "&:hover": {
+            backgroundColor: "white.main",
+          },
+          transition: "background-color 0.5s",
+        }}
+      >
+  <TableRowsIcon fontSize='large'/>
+  <Typography color="initial">
+    PLANKS
+    <Typography component="span" variant="body2" color="initial"> ({planks.length})</Typography>
+  </Typography>
+
+</Grid>
+   {/* <Grid textAlign="center">
       <TableRowsIcon fontSize='large' sx={{ color: 'dark.main' }} />
       <Typography color="initial">LUMBER
       <Typography component="span" variant="body2" color="initial"> ({planks.length})</Typography>
@@ -62,7 +80,7 @@ const PlankGauge = () => {
       <Grid item padding={1}>
     <Button size='small' variant="contained" color="dark" onClick={handleAddClick}>View more</Button>
   </Grid>
-    </Grid>
+    </Grid> */}
     </>
   );
 };
