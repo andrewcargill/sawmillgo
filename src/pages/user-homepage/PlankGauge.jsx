@@ -44,14 +44,26 @@ const PlankGauge = () => {
   };
 
   return (
-    <Grid border={1} p={2} borderRadius={3} boxShadow={5} bgcolor={'primary.main'}>
+    <>
+    {/* <Grid border={1} p={2} borderRadius={3} boxShadow={5} bgcolor={'primary.main'}>
       <TableRowsIcon fontSize='large'/>
       <Typography color="initial">LUMBER</Typography>
       <Typography>Entries: {planks.length}</Typography>
       <Grid>
         <Button variant="contained" color="primary" onClick={handleAddClick}>View more</Button>
       </Grid>
+    </Grid> */}
+   <Grid textAlign="center">
+      <TableRowsIcon fontSize='large' sx={{ color: 'dark.main' }} />
+      <Typography color="initial">LUMBER
+      <Typography component="span" variant="body2" color="initial"> ({planks.length})</Typography>
+      </Typography>
+    
+      <Grid item padding={1}>
+    <Button size='small' variant="contained" color="dark" onClick={handleAddClick}>View more</Button>
+  </Grid>
     </Grid>
+    </>
   );
 };
 

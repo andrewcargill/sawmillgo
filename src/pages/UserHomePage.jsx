@@ -71,17 +71,17 @@ const navigate = useNavigate();
       ) : (
  
       <Grid container>
-        <Grid container item xs={12} spacing={1}>
-          <Grid item xs={6} md={3}>
+        <Grid container item xs={12} justifyContent="space-around">
+          <Grid item xs={6} md={2}>
             <TreeGauge />
           </Grid>
-          <Grid item xs={6} md={3}>
+          <Grid item xs={6} md={2}>
             <LogGauge />
           </Grid>
-          <Grid item xs={6} md={3}>
+          <Grid item xs={6} md={2}>
             <PlankGauge />
           </Grid>
-          <Grid item xs={6} md={3}>
+          <Grid item xs={6} md={2}>
             <ProjectGauge />
           </Grid>
         </Grid>

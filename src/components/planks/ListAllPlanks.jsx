@@ -304,8 +304,7 @@ const ListAllPlanks = () => {
 
   return (
     <Grid container spacing={2} p={2}>
-      {activeSpecies ? "Active Species" : "inactive species"}
-      {activeStatus ? "Active Status" : "inactive status"}
+
       <Grid
         container
         item

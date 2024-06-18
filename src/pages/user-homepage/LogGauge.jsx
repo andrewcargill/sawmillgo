@@ -7,6 +7,8 @@ import { app } from '../../firebase-config'; // Make sure this path is correct
 import { useNavigate } from "react-router-dom";
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import { WorkSharp } from '@mui/icons-material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { IconButton } from '@mui/material';
 
 const LogGauge = () => {
   const [logs, setLogs] = useState([]);
@@ -44,14 +46,30 @@ const LogGauge = () => {
   };
 
   return (
-    <Grid border={1} p={2} borderRadius={3} boxShadow={5} bgcolor={'primary.main'}>
-      <WorkspacesIcon fontSize='large'/>
-      <Typography color="initial">LOGS</Typography>
-      <Typography>Entries: {logs.length}</Typography>
-      <Grid>
-        <Button variant="contained" color="primary" onClick={handleAddClick}>View more</Button>
-      </Grid>
-    </Grid>
+    <>
+  <Grid border={1} borderRadius={3} p={2} boxShadow={5} bgcolor={'primary.main'} textAlign="center">
+  <WorkspacesIcon fontSize='large'/>
+  <Typography color="initial">
+    LOGS 
+    <Typography component="span" variant="body2" color="initial"> ({logs.length})</Typography>
+  </Typography>
+  <Grid item padding={1}>
+    <IconButton size="small" color="dark" onClick={handleAddClick}>
+      <ArrowForwardIcon />
+    </IconButton>
+  </Grid>
+</Grid>
+    {/* <Grid textAlign="center">
+      <WorkspacesIcon fontSize='large' sx={{ color: 'dark.main' }} />
+      <Typography color="initial">LOGS
+      <Typography component="span" variant="body2" color="initial"> ({logs.length})</Typography>
+      </Typography>
+   
+      <Grid item padding={1}>
+    <Button size='small' variant="contained" color="dark" onClick={handleAddClick}>View more</Button>
+  </Grid> */}
+ 
+    </>
   );
 };
 
