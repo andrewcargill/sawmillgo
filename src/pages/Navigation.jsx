@@ -186,7 +186,7 @@ const Navigation = () => {
     <MenuItem>
    
       <IconButton component={Link} to={'/home'} onClick={handleMenuClose}>
-       <HomeIcon sx={{ color: 'primary.main' }} />
+       <HomeIcon sx={{ color: 'black' }} />
       </IconButton>
 
       </MenuItem>
@@ -315,7 +315,7 @@ const Navigation = () => {
       </Button> */}
       <Tooltip title="Home">
       <IconButton component={Link} to={'/home'}>
-      <HomeIcon sx={{ color: 'primary.main' }} />
+      <HomeIcon sx={{ color: 'black' }} />
       </IconButton>
       </Tooltip>
 

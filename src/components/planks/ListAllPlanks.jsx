@@ -17,7 +17,6 @@ import { useNavigate } from "react-router-dom";
 import PlankListContent from "./sub-components/PlankListContent";
 import AppsIcon from "@mui/icons-material/Apps";
 import GridOnIcon from "@mui/icons-material/GridOn";
-import GridOffIcon from "@mui/icons-material/GridOff";
 import ListIcon from "@mui/icons-material/List";
 import TuneIcon from "@mui/icons-material/Tune";
 import {
@@ -35,6 +34,7 @@ import {
   IconButton,
 } from "@mui/material";
 import FilterModal from "./sub-components/filter-components/FilterModal";
+import TableRowsIcon from "@mui/icons-material/TableRows";
 
 const ListAllPlanks = () => {
   const [planks, setPlanks] = useState([]);
@@ -197,16 +197,21 @@ const ListAllPlanks = () => {
           <TableContainer component={Paper}>
             <Table aria-label="simple table" sx={{ minWidth: 800 }}>
               <TableHead>
-                <TableRow>
+                <TableRow
+                  sx={{ backgroundColor: "primary.main", boxShadow: 2 }}
+                >
                   <TableCell
                     sx={{
                       position: "sticky",
                       left: 0,
                       background: "white",
+                      backgroundColor: "primary.main",
+                      boxShadow: 2,
                       zIndex: 1,
+                      borderRight: "1px solid lightgrey",
                     }}
                   >
-                    Ref ID
+                    ID
                   </TableCell>
                   <TableCell>Quality</TableCell>
                   <TableCell>Status</TableCell>
@@ -223,8 +228,10 @@ const ListAllPlanks = () => {
                 {planks.map((plank) => (
                   <TableRow
                     key={plank.id}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    hover
+                    sx={{
+                      "&:nth-of-type(odd)": { backgroundColor: "action.hover" },
+                      "&:hover": { backgroundColor: "action.selected" },
+                    }}
                     onClick={handlePlankClick(plank.id)}
                     style={{ cursor: "pointer" }}
                   >
@@ -234,8 +241,12 @@ const ListAllPlanks = () => {
                       sx={{
                         position: "sticky",
                         left: 0,
+
+                        "&:hover": { backgroundColor: "lightgray" },
                         background: "white",
-                        zIndex: 1,
+                        borderRight: "1px solid lightgrey",
+
+                        zIndex: 2,
                       }}
                     >
                       {plank.refId}
@@ -304,32 +315,55 @@ const ListAllPlanks = () => {
     }
   };
 
-  const currentViewIcon = views.find((v) => v.view === dynamicView)?.icon || <AddIcon />;
-
+  const currentViewIcon = views.find((v) => v.view === dynamicView)?.icon || (
+    <AddIcon />
+  );
 
   return (
-    <Grid container spacing={2} p={2}>
-
+    <Grid container>
       <Grid
-        container
+      
         item
         xs={12}
-        justifyContent="space-between"
-        alignItems="center"
+        p={1}
+    
+        mb={2}
+        borderRadius={3}
+       
+        spacing={1}
       >
-        <Typography variant="h4">Planks</Typography>
+        <Grid
+          container
+          item
+          xs={12}
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Grid item container xs={4}  alignContent={"flex-start"}>
+            <TableRowsIcon fontSize="large" />
+            <Typography  variant="body1" p={1}>
+              {" "}
+              Planks{" "}
+            </Typography>
+          </Grid>
 
+          <Grid item container justifyContent={'flex-end'} xs={6}>
+          <ButtonGroup variant="contained" color="primary">
+            <IconButton
+              size="small"
+              color="inherit"
+              onClick={handleDynamicViewClick}
+              aria-label="Change View"
+            >
+              {currentViewIcon}
+            </IconButton>
+            <Button color="white" onClick={handleAddPlankClick}>
+              Add Plank
+            </Button>
+          </ButtonGroup>
+          </Grid>
 
-        <ButtonGroup variant="contained" color="primary">
-    <IconButton size="small" color="inherit" onClick={handleDynamicViewClick}>
-      {currentViewIcon}
-    </IconButton>
-    <Button color="white" onClick={handleAddPlankClick}>
-      Add Plank
-    </Button>
-  </ButtonGroup>
-
-        {/* <Button
+          {/* <Button
           variant="outlined"
           color="primary"
           onClick={handleDynamicViewClick}
@@ -345,99 +379,127 @@ const ListAllPlanks = () => {
         >
           Add Plank
         </Button> */}
-      </Grid>
+        </Grid>
 
-      <Grid item xs={12}>
-        Last added plank:{" "}
-        {planks.length > 0 ? planks[0].refId : "No planks available"}
-      </Grid>
-
-      <Grid
-        container
-        sx={{
-          overflowX: "auto",
-          "&::-webkit-scrollbar": {
-            display: "none",
-          },
-          scrollbarWidth: "none",
-        }}
-        alignContent="flex-start"
-      >
         <Grid
           item
-          xs={12}
-          mt={1}
           container
-          sx={{ minWidth: 500, flexWrap: "nowrap" }}
+          bgcolor="background.paper"
+          alignContent={"flex-start"}
+          xs={12}
         >
-          <Grid pr={1}>
-            <Chip
-              icon={<TuneIcon />}
-              variant="outlined"
-              color={"primary"}
-              label="All Filters"
-              onClick={handleOpenModal("allFilters")}
-            />
-          </Grid>
-          <Grid pr={1}>
-            <Chip
-              variant={verifiedFilter ? "contained" : "outlined"}
-              color={"primary"}
-              label={"Verified"}
-              onClick={toggleVerifiedFilter}
-            />
-          </Grid>
-          <Grid pr={1}>
-            <Chip
-              variant={allFilters.status ? "contained" : "outlined"}
-              color={"primary"}
-              label={
-                allFilters.status
-                  ? `Status: ${allFilters.status || ""}`
-                  : "Status"
-              }
-              onClick={handleOpenModal("status")}
-              onDelete={
-                allFilters.status ? handleResetFilter("status") : undefined
-              }
-              deleteIcon={<CancelIcon />}
-            />
-          </Grid>
+          <Typography variant="subtitle2">
+            Last added plank:{" "}
+            {planks.length > 0 ? planks[0].refId : "No planks available"}
+          </Typography>
+        </Grid>
 
-          <Grid pr={1}>
-            <Chip
-              variant={allFilters.speciesId ? "contained" : "outlined"}
-              color={"primary"}
-              label={
-                allFilters.speciesId
-                  ? `Species: ${allFilters.speciesName || ""}`
-                  : "Species"
-              }
-              onClick={handleOpenModal("species")}
-              disabled={!activeStatus}
-              onDelete={
-                allFilters.speciesId ? handleResetFilter("species") : undefined
-              }
-              deleteIcon={<CancelIcon />}
-            />
-          </Grid>
+        </Grid>
 
-          <Grid pr={1}>
-            <Chip
-              variant={allFilters.grade ? "contained" : "outlined"}
-              color={"primary"}
-              label={
-                allFilters.grade ? `Grade: ${allFilters.grade || ""}` : "Grade"
-              }
-              onClick={handleOpenModal("grade")}
-              disabled={!activeSpecies}
-              onDelete={
-                allFilters.grade ? handleResetFilter("grade") : undefined
-              }
-              deleteIcon={<CancelIcon />}
-            />
-          </Grid>
-          {/* <Grid pr={1}>
+        <Grid
+            container
+            borderRadius={3}
+            item
+            xs={12}
+            p={1}
+           
+            mb={2}
+           
+          >
+
+        <Grid
+          container
+          item
+          sx={{
+            overflowX: "auto",
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
+            scrollbarWidth: "none",
+          }}
+          alignContent="flex-start"
+          className="filter-chip-countainer"
+        >
+          <Grid
+            item
+            xs={12}
+            mt={1}
+            container
+            sx={{ minWidth: 500, flexWrap: "nowrap" }}
+            className="filter-chip-inner-container"
+          >
+            <Grid pr={1}>
+              <Chip
+                icon={<TuneIcon />}
+                variant="outlined"
+                color={"primary"}
+                label="All Filters"
+                onClick={handleOpenModal("allFilters")}
+              />
+            </Grid>
+            <Grid pr={1}>
+              <Chip
+                variant={verifiedFilter ? "contained" : "outlined"}
+                color={"primary"}
+                label={"Verified"}
+                onClick={toggleVerifiedFilter}
+              />
+            </Grid>
+            <Grid pr={1}>
+              <Chip
+                variant={allFilters.status ? "contained" : "outlined"}
+                color={"primary"}
+                label={
+                  allFilters.status
+                    ? `Status: ${allFilters.status || ""}`
+                    : "Status"
+                }
+                onClick={handleOpenModal("status")}
+                onDelete={
+                  allFilters.status ? handleResetFilter("status") : undefined
+                }
+                deleteIcon={<CancelIcon />}
+              />
+            </Grid>
+
+            <Grid pr={1}>
+              <Chip
+                variant={allFilters.speciesId ? "contained" : "outlined"}
+                color={"primary"}
+                label={
+                  allFilters.speciesId
+                    ? `Species: ${allFilters.speciesName || ""}`
+                    : "Species"
+                }
+                onClick={handleOpenModal("species")}
+                disabled={!activeStatus}
+                onDelete={
+                  allFilters.speciesId
+                    ? handleResetFilter("species")
+                    : undefined
+                }
+                deleteIcon={<CancelIcon />}
+              />
+            </Grid>
+
+            <Grid pr={1}>
+              <Chip
+                variant={allFilters.grade ? "contained" : "outlined"}
+                color={"primary"}
+                label={
+                  allFilters.grade
+                    ? `Grade: ${allFilters.grade || ""}`
+                    : "Grade"
+                }
+                onClick={handleOpenModal("grade")}
+                disabled={!activeSpecies}
+                onDelete={
+                  allFilters.grade ? handleResetFilter("grade") : undefined
+                }
+                deleteIcon={<CancelIcon />}
+              />
+            </Grid>
+            {/* <Grid pr={1}>
             <Chip
               variant={allFilters.length ? "contained" : "outlined"}
               color={"primary"}
@@ -449,102 +511,107 @@ const ListAllPlanks = () => {
               deleteIcon={<CancelIcon />}
             />
           </Grid> */}
-          <Grid pr={1}>
-            <Chip
-              variant={allFilters.length ? "contained" : "outlined"}
-              color={"primary"}
-              label={
-                allFilters.length
-                  ? `Length: ${allFilters.length[0] || ""}-${
-                      allFilters.length[1]
-                    }cm`
-                  : "Length"
-              }
-              onClick={handleOpenModal("length")}
-              disabled={!activeSpecies}
-              onDelete={
-                allFilters.length ? handleResetFilter("length") : undefined
-              }
-              deleteIcon={<CancelIcon />}
-            />
-          </Grid>
+            <Grid pr={1}>
+              <Chip
+                variant={allFilters.length ? "contained" : "outlined"}
+                color={"primary"}
+                label={
+                  allFilters.length
+                    ? `Length: ${allFilters.length[0] || ""}-${
+                        allFilters.length[1]
+                      }cm`
+                    : "Length"
+                }
+                onClick={handleOpenModal("length")}
+                disabled={!activeSpecies}
+                onDelete={
+                  allFilters.length ? handleResetFilter("length") : undefined
+                }
+                deleteIcon={<CancelIcon />}
+              />
+            </Grid>
 
-          <Grid pr={1}>
-            <Chip
-              variant={allFilters.width ? "contained" : "outlined"}
-              color={"primary"}
-              label={
-                allFilters.width
-                  ? `Width: ${allFilters.width[0] || ""}-${
-                      allFilters.width[1]
-                    }cm`
-                  : "Width"
-              }
-              onClick={handleOpenModal("width")}
-              disabled={!activeSpecies}
-              onDelete={
-                allFilters.width ? handleResetFilter("width") : undefined
-              }
-              deleteIcon={<CancelIcon />}
-            />
-          </Grid>
-          <Grid pr={1}>
-            <Chip
-              variant={allFilters.depth ? "contained" : "outlined"}
-              color={"primary"}
-              label={
-                allFilters.depth
-                  ? `Depth: ${allFilters.depth[0] || ""}-${
-                      allFilters.depth[1]
-                    }cm`
-                  : "Depth"
-              }
-              onClick={handleOpenModal("depth")}
-              disabled={!activeSpecies}
-              onDelete={
-                allFilters.depth ? handleResetFilter("depth") : undefined
-              }
-              deleteIcon={<CancelIcon />}
-            />
-          </Grid>
-          <Grid pr={1}>
-            <Chip
-              variant={allFilters.locationId ? "contained" : "outlined"}
-              color={"primary"}
-              label={
-                allFilters.locationId
-                  ? `Location: ${allFilters.locationName || ""}`
-                  : "Location"
-              }
-              onClick={handleOpenModal("locations")}
-              disabled={!activeSpecies}
-              onDelete={
-                allFilters.locationId
-                  ? handleResetFilter("locations")
-                  : undefined
-              }
-              deleteIcon={<CancelIcon />}
-            />
-          </Grid>
-          <Grid pr={1}>
-            <Chip
-              variant={allFilters.projectId ? "contained" : "outlined"}
-              color={"primary"}
-              label={
-                allFilters.projectId
-                  ? `Project: ${allFilters.projectName || ""}`
-                  : "Project"
-              }
-              onClick={handleOpenModal("projects")}
-              disabled={!activeSpecies}
-              onDelete={
-                allFilters.projectId ? handleResetFilter("projects") : undefined
-              }
-              deleteIcon={<CancelIcon />}
-            />
+            <Grid pr={1}>
+              <Chip
+                variant={allFilters.width ? "contained" : "outlined"}
+                color={"primary"}
+                label={
+                  allFilters.width
+                    ? `Width: ${allFilters.width[0] || ""}-${
+                        allFilters.width[1]
+                      }cm`
+                    : "Width"
+                }
+                onClick={handleOpenModal("width")}
+                disabled={!activeSpecies}
+                onDelete={
+                  allFilters.width ? handleResetFilter("width") : undefined
+                }
+                deleteIcon={<CancelIcon />}
+              />
+            </Grid>
+            <Grid pr={1}>
+              <Chip
+                variant={allFilters.depth ? "contained" : "outlined"}
+                color={"primary"}
+                label={
+                  allFilters.depth
+                    ? `Depth: ${allFilters.depth[0] || ""}-${
+                        allFilters.depth[1]
+                      }cm`
+                    : "Depth"
+                }
+                onClick={handleOpenModal("depth")}
+                disabled={!activeSpecies}
+                onDelete={
+                  allFilters.depth ? handleResetFilter("depth") : undefined
+                }
+                deleteIcon={<CancelIcon />}
+              />
+            </Grid>
+            <Grid pr={1}>
+              <Chip
+                variant={allFilters.locationId ? "contained" : "outlined"}
+                color={"primary"}
+                label={
+                  allFilters.locationId
+                    ? `Location: ${allFilters.locationName || ""}`
+                    : "Location"
+                }
+                onClick={handleOpenModal("locations")}
+                disabled={!activeSpecies}
+                onDelete={
+                  allFilters.locationId
+                    ? handleResetFilter("locations")
+                    : undefined
+                }
+                deleteIcon={<CancelIcon />}
+              />
+            </Grid>
+            <Grid pr={1}>
+              <Chip
+                variant={allFilters.projectId ? "contained" : "outlined"}
+                color={"primary"}
+                label={
+                  allFilters.projectId
+                    ? `Project: ${allFilters.projectName || ""}`
+                    : "Project"
+                }
+                onClick={handleOpenModal("projects")}
+                disabled={!activeSpecies}
+                onDelete={
+                  allFilters.projectId
+                    ? handleResetFilter("projects")
+                    : undefined
+                }
+                deleteIcon={<CancelIcon />}
+              />
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
+     
+
       <Grid item xs={12}>
         {planks.length > 0 ? (
           renderPlankView(dynamicView)
