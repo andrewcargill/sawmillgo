@@ -247,6 +247,7 @@ const ListAllTrees = () => {
           </Grid>
         )}
       </Grid>
+      
       <TreeListModal
         isOpen={isModalOpen}
         onClose={(edited) => {

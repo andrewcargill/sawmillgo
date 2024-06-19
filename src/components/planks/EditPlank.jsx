@@ -94,12 +94,16 @@ const EditPlank = () => {
           navigate("/planks");
           return;
         }
-        
+
         const plankData = plankSnap.data();
         setPlank({ id: plankSnap.id, ...plankData });
-  
-        const projects = await fetchProjectsForSawmill(db, sawmillId, plankData.verified);
-        const normalizedProjects = projects.map(project => ({
+
+        const projects = await fetchProjectsForSawmill(
+          db,
+          sawmillId,
+          plankData.verified
+        );
+        const normalizedProjects = projects.map((project) => ({
           id: project.id,
           name: project.projectName,
         }));
@@ -166,8 +170,12 @@ const EditPlank = () => {
     e.preventDefault();
 
     // Start by uploading the new images if any are selected
-    const newImage1Url = imageFiles.image1 ? await uploadImage(imageFiles.image1) : null;
-    const newImage2Url = imageFiles.image2 ? await uploadImage(imageFiles.image2) : null;
+    const newImage1Url = imageFiles.image1
+      ? await uploadImage(imageFiles.image1)
+      : null;
+    const newImage2Url = imageFiles.image2
+      ? await uploadImage(imageFiles.image2)
+      : null;
 
     // Prepare the update object, only adding image URLs if they've been updated
     const updateData = {
@@ -185,54 +193,25 @@ const EditPlank = () => {
       console.error("Failed to update plank:", error);
       alert("Error updating plank.");
     }
-};
-
+  };
 
   return (
     <Grid container>
-      <Typography variant="h4" gutterBottom>
+   <Grid item xs={12}>
+          <Typography variant="body1" p={1}>
         Edit Plank: {plank?.refId}
       </Typography>
+          </Grid>
       {plank ? (
-        <Grid container spacing={2}>
-          <TextFieldGrid
+        <Grid container spacing={0}>
+          <Grid item container xs={12} m={1} spacing={2} p={2} border={'solid 1px black'} borderRadius={3}>
+         
+          <TextFieldGridThird
             name="date"
             label="Date"
             type="date"
             value={plank.date}
             onChange={handleInputChange}
-          />
-          <TextFieldGrid
-            name="length"
-            label="Length (cm)"
-            value={plank.length}
-            onChange={handleInputChange}
-          />
-          <TextFieldGrid
-            name="width"
-            label="Width (cm)"
-            value={plank.width}
-            onChange={handleInputChange}
-          />
-          <TextFieldGrid
-            name="depth"
-            label="Depth (cm)"
-            value={plank.depth}
-            onChange={handleInputChange}
-          />
-
-          <TextFieldGrid
-            name="grade"
-            label="Grade"
-            value={plank.grade}
-            onChange={handleInputChange}
-          />
-          <TextFieldGrid
-            name="notes"
-            label="Notes"
-            value={plank.notes}
-            onChange={handleInputChange}
-            multiline
           />
           {renderSelect(
             "locationId",
@@ -255,6 +234,46 @@ const EditPlank = () => {
             (event) => handleSelectChange(event, species),
             plank.speciesId
           )}
+
+          <TextFieldGridThird
+            name="grade"
+            label="Grade"
+            value={plank.grade}
+            onChange={handleInputChange}
+          />
+           <TextFieldGridThird
+            name="length"
+            label="Length (cm)"
+            value={plank.length}
+            onChange={handleInputChange}
+          />
+          <TextFieldGridThird
+            name="width"
+            label="Width (cm)"
+            value={plank.width}
+            onChange={handleInputChange}
+          />
+          <TextFieldGridThird
+            name="depth"
+            label="Depth (cm)"
+            value={plank.depth}
+            onChange={handleInputChange}
+          />
+          
+           </Grid>
+       
+          <Grid item container xs={12} m={1} spacing={2} p={2} border={'solid 1px black'} borderRadius={3}>
+          <TextFieldGridFull
+            name="notes"
+            label="Notes"
+            value={plank.notes}
+            onChange={handleInputChange}
+            multiline
+          />
+
+         
+                    <Grid item container xs={12} m={1} spacing={2} p={2} border={'solid 1px black'} borderRadius={3}>
+
           <Grid
             container
             item
@@ -303,6 +322,10 @@ const EditPlank = () => {
               </Grid>
             </Grid>
           </Grid>
+        </Grid>
+
+          <Grid item container xs={12} m={1} spacing={2} p={2} border={'solid 1px black'} borderRadius={3}>
+
           <CheckboxGrid
             name="furniture"
             label="Furniture"
@@ -327,8 +350,10 @@ const EditPlank = () => {
             checked={plank.general}
             onChange={handleInputChange}
           />
+           </Grid>
+          </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={12} p={2}>
             <Button
               variant="contained"
               color="primary"
@@ -337,7 +362,9 @@ const EditPlank = () => {
             >
               Update Plank
             </Button>
+
           </Grid>
+         
         </Grid>
       ) : (
         <p>Loading plank details...</p>
@@ -371,6 +398,56 @@ function TextFieldGrid({
   );
 }
 
+function TextFieldGridThird({
+  name,
+  label,
+  type = "text",
+  value,
+  onChange,
+  multiline = false,
+}) {
+  return (
+    <Grid item xs={12} sm={4}>
+      <TextField
+        fullWidth
+        label={label}
+        type={type}
+        name={name}
+        value={value || ""}
+        onChange={onChange}
+        required={!multiline}
+        multiline={multiline}
+        rows={multiline ? 4 : 1}
+      />
+    </Grid>
+  );
+}
+
+function TextFieldGridFull({
+  name,
+  label,
+  type = "text",
+  value,
+  onChange,
+  multiline = false,
+}) {
+  return (
+    <Grid item xs={12} sm={12}>
+      <TextField
+        fullWidth
+        label={label}
+        type={type}
+        name={name}
+        value={value || ""}
+        onChange={onChange}
+        required={!multiline}
+        multiline={multiline}
+        rows={multiline ? 4 : 1}
+      />
+    </Grid>
+  );
+}
+
 function CheckboxGrid({ name, label, checked, onChange }) {
   return (
     <Grid item xs={12} sm={6}>
@@ -386,7 +463,7 @@ function CheckboxGrid({ name, label, checked, onChange }) {
 
 function renderSelect(name, label, options, onChange, value) {
   return (
-    <Grid item xs={12} sm={6}>
+    <Grid item xs={12} sm={4}>
       <FormControl fullWidth>
         <InputLabel id={`${name}-label`}>{label}</InputLabel>
         <Select
@@ -397,11 +474,7 @@ function renderSelect(name, label, options, onChange, value) {
           label={label}
           onChange={onChange}
         >
-            {label === "Project" && (
-            <MenuItem value="">
-              No Project
-            </MenuItem>
-          )}
+          {label === "Project" && <MenuItem value="">No Project</MenuItem>}
           {options.map((option) => (
             <MenuItem key={option.id} value={option.id}>
               {option.name}

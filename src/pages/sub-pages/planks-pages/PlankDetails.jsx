@@ -96,13 +96,13 @@ const PlankDetails = () => {
           <p>TreeId: {plankDetails.treeId}</p>
           <br />
           <Grid container>
-          <Grid
+            <Grid
               item
               container
               xs={6}
               alignContent={"flex-start"}
               justifyContent={"flex-end"}
-              maxHeight={'150px'}
+              maxHeight={"150px"}
             >
               <img
                 src={plankDetails.image1}
@@ -114,13 +114,13 @@ const PlankDetails = () => {
                 }}
               />
             </Grid>
-          <Grid
+            <Grid
               item
               container
               xs={6}
               alignContent={"flex-start"}
               justifyContent={"flex-end"}
-              maxHeight={'150px'}
+              maxHeight={"150px"}
             >
               <img
                 src={plankDetails.image2}
@@ -129,38 +129,41 @@ const PlankDetails = () => {
                   width: "auto",
                   height: "100%",
                   objectFit: "contain",
-                 
                 }}
               />
             </Grid>
-            </Grid>
-            
-                <PlankMoistureCheckGraph />
-            
-
-          <Grid container spacing={2} p={1} >
-            <Grid item xs={12}>
-            <Button variant="contained" onClick={handleClickOpen} fullWidth>
-              Delete
-            </Button>
-            </Grid>
-            
-            <Grid item xs={12}>
-            <Button variant="contained" color="secondary" onClick={handleEditClick} fullWidth>
-              Edit
-            </Button>
-            </Grid>
-           
           </Grid>
-          <Grid container spacing={2} p={1} >
+
+          <PlankMoistureCheckGraph />
+
+          <Grid container spacing={2} p={1}>
             <Grid item xs={12}>
-            <Button variant="contained" onClick={handleMoistureClick} fullWidth>
-              Add Moisture Check
-            </Button>
+              <Button variant="contained" onClick={handleClickOpen} fullWidth>
+                Delete
+              </Button>
             </Grid>
-            
-       
-           
+
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleEditClick}
+                fullWidth
+              >
+                Edit
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid container spacing={2} p={1}>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                onClick={handleMoistureClick}
+                fullWidth
+              >
+                Add Moisture Check
+              </Button>
+            </Grid>
           </Grid>
 
           <Dialog open={open} onClose={handleClose}>
