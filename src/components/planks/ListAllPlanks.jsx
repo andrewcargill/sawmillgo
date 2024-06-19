@@ -35,6 +35,9 @@ import {
 } from "@mui/material";
 import FilterModal from "./sub-components/filter-components/FilterModal";
 import TableRowsIcon from "@mui/icons-material/TableRows";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
+import { Tooltip } from "@mui/material";
 
 const ListAllPlanks = () => {
   const [planks, setPlanks] = useState([]);
@@ -159,21 +162,25 @@ const ListAllPlanks = () => {
         );
       case "basic":
         return (
-          <Grid container>
+          <Grid 
+          container
+        sx={{ justifyContent: { xs: "center", sm: "flex-start" } }}
+        alignContent={"center"}
+          >
             {planks.map((plank) => (
               <Grid
                 className="item-select"
                 item
+                container
                 xs={3}
                 sm={2}
                 lg={2}
                 key={plank.id}
                 m={1}
-                bgcolor="white.main"
-                sx={{
-                  border: plank.verified
-                    ? "4px solid green"
-                    : "2px solid lightgrey",
+                bgcolor={"white.main"}
+                style={{
+                  position: "relative", // Ensure this container is the positioning context
+                  border: "2px solid lightgrey",
                   borderRadius: "5px",
                   padding: "12px",
                   display: "flex",
@@ -184,10 +191,24 @@ const ListAllPlanks = () => {
                 }}
                 onClick={handlePlankClick(plank.id)}
               >
-                <Grid item>
+                <Grid item pt={4} pb={4}>
                   <Typography variant="h6">{plank.refId}</Typography>
                   <Typography variant="body2">{plank.speciesName}</Typography>
                 </Grid>
+
+                {/* Labels */}
+                <div style={{ position: "absolute", top: "8px", right: "8px" }}>
+                  {plank.projectId && (
+                    <Tooltip title={`Project: ${plank.projectName}`} arrow>
+                      <LocalOfferIcon color="dark" fontSize="small" />
+                    </Tooltip>
+                  )}
+                  {plank.verified && (
+                    <Tooltip title="Verified" arrow>
+                      <WorkspacePremiumIcon color="primary" fontSize="small" />
+                    </Tooltip>
+                  )}
+                </div>
               </Grid>
             ))}
           </Grid>
@@ -241,11 +262,9 @@ const ListAllPlanks = () => {
                       sx={{
                         position: "sticky",
                         left: 0,
-
                         "&:hover": { backgroundColor: "lightgray" },
                         background: "white",
                         borderRight: "1px solid lightgrey",
-
                         zIndex: 2,
                       }}
                     >
@@ -321,17 +340,7 @@ const ListAllPlanks = () => {
 
   return (
     <Grid container>
-      <Grid
-      
-        item
-        xs={12}
-        p={1}
-    
-        mb={2}
-        borderRadius={3}
-       
-        spacing={1}
-      >
+      <Grid item xs={12} p={1} mb={2} borderRadius={3} spacing={1}>
         <Grid
           container
           item
@@ -339,46 +348,29 @@ const ListAllPlanks = () => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Grid item container xs={4}  alignContent={"flex-start"}>
+          <Grid item container xs={4} alignContent={"flex-start"}>
             <TableRowsIcon fontSize="large" />
-            <Typography  variant="body1" p={1}>
+            <Typography variant="body1" p={1}>
               {" "}
               Planks{" "}
             </Typography>
           </Grid>
 
-          <Grid item container justifyContent={'flex-end'} xs={6}>
-          <ButtonGroup variant="contained" color="primary">
-            <IconButton
-              size="small"
-              color="inherit"
-              onClick={handleDynamicViewClick}
-              aria-label="Change View"
-            >
-              {currentViewIcon}
-            </IconButton>
-            <Button color="white" onClick={handleAddPlankClick}>
-              Add Plank
-            </Button>
-          </ButtonGroup>
+          <Grid item container justifyContent={"flex-end"} xs={6}>
+            <ButtonGroup variant="contained" color="primary">
+              <IconButton
+                size="small"
+                color="inherit"
+                onClick={handleDynamicViewClick}
+                aria-label="Change View"
+              >
+                {currentViewIcon}
+              </IconButton>
+              <Button color="white" onClick={handleAddPlankClick}>
+                Add Plank
+              </Button>
+            </ButtonGroup>
           </Grid>
-
-          {/* <Button
-          variant="outlined"
-          color="primary"
-          onClick={handleDynamicViewClick}
-          startIcon={views.find((v) => v.view === dynamicView)?.icon}
-        >
-          Change View
-        </Button>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={handleAddPlankClick}
-          startIcon={<AddIcon />}
-        >
-          Add Plank
-        </Button> */}
         </Grid>
 
         <Grid
@@ -393,20 +385,9 @@ const ListAllPlanks = () => {
             {planks.length > 0 ? planks[0].refId : "No planks available"}
           </Typography>
         </Grid>
+      </Grid>
 
-        </Grid>
-
-        <Grid
-            container
-            borderRadius={3}
-            item
-            xs={12}
-            p={1}
-           
-            mb={2}
-           
-          >
-
+      <Grid container borderRadius={3} item xs={12} p={1} mb={2}>
         <Grid
           container
           item
@@ -499,18 +480,7 @@ const ListAllPlanks = () => {
                 deleteIcon={<CancelIcon />}
               />
             </Grid>
-            {/* <Grid pr={1}>
-            <Chip
-              variant={allFilters.length ? "contained" : "outlined"}
-              color={"primary"}
-              label="Dimensions"
-              onClick={handleOpenModal("dimensions")}
-              onDelete={
-                allFilters.length ? handleResetFilter("dimensions") : undefined
-              }
-              deleteIcon={<CancelIcon />}
-            />
-          </Grid> */}
+
             <Grid pr={1}>
               <Chip
                 variant={allFilters.length ? "contained" : "outlined"}
@@ -610,7 +580,6 @@ const ListAllPlanks = () => {
           </Grid>
         </Grid>
       </Grid>
-     
 
       <Grid item xs={12}>
         {planks.length > 0 ? (
@@ -627,32 +596,6 @@ const ListAllPlanks = () => {
         setOpenModal={setOpenModal}
         modalType={modalType}
       />
-
-      {/* <Modal
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-        aria-labelledby="tree-details-title"
-        aria-describedby="tree-details-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: { xs: "90%", sm: 500 },
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            p: 4,
-            maxHeight: { xs: "80vh", sm: "90vh" }, // Adjusted max height
-            overflowY: "auto", // Ensures scrollability
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Typography variant="h4">{modalType}</Typography>
-        </Box>
-      </Modal> */}
     </Grid>
   );
 };

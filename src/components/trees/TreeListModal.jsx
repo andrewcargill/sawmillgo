@@ -39,14 +39,6 @@ function TreeListModal({ isOpen, onClose, treeDetails, mode, setMode }) {
           flexDirection: "column",
         }}
       >
-        {/* {editMode ? (
-             <AddEditTreeForm handleEditClick={handleEditClick} treeDetails={treeDetails} onClose={onClose} /> 
-      
-           
-        ) : (
-            <TreeDetailsModal handleEditClick={handleEditClick} onClose={onClose} treeDetails={treeDetails}/>
-       
-        )} */}
         {mode === "view" && (
           <TreeDetailsModal
             setMode={setMode}
@@ -58,7 +50,6 @@ function TreeListModal({ isOpen, onClose, treeDetails, mode, setMode }) {
           <AddEditTreeForm treeDetails={treeDetails} onClose={onClose} />
         )}
         {mode === "add" && <AddEditTreeForm onClose={onClose} />}
-        {/* {mode === 'add' && <AddTreeForm onClose={onClose} />} */}
       </Box>
     </Modal>
   );

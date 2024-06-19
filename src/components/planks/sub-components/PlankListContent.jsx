@@ -55,12 +55,13 @@ const PlankListContent = ({ data }) => {
   };
 
   return (
-    <Tooltip title={toolTipContent} arrow>
+    <Tooltip title={toolTipContent}>
       <Grid
         className="item-select"
         item
         container
-        bgcolor={ data.verified ?  "secondary.main" : "lightgrey"}
+        border={'solid black 1px'}
+        bgcolor={ data.verified ?  "primary.main" : "#f5f5f5"}
         m={3}
         p={0}
         borderRadius={"5px"}
@@ -73,15 +74,18 @@ const PlankListContent = ({ data }) => {
           height: calculateHeight(data.depth),
           cursor: "pointer",
         }}
-
       >
-        <Grid xs={12} fontWeight={700} >
-        
+        <Grid xs={12} >
+        <Typography variant="body1">
          {data.refId}
+        </Typography>
         
         </Grid>
+
         <Grid xs={12}>
+        <Typography variant="body2">
         {data.speciesName} 
+        </Typography>
         </Grid>
        
       </Grid>

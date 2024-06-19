@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { getFirestore, collection, getDocs, query, orderBy } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  query,
+  orderBy,
+} from "firebase/firestore";
 import { app } from "../../firebase-config"; // Correct the import path as necessary
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
-import CarpenterIcon from '@mui/icons-material/Carpenter';
-import BlockIcon from '@mui/icons-material/Block';
-import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
-import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import CarpenterIcon from "@mui/icons-material/Carpenter";
+import BlockIcon from "@mui/icons-material/Block";
+import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import { Tooltip } from "@mui/material";
 
 const ListAllLogs = () => {
@@ -27,13 +32,6 @@ const ListAllLogs = () => {
       console.log("Sawmill ID not found. Cannot fetch logs.");
       return;
     }
-
-    // let q = collection(db, `sawmill/${sawmillId}/logs`);
-    // const snapshot = await getDocs(q);
-    // const logsList = snapshot.docs.map((doc) => ({
-    //   id: doc.id,
-    //   ...doc.data(),
-
     let q = query(
       collection(db, `sawmill/${sawmillId}/logs`),
       orderBy("createdAt", "desc")
@@ -48,7 +46,7 @@ const ListAllLogs = () => {
 
   useEffect(() => {
     fetchLogs();
-  }, [sawmillId]); // Fetch logs when component mounts and sawmillId changes
+  }, [sawmillId]);
 
   const handleAddLogClick = () => {
     navigate("/addlog");
@@ -84,7 +82,7 @@ const ListAllLogs = () => {
         </Grid>
       </Grid>
       <Grid item xs={12}>
-       last added log: {logs.length > 0 ? logs[0].refId : "No logs available"}
+        last added log: {logs.length > 0 ? logs[0].refId : "No logs available"}
       </Grid>
 
       <Grid
@@ -93,68 +91,63 @@ const ListAllLogs = () => {
         alignContent={"center"}
       >
         {logs.length > 0 ? (
-     logs.map((log) => (
-      <Grid
-        className="item-select"
-        item
-        container
-        xs={3}
-        sm={2}
-        lg={2}
-        key={log.id}
-        m={1}
-        bgcolor={"white.main"}
-        style={{
-          position: 'relative', // Ensure this container is the positioning context
-          border: "2px solid lightgrey",
-          borderRadius: "5px",
-          padding: "12px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          cursor: "pointer",
-        }}
-        onClick={handleLogClick(log.id)}
-      >
-        <Grid item>
-          <h3>{log.refId}</h3>
-        </Grid>
-        <Grid item>
-          <p>{log.speciesName}</p>
-        </Grid>
-        {/* Position the icon absolutely within its parent Grid container */}
-        <div style={{ position: 'absolute', top: '8px', right: '8px' }}>
+          logs.map((log) => (
+            <Grid
+              className="item-select"
+              item
+              container
+              xs={3}
+              sm={2}
+              lg={2}
+              key={log.id}
+              m={1}
+              bgcolor={"white.main"}
+              style={{
+                position: "relative", // Ensure this container is the positioning context
+                border: "2px solid lightgrey",
+                borderRadius: "5px",
+                padding: "12px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
+              onClick={handleLogClick(log.id)}
+            >
+              <Grid item>
+                <h3>{log.refId}</h3>
+              </Grid>
+              <Grid item>
+                <p>{log.speciesName}</p>
+              </Grid>
+              {/* Position the icon absolutely within its parent Grid container */}
+              <div style={{ position: "absolute", top: "8px", right: "8px" }}>
+                {log.plankIds && log.plankIds.length > 0 && (
+                  <Tooltip title={`${log.plankIds.length} Planks`} arrow>
+                    <CarpenterIcon color="dark" fontSize="small" />
+                  </Tooltip>
+                )}
 
-         {log.plankIds && log.plankIds.length > 0 && (
-          <Tooltip title={`${log.plankIds.length} Planks`} arrow>
-         <CarpenterIcon color="dark" fontSize="small" /> 
-          </Tooltip>
-         )}
+                {log.planked && (
+                  <Tooltip title="Planked" arrow>
+                    <BlockIcon color="dark" fontSize="small" />
+                  </Tooltip>
+                )}
 
-         {log.planked && (
-          <Tooltip title="Planked" arrow>
-          <BlockIcon color="dark" fontSize="small" /> 
-          </Tooltip>
-        )}
-       
-         {log.projectId && (
-          <Tooltip title={`Project: ${log.projectName}`} arrow>
-          <LocalOfferIcon color="dark" fontSize="small" /> 
-          </Tooltip>
-        )}
-         {log.verified && (
-          <Tooltip title="Verified" arrow>
-          <WorkspacePremiumIcon color="primary" fontSize="small" /> 
-          </Tooltip>
-        )}
-        </div>
-        {/* <div style={{ position: 'absolute', top: '8px', right: '20px' }}>
-       
-        </div> */}
-      </Grid>
-    ))
-    
+                {log.projectId && (
+                  <Tooltip title={`Project: ${log.projectName}`} arrow>
+                    <LocalOfferIcon color="dark" fontSize="small" />
+                  </Tooltip>
+                )}
+                {log.verified && (
+                  <Tooltip title="Verified" arrow>
+                    <WorkspacePremiumIcon color="primary" fontSize="small" />
+                  </Tooltip>
+                )}
+              </div>
+            </Grid>
+          ))
         ) : (
           <Grid item xs={12}>
             <Typography variant="body1">No logs found.</Typography>

@@ -6,22 +6,18 @@ import {
   where,
   query,
 } from "firebase/firestore";
-import { app } from "../../firebase-config"; // Update the import path as necessary
+import { app } from "../../firebase-config"; 
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import FormHelperText from "@mui/material/FormHelperText";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import TextField from "@mui/material/TextField";
-import TreeDetailsModal from "./TreeDetailsModal";
 import TreeListModal from "./TreeListModal";
 import { fetchSpeciesForSawmill } from "../../utils/filestoreOperations";
-import { Add } from "@mui/icons-material";
 import CarpenterIcon from "@mui/icons-material/Carpenter";
 import BlockIcon from "@mui/icons-material/Block";
 
@@ -94,12 +90,6 @@ const ListAllTrees = () => {
   useEffect(() => {
     fetchTrees(statusFilter);
   }, [loggingFilter, speciesFilter, refIdFilter, statusFilter]); // Re-run fetchTrees when filter changes
-
-  // const handleTreeClick = (treeId) => {
-  //   const tree = trees.find((t) => t.id === treeId);
-  //   setSelectedTreeDetails(tree);
-  //   setIsModalOpen(true);
-  // };
 
   const handleTreeClick = (treeId) => {
     const tree = trees.find((t) => t.id === treeId);
@@ -182,7 +172,6 @@ const ListAllTrees = () => {
             id="species-filter-select"
             value={speciesFilter}
             label="Species"
-          
             onChange={(e) => setSpeciesFilter(e.target.value)}
           >
             <MenuItem value="all">All</MenuItem>
@@ -224,7 +213,7 @@ const ListAllTrees = () => {
               m={1}
               bgcolor={"white.main"}
               style={{
-                position: 'relative',
+                position: "relative",
                 border: `2px solid ${tree.logged ? "orange" : "green"}`,
                 borderRadius: "5px",
                 padding: "12px",
@@ -242,13 +231,15 @@ const ListAllTrees = () => {
               <Grid item>
                 <p>{tree.speciesName}</p>
               </Grid>
-              <div style={{ position: 'absolute', top: '8px', right: '8px' }}>
-
-{tree.logIds && tree.logIds.length > 0 && <CarpenterIcon color="dark" fontSize="small" /> }
-{tree.logged && <BlockIcon color="secondary" fontSize="small" /> }
-</div>
+              <div style={{ position: "absolute", top: "8px", right: "8px" }}>
+                {tree.logIds && tree.logIds.length > 0 && (
+                  <CarpenterIcon color="dark" fontSize="small" />
+                )}
+                {tree.logged && (
+                  <BlockIcon color="secondary" fontSize="small" />
+                )}
+              </div>
             </Grid>
-            
           ))
         ) : (
           <Grid item xs={12}>
@@ -265,7 +256,6 @@ const ListAllTrees = () => {
             refreshTreeList();
           }
         }}
-        // onClose={() => setIsModalOpen(false)}
         treeDetails={selectedTreeDetails}
         mode={modalMode}
         setMode={setModalMode}
