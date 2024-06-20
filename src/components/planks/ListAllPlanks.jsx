@@ -41,7 +41,7 @@ import { Tooltip } from "@mui/material";
 
 const ListAllPlanks = () => {
   const [planks, setPlanks] = useState([]);
-  const [dynamicView, setDynamicView] = useState("list");
+  const [dynamicView, setDynamicView] = useState("basic");
   const [openModal, setOpenModal] = useState(false);
   const [modalType, setModalType] = useState("");
   const [newestPlank, setNewestPlank] = useState("");

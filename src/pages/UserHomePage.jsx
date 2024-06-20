@@ -21,6 +21,8 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import AddSawmillGauge from "./user-homepage/AddSawmillGauge";
 import KeyIcon from '@mui/icons-material/Key';
+import LocationsGauge from "./user-homepage/LocationsGauge";
+import TreeAgeGauge from "./user-homepage/TreeAgeGauge";
 
 const UserHomePage = () => {
   // Access user information from context
@@ -111,6 +113,9 @@ const UserHomePage = () => {
             <Grid item xs={6} md={2} p={1}>
               <ProjectGauge />
             </Grid>
+            <Grid item xs={6} md={2} p={1}>
+              <LocationsGauge />
+            </Grid>
           </Grid>
 
           <Grid
@@ -136,6 +141,9 @@ const UserHomePage = () => {
 
             <Grid item xs={6} sm={3} md={3} lg={2} p={1}>
               <SpeciesGauge />
+            </Grid>
+            <Grid item xs={6} sm={3} md={3} lg={2} p={1}>
+              <TreeAgeGauge/>
             </Grid>
           </Grid>
 
