@@ -11,19 +11,20 @@ import {
 } from "firebase/firestore";
 import { app } from "../../firebase-config"; // Make sure this path is correct
 import { useNavigate } from "react-router-dom";
-import WorkspacesIcon from "@mui/icons-material/Workspaces";
-import { WorkSharp } from "@mui/icons-material";
+import TableRowsIcon from "@mui/icons-material/TableRows";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { IconButton, Tooltip } from "@mui/material";
+import WaterDropIcon from "@mui/icons-material/WaterDrop";
 
-const LogGauge = () => {
-  const [logs, setLogs] = useState([]);
+const DryingGauge = () => {
+  const [trees, setTrees] = useState([]);
+  const [planks, setPlanks] = useState([]);
   const db = getFirestore(app);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchLogs = async () => {
+    const fetchPlanks = async () => {
       const userLocalStorage = JSON.parse(localStorage.getItem("user"));
       const sawmillId = userLocalStorage?.sawmillId;
 
@@ -32,53 +33,47 @@ const LogGauge = () => {
         return;
       }
 
-      // Reference to the 'trees' sub-collection within a specific 'sawmill'
-      const logsRef = collection(db, `sawmill/${sawmillId}/logs`);
+      const planksRef = collection(db, `sawmill/${sawmillId}/planks`);
       try {
-        const querySnapshot = await getDocs(logsRef);
-        const logsList = querySnapshot.docs.map((doc) => ({
+        const querySnapshot = await getDocs(planksRef);
+        const planksList = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
-        setLogs(logsList);
-        console.log("Fetched logs: ", logsList);
+        setPlanks(planksList);
+        console.log("Fetched planks: ", planksList);
       } catch (error) {
-        console.error("Error fetching logs: ", error);
+        console.error("Error fetching planks: ", error);
       }
     };
 
-    fetchLogs();
+    fetchPlanks();
   }, []); // Dependency array is empty, so this runs once on component mount
 
-  const handleAddClick = () => {
-    navigate("/logs");
-  };
+  const handleAddClick = () => {};
 
   return (
     <>
-      <Tooltip title="Here you can manage logs">
+      <Tooltip title="Coming Soon - Drying data for stock and locations">
         <Grid
           border={1}
           borderRadius={3}
           p={2}
           boxShadow={5}
-          bgcolor={"primary.main"}
+          bgcolor={"lightgray"}
           textAlign="center"
-          onClick={handleAddClick}
           sx={{
-            cursor: "pointer",
             "&:hover": {
-              backgroundColor: "white.main",
+              backgroundColor: "lightgray",
             },
-            transition: "background-color 0.5s",
+            transition: "lightgray 0.3s",
           }}
         >
-          <WorkspacesIcon fontSize="large" />
+          <WaterDropIcon fontSize="large" />
           <Typography color="initial">
-            LOGS
+            DRYING
             <Typography component="span" variant="body2" color="initial">
               {" "}
-              ({logs.length})
             </Typography>
           </Typography>
         </Grid>
@@ -87,4 +82,4 @@ const LogGauge = () => {
   );
 };
 
-export default LogGauge;
+export default DryingGauge;

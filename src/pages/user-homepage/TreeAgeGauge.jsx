@@ -7,7 +7,8 @@ import { app } from '../../firebase-config'; // Make sure this path is correct
 import { useNavigate } from "react-router-dom";
 import TableRowsIcon from '@mui/icons-material/TableRows';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { IconButton } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
+import NaturePeopleIcon from '@mui/icons-material/NaturePeople';
 
 
 const TreeAgeGauge = () => {
@@ -48,6 +49,8 @@ const TreeAgeGauge = () => {
 
   return (
     <>
+          <Tooltip title="Coming Soon - Set age ranges for trees">
+
   <Grid
         border={1}
         borderRadius={3}
@@ -58,20 +61,21 @@ const TreeAgeGauge = () => {
         
        
         sx={{
-          cursor: "pointer",
+          // cursor: "pointer",
           "&:hover": {
             backgroundColor: "lightgray",
           },
           transition: "lightgray 0.3s",
         }}
       >
-  <TableRowsIcon fontSize='large'/>
+  <NaturePeopleIcon fontSize='large'/>
   <Typography color="initial">
     TREE AGE
     <Typography component="span" variant="body2" color="initial"> </Typography>
   </Typography>
 
 </Grid>
+</Tooltip>
 
     </>
   );

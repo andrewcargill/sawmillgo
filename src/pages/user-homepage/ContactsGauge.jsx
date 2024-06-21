@@ -11,10 +11,10 @@ import {
 } from "firebase/firestore";
 import { app } from "../../firebase-config"; // Make sure this path is correct
 import { useNavigate } from "react-router-dom";
-import FactoryIcon from "@mui/icons-material/Factory";
-import { Tooltip } from "@mui/material";
+import ContactsIcon from "@mui/icons-material/Contacts";
+import { Tooltip } from "recharts";
 
-const AddSawmillGauge = () => {
+const ContactsGauge = () => {
   const navigate = useNavigate();
 
   const handleAddClick = () => {
@@ -23,29 +23,28 @@ const AddSawmillGauge = () => {
 
   return (
     <>
-      <Tooltip title="Create a new sawmill">
+     
         <Grid
           border={1}
           borderRadius={3}
           p={2}
           boxShadow={5}
-          bgcolor={"white.main"}
+          bgcolor={"lightgray"}
           textAlign="center"
-          onClick={handleAddClick}
           sx={{
-            cursor: "pointer",
+            // cursor: "pointer",
             "&:hover": {
-              backgroundColor: "primary.main",
+              backgroundColor: "lightgray",
             },
-            transition: "background-color 0.5s",
+            transition: "lightgray 0.3s",
           }}
         >
-          <FactoryIcon fontSize="large" />
-          <Typography color="initial">ADD SAWMILL</Typography>
+          <ContactsIcon fontSize="large" />
+          <Typography color="initial">CUSTOMERS</Typography>
         </Grid>
-      </Tooltip>
+  
     </>
   );
 };
 
-export default AddSawmillGauge;
+export default ContactsGauge;

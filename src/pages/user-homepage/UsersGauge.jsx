@@ -7,11 +7,11 @@ import { app } from '../../firebase-config'; // Make sure this path is correct
 import { useNavigate } from "react-router-dom";
 import TableRowsIcon from '@mui/icons-material/TableRows';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { IconButton, Tooltip } from '@mui/material';
-import MapIcon from '@mui/icons-material/Map';
+import { IconButton } from '@mui/material';
+import PeopleIcon from '@mui/icons-material/People';
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 
-
-const LocationsGauge = () => {
+const UsersGauge = () => {
   const [trees, setTrees] = useState([]);
   const [planks, setPlanks] = useState([]);
   const db = getFirestore(app);
@@ -49,7 +49,6 @@ const LocationsGauge = () => {
 
   return (
     <>
-    <Tooltip title="Coming Soon - Interactive Sawmill Map">
   <Grid
         border={1}
         borderRadius={3}
@@ -60,25 +59,24 @@ const LocationsGauge = () => {
         
        
         sx={{
-          // cursor: "pointer",
+         
           "&:hover": {
             backgroundColor: "lightgray",
           },
           transition: "lightgray 0.3s",
         }}
       >
-  <MapIcon fontSize='large'/>
+  <PeopleIcon fontSize='large'/>
   <Typography color="initial">
-    MAP
+   USERS
     <Typography component="span" variant="body2" color="initial"> </Typography>
   </Typography>
 
 </Grid>
-</Tooltip>
 
     </>
   );
 };
 
 
-export default LocationsGauge;
+export default UsersGauge;

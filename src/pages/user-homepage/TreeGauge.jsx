@@ -13,7 +13,7 @@ import { app } from "../../firebase-config"; // Make sure this path is correct
 import { useNavigate } from "react-router-dom";
 import ParkIcon from "@mui/icons-material/Park";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { IconButton } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 
 const TreeGauge = () => {
   const [trees, setTrees] = useState([]);
@@ -55,27 +55,8 @@ const TreeGauge = () => {
 
   return (
     <>
-      {/* <Grid border={1} borderRadius={3} p={2} boxShadow={5} bgcolor={'primary.main'} textAlign="center">
-  <ParkIcon fontSize='large' sx={{ color: 'dark.main' }} />
-  <Typography color="initial">
-    TREES 
-    <Typography component="span" variant="body2" color="initial"> ({trees.length})</Typography>
-  </Typography>
-  <Grid item padding={1}>
-    <Button size='small' variant="contained" color="dark" onClick={handleAddClick}>View more</Button>
-  </Grid>
-</Grid> */}
-
-      {/* <Grid textAlign="center">
-  <ParkIcon fontSize='large' sx={{ color: 'dark.main' }} />
-  <Typography color="initial">
-    TREES 
-    <Typography component="span" variant="body2" color="initial"> ({trees.length})</Typography>
-  </Typography>
-  <Grid item padding={1}>
-    <Button size='small' variant="contained" color="dark" onClick={handleAddClick}>View more</Button>
-  </Grid>
-</Grid> */}
+ 
+ <Tooltip title="Here you can manage trees">
 
       <Grid
         border={1}
@@ -102,6 +83,7 @@ const TreeGauge = () => {
           </Typography>
         </Typography>
       </Grid>
+      </Tooltip>
     </>
   );
 };

@@ -13,7 +13,7 @@ import LocationGauge from "./user-homepage/LocationGauge";
 import MovementsGauge from "./user-homepage/Movements";
 import ProjectGauge from "./user-homepage/ProjectGauge";
 import SpeciesGauge from "./user-homepage/SpeicesGauge";
-import { Button } from "@mui/material";
+import { Button, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Flag } from "@mui/icons-material";
 import FlagIcon from "../components/country-components/FlagIcon";
@@ -23,6 +23,9 @@ import AddSawmillGauge from "./user-homepage/AddSawmillGauge";
 import KeyIcon from '@mui/icons-material/Key';
 import LocationsGauge from "./user-homepage/LocationsGauge";
 import TreeAgeGauge from "./user-homepage/TreeAgeGauge";
+import DryingGauge from "./user-homepage/DryingGauge";
+import ContactsGauge from "./user-homepage/ContactsGauge";
+import UsersGauge from "./user-homepage/UsersGauge";
 
 const UserHomePage = () => {
   // Access user information from context
@@ -116,6 +119,12 @@ const UserHomePage = () => {
             <Grid item xs={6} md={2} p={1}>
               <LocationsGauge />
             </Grid>
+            <Grid item xs={6} md={2} p={1}>
+              <DryingGauge />
+            </Grid>
+            <Grid item xs={6} md={2} p={1}>
+              <ContactsGauge />
+            </Grid>
           </Grid>
 
           <Grid
@@ -143,7 +152,11 @@ const UserHomePage = () => {
               <SpeciesGauge />
             </Grid>
             <Grid item xs={6} sm={3} md={3} lg={2} p={1}>
-              <TreeAgeGauge/>
+              <TreeAgeGauge />
+            </Grid>
+            <Grid item xs={6} sm={3} md={3} lg={2} p={1}>
+              <UsersGauge />
+            
             </Grid>
           </Grid>
 
