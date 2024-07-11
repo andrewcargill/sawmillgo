@@ -20,7 +20,20 @@ const PlankMoistureCheckGraph = () => {
         date: doc.data().date,
         moistureContent: doc.data().moistureContent,
       }));
-      setData(moistureData);
+
+      // Parse dates and sort the data
+      const sortedData = moistureData
+        .map(entry => ({
+          ...entry,
+          date: new Date(entry.date)
+        }))
+        .sort((a, b) => a.date - b.date)
+        .map(entry => ({
+          ...entry,
+          date: entry.date.toISOString().split('T')[0] // Format for display (YYYY-MM-DD)
+        }));
+
+      setData(sortedData);
     };
 
     fetchData();

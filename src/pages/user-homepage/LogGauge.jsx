@@ -62,13 +62,13 @@ const LogGauge = () => {
           borderRadius={3}
           p={2}
           boxShadow={5}
-          bgcolor={"primary.main"}
+          bgcolor={"white.main"}
           textAlign="center"
           onClick={handleAddClick}
           sx={{
             cursor: "pointer",
             "&:hover": {
-              backgroundColor: "white.main",
+              backgroundColor: "primary.main",
             },
             transition: "background-color 0.5s",
           }}

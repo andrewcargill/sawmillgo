@@ -126,6 +126,35 @@ Instructions on how users can submit feedback about the system.
 Information on how and when system updates will be rolled out.
 
 
+### Notes about the backend management of Creators
+System Overview:
+Collections and Sub-Collections Structure:
+
+Sawmills Collection: Contains documents representing each sawmill.
+Projects Sub-Collection: Each sawmill document has a sub-collection of projects. This is where projects specific to each sawmill are stored.
+Users Collection: Separate collection where user profiles are stored, including sawmill workers and creators.
+Creators: Not specifically a sub-collection, but creators are stored in the Users collection with a role type distinguishing them.
+Creators and Projects:
+
+Creator Allocation: Creators are assigned to projects within the sawmill's projects sub-collection. This assignment is likely managed through a field in the project documents that references the creator's user ID.
+Project Management: Each project document might contain information about which creator is working on it, along with status updates and links to any content the creator produces.
+Data Flow and Access Control:
+
+Project Assignment: A creator is allocated to a project by a user with the necessary permissions within the sawmill system. This might involve selecting a creator from a list and assigning them to a project within the sawmill's project sub-collection.
+Creator's View and Interactions: Once assigned, creators can access details of the project, update project status, and add content such as images, notes, or other updates.
+Access Restrictions: Access to project details and the ability to make updates are likely controlled via Firestore security rules or programmatic checks within the application, ensuring that only assigned creators and authorized sawmill personnel can view or modify project details.
+Creators' Work Reporting:
+
+Detailed Project Documents: Each creator might maintain detailed records of their work within a dedicated sub-collection under their user document or linked directly within the project document, depending on how the data needs to be accessed and managed.
+End Report Generation: Upon project completion, the system might generate a comprehensive report that includes all relevant data from both the sawmill and the creator's contributions. This could be achieved through cloud functions that aggregate and format data from multiple sources.
+Interaction Example:
+Project Creation: A sawmill user creates a project document within the sawmill's project sub-collection.
+Creator Assignment: The project document is updated to include a reference to a creator's user ID, possibly within a field like assignedCreatorId.
+Creator Access: The creator logs in, queries for projects where their user ID matches the assignedCreatorId, and accesses the project details.
+Content Addition: The creator adds content to the project, either directly in the project document or within a separate collection linked to the project.
+Reporting: On project completion, data from the project and any creator-specific contributions are compiled into a final report accessible to the sawmill and the creator.
+This structure facilitates clear separation of roles and responsibilities while ensuring that data flow between creators and the sawmill system is streamlined and secure. The exact implementation details, such as how data is stored, queried, and secured, would depend on specific application requirements and Firestore configurations.
+
 
 
 

@@ -26,6 +26,7 @@ import TreeAgeGauge from "./user-homepage/TreeAgeGauge";
 import DryingGauge from "./user-homepage/DryingGauge";
 import ContactsGauge from "./user-homepage/ContactsGauge";
 import UsersGauge from "./user-homepage/UsersGauge";
+import SawmillProfileGauge from "./user-homepage/SawmillProfileGauge";
 
 const UserHomePage = () => {
   // Access user information from context
@@ -147,16 +148,17 @@ const UserHomePage = () => {
             <Grid item xs={6} sm={3} md={3} lg={2} p={1}>
               <LocationGauge />
             </Grid>
-
             <Grid item xs={6} sm={3} md={3} lg={2} p={1}>
               <SpeciesGauge />
+            </Grid>
+            <Grid item xs={6} sm={3} md={3} lg={2} p={1}>
+              <SawmillProfileGauge />
             </Grid>
             <Grid item xs={6} sm={3} md={3} lg={2} p={1}>
               <TreeAgeGauge />
             </Grid>
             <Grid item xs={6} sm={3} md={3} lg={2} p={1}>
               <UsersGauge />
-            
             </Grid>
           </Grid>
 
