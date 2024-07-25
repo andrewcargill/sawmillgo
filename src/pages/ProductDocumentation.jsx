@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import {
@@ -25,25 +25,136 @@ import {
 } from "../components/project-report/sub-components/PlankTestData";
 import GoogleMapsReport from "../components/google-maps/GoogleMapsReport";
 import CustomBox from "../components/customContainers/CustomBox";
+import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { app } from "../firebase-config";
 
 const ProductDocumentation = () => {
-  const { reportId } = useParams();
-  const location = useLocation();
-  const { reportData } = location.state || {};
+  const { projectId } = useParams();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [expanded, setExpanded] = useState(null);
   const [imageGalleryData, setImageGalleryData] = useState([]);
   const [creatorProfile, setCreatorProfile] = useState([]);
+  const [reportData, setReportData] = useState(null);
+
+  const db = getFirestore(app);
+  const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
 
   useEffect(() => {
-    if (reportData) {
-      setCreatorProfile(reportData.creatorProfile);
+    console.log('projectId: ', projectId);
+    const fetchPlanks = async (projectId) => {
+      const planksQuery = query(
+        collection(db, `sawmill/${sawmillId}/planks`),
+        where("projectId", "==", projectId)
+      );
+      const querySnapshot = await getDocs(planksQuery);
+      return querySnapshot.docs.map(doc => doc.data());
+    };
 
-      // Process and set the image gallery data
+    const fetchLogsAndTrees = async (planks) => {
+      const logPromises = planks.map(async (plank) => {
+        const logsQuery = query(
+          collection(db, `sawmill/${sawmillId}/logs`),
+          where("refId", "==", plank.logId)
+        );
+        const logsSnapshot = await getDocs(logsQuery);
+        const logDoc = logsSnapshot.docs[0];
+        const log = logDoc.data();
+
+        const treesQuery = query(
+          collection(db, `sawmill/${sawmillId}/trees`),
+          where("refId", "==", log.treeId)
+        );
+        const treesSnapshot = await getDocs(treesQuery);
+        const treeDoc = treesSnapshot.docs[0];
+        const tree = treeDoc.data();
+
+        return {
+          plank: removeUnnecessaryFields(plank, "plank"),
+          log: { id: logDoc.id, ...removeUnnecessaryFields(log, "log") },
+          tree: { id: treeDoc.id, ...removeUnnecessaryFields(tree, "tree") }
+        };
+      });
+
+      return (await Promise.all(logPromises)).filter(item => item !== null);
+    };
+
+    const fetchCreatorProfileData = async (creatorId) => {
+      const userRef = doc(db, `users`, creatorId);
+      const userDoc = await getDoc(userRef);
+      return userDoc.exists() ? userDoc.data() : null;
+    };
+
+    const fetchCreatorProjectData = async (creatorId, projectId) => {
+      const projectRef = doc(db, `users/${creatorId}/detailedProjects`, projectId);
+      const projectDoc = await getDoc(projectRef);
+
+      if (!projectDoc.exists()) return null;
+
+      const projectData = projectDoc.data();
+      const postsQuery = collection(db, `users/${creatorId}/detailedProjects/${projectId}/posts`);
+      const postsSnapshot = await getDocs(postsQuery);
+      const posts = postsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+      return { ...projectData, posts };
+    };
+
+    const removeUnnecessaryFields = (data, type) => {
+      const fieldsToKeep = {
+        tree: ["refId", "date", "speciesName", "age", "reason", "lumberjackName", "latitude", "longitude", "image"],
+        log: ["refId", "date", "length", "diameter", "lumberjackName", "milledDate", "locationName"],
+        plank: ["refId", "date", "length", "width", "depth", "grade", "image1", "image2", "notes", "furniture", "construction", "liveEdge", "general"]
+      };
+
+      const filteredData = {};
+
+      fieldsToKeep[type].forEach(field => {
+        if (data[field] !== undefined) {
+          filteredData[field] = data[field];
+        }
+      });
+
+      if (type === "tree") {
+        filteredData.position = { lat: data.latitude, lng: data.longitude };
+        delete filteredData.latitude;
+        delete filteredData.longitude;
+      }
+
+      return filteredData;
+    };
+
+    const compileReportData = (planksWithLogsAndTrees, creatorProfileData, creatorProjectData) => {
+      const reportData = planksWithLogsAndTrees.reduce((acc, item) => {
+        const { plank, log, tree } = item;
+
+        const existingTree = acc.find(t => t.refId === tree.refId);
+        if (existingTree) {
+          const existingLog = existingTree.logs.find(l => l.refId === log.refId);
+          if (existingLog) {
+            existingLog.planks.push(plank);
+          } else {
+            existingTree.logs.push({ ...log, planks: [plank] });
+          }
+        } else {
+          acc.push({
+            ...tree,
+            logs: [{ ...log, planks: [plank] }]
+          });
+        }
+
+        return acc;
+      }, []);
+
+      return {
+        creatorProfile: creatorProfileData,
+        creatorProject: creatorProjectData,
+        reportData
+      };
+    };
+
+    const processImageGalleryData = (reportData) => {
       const galleryData = [];
 
-      // Add the creator project data
       if (reportData.creatorProject) {
         galleryData.push({
           original: reportData.creatorProject.imageUrl,
@@ -55,7 +166,6 @@ const ProductDocumentation = () => {
         });
       }
 
-      // Add the posts data
       if (reportData.creatorProject && reportData.creatorProject.posts) {
         reportData.creatorProject.posts.forEach((post) => {
           galleryData.push({
@@ -70,12 +180,32 @@ const ProductDocumentation = () => {
       }
 
       setImageGalleryData(galleryData);
-    }
-  }, [reportData]);
+    };
 
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : null);
-  };
+    const fetchReportData = async () => {
+      try {
+        const projectRef = doc(db, `sawmill/${sawmillId}/projects`, projectId);
+        const projectDoc = await getDoc(projectRef);
+
+        if (!projectDoc.exists()) return;
+
+        const projectData = projectDoc.data();
+        const planks = await fetchPlanks(projectId);
+        const planksWithLogsAndTrees = await fetchLogsAndTrees(planks);
+        const creatorProfileData = await fetchCreatorProfileData(projectData.creatorId);
+        const creatorProjectData = await fetchCreatorProjectData(projectData.creatorId, projectId);
+        const compiledReportData = compileReportData(planksWithLogsAndTrees, creatorProfileData, creatorProjectData);
+
+        setReportData(compiledReportData);
+        setCreatorProfile(compiledReportData.creatorProfile);
+        processImageGalleryData(compiledReportData);
+      } catch (error) {
+        console.error("Error fetching report data:", error);
+      }
+    };
+
+    fetchReportData();
+  }, [db, projectId, sawmillId]);
 
   const openModal = (index) => {
     setSelectedImageIndex(index);
@@ -85,6 +215,10 @@ const ProductDocumentation = () => {
   const closeModal = () => {
     setModalIsOpen(false);
   };
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  }; 
 
   const getPlankBorderColor = (treeIndex) => {
     const colors = ["#FF5733", "#33FFB8", "#3361FF", "#F4FF33", "#8333FF"];
@@ -136,14 +270,10 @@ const ProductDocumentation = () => {
           <Grid item xs={12} m={1}>
             <Avatar
               src={creatorProfile?.imageUrl || ""}
-              alt={`avatar for creator called ${
-                creatorProfile?.username || "No Name"
-              }`}
+              alt={`avatar for creator called ${creatorProfile?.username || "No Name"}`}
             />
             <Typography variant="body1" fontWeight={500} align="left">
-              {reportData.creatorProfile?.companyName || "No Company"} (
-              {creatorProfile?.username || "No Username"}){" "}
-              {creatorProfile?.country || "No Country"}
+              {reportData.creatorProfile?.companyName || "No Company"} ({creatorProfile?.username || "No Username"}) {creatorProfile?.country || "No Country"}
             </Typography>
           </Grid>
         </Grid>
