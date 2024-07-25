@@ -253,8 +253,11 @@ function ProjectDetailsModal({ projectDetails, onClose, setMode }) {
                 Delete
               </Button>
 
-              <Button variant="outlined"  onClick={() => handleViewReport(projectDetails.id)}>
+              {/* <Button variant="outlined"  onClick={() => handleViewReport(projectDetails.id)}>
                 Generate Report
+              </Button> */}
+              <Button variant="outlined"  onClick={() => handleViewReport(projectDetails.id)}>
+                Generate Report New
               </Button>
 
               <IconButton aria-label="" onClick={onClose}>

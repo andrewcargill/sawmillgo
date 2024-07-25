@@ -40,6 +40,9 @@ import CreatorProfile from "./components/creators/CreatorProfile";
 import CreatorHomePage from "./pages/CreatorHomePage";
 import ProductForm from "./components/creators/creator-product-management/ProductForm";
 import ProjectComponent from "./components/project-report/report-data-testing/ProjectComponent";
+import ProjectReportGenerator from "./components/project-report/ProjectReportGenerator";
+import ProductDocumentation from "./pages/ProductDocumentation";
+import LinkTest from "./pages/LinkTest";
 
 function App() {
  
@@ -60,6 +63,8 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/productreport/:projectId" element={<ProductDocumentation /> } />
+
         <Route path="/authreport/:reportId" element={<ReportMockUp 
          onLoad={() => setIsReportMockUpLoaded(true)}
          onUnload={() => setIsReportMockUpLoaded(false)}
@@ -91,7 +96,8 @@ function App() {
         <Route path="/monitorplank/:plankId" element={<AddMoistureCheck />} />
         <Route path="/locations" element={<LocationsPage />} />
         <Route path="/projects" element={<ProjectsPage />} />
-        <Route path="/report/:projectId" element={<ProjectComponent />} />
+        {/* <Route path="/report/:projectId" element={<ProjectComponent />} /> */}
+        <Route path="/report/:projectId" element={<ProjectReportGenerator />} />
 
         <Route path="/species" element={<SpeciesPage />} />
 
