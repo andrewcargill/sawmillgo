@@ -45,6 +45,16 @@ This section will allow you to create a homepage to share your unique story abou
 ### UserProfile
 Every user must have a username. Additionally, users can upload a profile image and be assigned specific roles within the system.
 
+## 3. User Interface
+### Dashboard Overview
+You will see a home icon. This displays all components within Sawmill Go.
+### Modules
+These are the everyday modules used to add, view and manipulate stock within the sawmill.
+* Trees - This is where you add, edit, delete and search trees
+* Logs - This is where you add, edit, delete and search logs
+* Planks - This is where you add, edit, delete and search planks / lumber
+* Projects - Here you set add, edit, delete projects. Projects are used to manage reserving and allocating items (trees, logs & planks ) to customers
+
 ### Species
 This setting allows you to define the tree species used within your system. You must add at least one species of tree before you can begin adding items.
 
@@ -54,6 +64,8 @@ Configure various storage locations for any item. The system tracks movements be
 ### Projects
 Projects are used to manage the status of items within the system. An item can be marked as 'available,' 'reserved,' or 'sold,' with its status automatically updated based on the associated project's status. Note: It is not necessary to have a project in order to use the system. However, projects are designated to manage either ONLY verified or unverified items, as verified reports are generated through projects.
 
+### Tree Ages (Coming Soon)
+Allows you to set a list of age ranges for trees that you remove from the forest (For example 20-50 years, 50-70 years). This restriction will enable the filtering and searching tree stocks by age.
 
 
 ## 3. User Interface
@@ -154,6 +166,30 @@ Creator Access: The creator logs in, queries for projects where their user ID ma
 Content Addition: The creator adds content to the project, either directly in the project document or within a separate collection linked to the project.
 Reporting: On project completion, data from the project and any creator-specific contributions are compiled into a final report accessible to the sawmill and the creator.
 This structure facilitates clear separation of roles and responsibilities while ensuring that data flow between creators and the sawmill system is streamlined and secure. The exact implementation details, such as how data is stored, queried, and secured, would depend on specific application requirements and Firestore configurations.
+
+
+### Reports Generation Notes
+The end product should display a QR Code. It is this QR code the the customer / product owner uses to access the report on the life journey of their product. The QR code will open a webpage where our system will populate a template with the data specific to that product. 
+
+This is managed by the sawmill via Projects. This is where wood is allocated and then assigned to a creator to turn into the end product.
+
+
+#### QR Code Generation
+QR Codes are created via the projects module. On all verified projects you have the option to generate report. Here you can generate a QR code and view the end report. The module responsible for this is 'ProjectReportGenerator.jsx'
+ 
+
+
+#### Live Product Report
+The report retrieves data based on the planks allocated to the project. The report uses the following data collections: 
+ - creators profile
+ - creators diary entries for the project
+ - creators description and hero image for the project
+ - sawmill profile
+ - plank data (images, miller, sawmill notes, drying information)
+ - parent log data (date, length, location)
+ - parent tree data (image, lumberjack, reason for milling, date, location)
+
+The data is live, meaning that all updates to trees, logs, planks, sawmill and creator profiles and diary entries will effect the end report. The component responsible for this is 'ProductDocument.jsx'
 
 
 
