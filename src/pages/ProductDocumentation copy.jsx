@@ -25,18 +25,8 @@ import {
 } from "../components/project-report/sub-components/PlankTestData";
 import GoogleMapsReport from "../components/google-maps/GoogleMapsReport";
 import CustomBox from "../components/customContainers/CustomBox";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-} from "firebase/firestore";
+import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { app } from "../firebase-config";
-import WoodworkerIcon from "@mui/icons-material/Handyman";
-import SawmillIcon from "@mui/icons-material/Forest";
 
 const ProductDocumentation = () => {
   const { projectId } = useParams();
@@ -51,14 +41,14 @@ const ProductDocumentation = () => {
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
 
   useEffect(() => {
-    console.log("projectId: ", projectId);
+    console.log('projectId: ', projectId);
     const fetchPlanks = async (projectId) => {
       const planksQuery = query(
         collection(db, `sawmill/${sawmillId}/planks`),
         where("projectId", "==", projectId)
       );
       const querySnapshot = await getDocs(planksQuery);
-      return querySnapshot.docs.map((doc) => doc.data());
+      return querySnapshot.docs.map(doc => doc.data());
     };
 
     const fetchLogsAndTrees = async (planks) => {
@@ -82,11 +72,11 @@ const ProductDocumentation = () => {
         return {
           plank: removeUnnecessaryFields(plank, "plank"),
           log: { id: logDoc.id, ...removeUnnecessaryFields(log, "log") },
-          tree: { id: treeDoc.id, ...removeUnnecessaryFields(tree, "tree") },
+          tree: { id: treeDoc.id, ...removeUnnecessaryFields(tree, "tree") }
         };
       });
 
-      return (await Promise.all(logPromises)).filter((item) => item !== null);
+      return (await Promise.all(logPromises)).filter(item => item !== null);
     };
 
     const fetchCreatorProfileData = async (creatorId) => {
@@ -96,71 +86,29 @@ const ProductDocumentation = () => {
     };
 
     const fetchCreatorProjectData = async (creatorId, projectId) => {
-      const projectRef = doc(
-        db,
-        `users/${creatorId}/detailedProjects`,
-        projectId
-      );
+      const projectRef = doc(db, `users/${creatorId}/detailedProjects`, projectId);
       const projectDoc = await getDoc(projectRef);
 
       if (!projectDoc.exists()) return null;
 
       const projectData = projectDoc.data();
-      const postsQuery = collection(
-        db,
-        `users/${creatorId}/detailedProjects/${projectId}/posts`
-      );
+      const postsQuery = collection(db, `users/${creatorId}/detailedProjects/${projectId}/posts`);
       const postsSnapshot = await getDocs(postsQuery);
-      const posts = postsSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      const posts = postsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
       return { ...projectData, posts };
     };
 
     const removeUnnecessaryFields = (data, type) => {
       const fieldsToKeep = {
-        tree: [
-          "refId",
-          "date",
-          "speciesName",
-          "age",
-          "reason",
-          "lumberjackName",
-          "latitude",
-          "longitude",
-          "image",
-        ],
-        log: [
-          "refId",
-          "date",
-          "length",
-          "diameter",
-          "lumberjackName",
-          "milledDate",
-          "locationName",
-        ],
-        plank: [
-          "refId",
-          "date",
-          "length",
-          "width",
-          "depth",
-          "grade",
-          "image1",
-          "image2",
-          "notes",
-          "furniture",
-          "construction",
-          "liveEdge",
-          "general",
-        ],
+        tree: ["refId", "date", "speciesName", "age", "reason", "lumberjackName", "latitude", "longitude", "image"],
+        log: ["refId", "date", "length", "diameter", "lumberjackName", "milledDate", "locationName"],
+        plank: ["refId", "date", "length", "width", "depth", "grade", "image1", "image2", "notes", "furniture", "construction", "liveEdge", "general"]
       };
 
       const filteredData = {};
 
-      fieldsToKeep[type].forEach((field) => {
+      fieldsToKeep[type].forEach(field => {
         if (data[field] !== undefined) {
           filteredData[field] = data[field];
         }
@@ -175,19 +123,13 @@ const ProductDocumentation = () => {
       return filteredData;
     };
 
-    const compileReportData = (
-      planksWithLogsAndTrees,
-      creatorProfileData,
-      creatorProjectData
-    ) => {
+    const compileReportData = (planksWithLogsAndTrees, creatorProfileData, creatorProjectData) => {
       const reportData = planksWithLogsAndTrees.reduce((acc, item) => {
         const { plank, log, tree } = item;
 
-        const existingTree = acc.find((t) => t.refId === tree.refId);
+        const existingTree = acc.find(t => t.refId === tree.refId);
         if (existingTree) {
-          const existingLog = existingTree.logs.find(
-            (l) => l.refId === log.refId
-          );
+          const existingLog = existingTree.logs.find(l => l.refId === log.refId);
           if (existingLog) {
             existingLog.planks.push(plank);
           } else {
@@ -196,7 +138,7 @@ const ProductDocumentation = () => {
         } else {
           acc.push({
             ...tree,
-            logs: [{ ...log, planks: [plank] }],
+            logs: [{ ...log, planks: [plank] }]
           });
         }
 
@@ -206,7 +148,7 @@ const ProductDocumentation = () => {
       return {
         creatorProfile: creatorProfileData,
         creatorProject: creatorProjectData,
-        reportData,
+        reportData
       };
     };
 
@@ -250,18 +192,9 @@ const ProductDocumentation = () => {
         const projectData = projectDoc.data();
         const planks = await fetchPlanks(projectId);
         const planksWithLogsAndTrees = await fetchLogsAndTrees(planks);
-        const creatorProfileData = await fetchCreatorProfileData(
-          projectData.creatorId
-        );
-        const creatorProjectData = await fetchCreatorProjectData(
-          projectData.creatorId,
-          projectId
-        );
-        const compiledReportData = compileReportData(
-          planksWithLogsAndTrees,
-          creatorProfileData,
-          creatorProjectData
-        );
+        const creatorProfileData = await fetchCreatorProfileData(projectData.creatorId);
+        const creatorProjectData = await fetchCreatorProjectData(projectData.creatorId, projectId);
+        const compiledReportData = compileReportData(planksWithLogsAndTrees, creatorProfileData, creatorProjectData);
 
         setReportData(compiledReportData);
         setCreatorProfile(compiledReportData.creatorProfile);
@@ -285,7 +218,7 @@ const ProductDocumentation = () => {
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
-  };
+  }; 
 
   const getPlankBorderColor = (treeIndex) => {
     const colors = ["#FF5733", "#33FFB8", "#3361FF", "#F4FF33", "#8333FF"];
@@ -297,54 +230,53 @@ const ProductDocumentation = () => {
   return (
     <>
       <Grid container position="relative" top={0} left={0}>
-        {/*Half Page image*/}
-        <Grid xs={12} md={8} p={3}>
-          <Grid item xs={12} pb={6} style={{}}>
-            {imageGalleryData.length > 0 ? (
-              <>
-                <ImageCarousel items={imageGalleryData} openModal={openModal} />
-                {modalIsOpen && (
-                  <FullImageModal
-                    isOpen={modalIsOpen}
-                    handleClose={closeModal}
-                    image={imageGalleryData[selectedImageIndex]}
-                  >
-                    <Typography variant="h6">
-                      {imageGalleryData[selectedImageIndex].title}
-                    </Typography>
-                    <Typography variant="body2">
-                      {imageGalleryData[selectedImageIndex].description}
-                    </Typography>
-                    <Typography variant="body2">
-                      Date: {imageGalleryData[selectedImageIndex].date}
-                    </Typography>
-                  </FullImageModal>
-                )}
-              </>
-            ) : (
-              <Typography>No images available</Typography>
-            )}
-          </Grid>
+        <Grid item xs={12} pb={6}>
+          <Typography variant="h2" align="center">
+            {reportData.creatorProject?.title || "No Title"}
+          </Typography>
         </Grid>
-
-        {/*Half Page Details*/}
-        <Grid xs={12} md={4} p={4} alignContent={"left"}>
-          <Grid item xs={12} pb={6}>
-            <Typography variant="h2" align="left">
-              {reportData.creatorProject?.title || "No Title"}
+        <Grid item xs={12} pb={6} style={{}}>
+          {imageGalleryData.length > 0 ? (
+            <>
+              <ImageCarousel items={imageGalleryData} openModal={openModal} />
+              {modalIsOpen && (
+                <FullImageModal
+                  isOpen={modalIsOpen}
+                  handleClose={closeModal}
+                  image={imageGalleryData[selectedImageIndex]}
+                >
+                  <Typography variant="h6">
+                    {imageGalleryData[selectedImageIndex].title}
+                  </Typography>
+                  <Typography variant="body2">
+                    {imageGalleryData[selectedImageIndex].description}
+                  </Typography>
+                  <Typography variant="body2">
+                    Date: {imageGalleryData[selectedImageIndex].date}
+                  </Typography>
+                </FullImageModal>
+              )}
+            </>
+          ) : (
+            <Typography>No images available</Typography>
+          )}
+        </Grid>
+        <Grid container spacing={2} alignItems="center" pb={6}>
+          <Grid item xs={12} m={1}>
+            <Typography variant="body1" align="left">
+              {reportData.creatorProject?.description || "No Description"}
             </Typography>
           </Grid>
-          <Grid container spacing={2} alignItems="center" pb={6}>
-            <Grid item xs={12} m={1}>
-              <Typography variant="body1" align="left">
-                {reportData.creatorProject?.description || "No Description"}
-              </Typography>
-            </Grid>
+          <Grid item xs={12} m={1}>
+            <Avatar
+              src={creatorProfile?.imageUrl || ""}
+              alt={`avatar for creator called ${creatorProfile?.username || "No Name"}`}
+            />
+            <Typography variant="body1" fontWeight={500} align="left">
+              {reportData.creatorProfile?.companyName || "No Company"} ({creatorProfile?.username || "No Username"}) {creatorProfile?.country || "No Country"}
+            </Typography>
           </Grid>
-         
         </Grid>
-        {/*Creator Profile*/}
-
         <Grid item xs={12} p={3}>
           <Typography variant="h5" align="center">
             <FingerprintIcon /> THE STORY BEHIND YOUR WOOD
@@ -364,95 +296,26 @@ const ProductDocumentation = () => {
               <Typography variant="h5">
                 Why is it important to know the source of your wood?
               </Typography>
-              <Typography variant="body1" align="left" pt={1}>
+              <Typography variant="body1" align="center" pt={1}>
                 The product that you own is honest and transparent. It is made
                 with craftmanship and care from the start to the end. We believe
                 in promoting sustainable forestry and the importance of knowing
                 where your wood comes from.
               </Typography>
-              <Typography variant="body1" align="left" pt={1}>
+              <Typography variant="body1" align="center" pt={1}>
                 True sustainable forestry is selective cutting and encouraging
                 mixed species forests. It is the practice of cutting down trees
                 in a way that allows the forest to regenerate itself.
               </Typography>
-              <Typography variant="body1" align="left" pt={1}>
+              <Typography variant="body1" align="center" pt={1}>
                 Clear-cut forestry is the practice of cutting down all the trees
                 in an area. This is not sustainable and can lead to
                 deforestation.
               </Typography>
-
-              <Grid xs={6}>
-              <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <WoodworkerIcon />
-              <Typography variant="h6" sx={{ marginLeft: 1 }}>
-                Woodworker Information
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={4}>
-                  <Avatar
-                    src={creatorProfile?.imageUrl || ""}
-                    alt={`avatar for creator called ${
-                      creatorProfile?.username || "No Name"
-                    }`}
-                    sx={{ width: 56, height: 56 }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={8}>
-                  <Typography variant="body1" fontWeight={500}>
-                    {creatorProfile?.companyName || "No Company"} (
-                    {creatorProfile?.username || "No Username"})
-                    {creatorProfile?.country || "No Country"}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </AccordionDetails>
-          </Accordion>
-          </Grid>
-
-          <Grid xs={6}>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <SawmillIcon />
-              <Typography variant="h6" sx={{ marginLeft: 1 }}>
-                Sawmill Information
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={4}>
-                  <Avatar
-                    src={creatorProfile?.imageUrl || ""}
-                    alt={`avatar for creator called ${
-                      creatorProfile?.username || "No Name"
-                    }`}
-                    sx={{ width: 56, height: 56 }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={8}>
-                  <Typography variant="body1" fontWeight={500}>
-                    {creatorProfile?.companyName || "No Company"} (
-                    {creatorProfile?.username || "No Username"})
-                    {creatorProfile?.country || "No Country"}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </AccordionDetails>
-          </Accordion>
-          </Grid>
             </Grid>
           </Paper>
-
-          
         </Grid>
-
-
-
-        {/*Google Maps*/}
-
-        <Grid item xs={12} md={8} p={1}>
+        <Grid item xs={12}>
           <Paper>
             <GoogleMapsReport
               trees={reportData.reportData}
@@ -460,8 +323,18 @@ const ProductDocumentation = () => {
             />
           </Paper>
         </Grid>
+        <Grid item xs={12}>
+          <Typography variant="h5" align="center">
+            Specific lumber from trees
+          </Typography>
+          <Typography variant="body1" align="center">
+            Selet 15 is a family run forest and sawmill that has been in
+            operation since 1923. We are proud to offer the finest lumber from
+            the most sustainable sources.
+          </Typography>
+        </Grid>
 
-        <Grid container xs={12} md={4} p={1}>
+        <Grid container>
           <Grid item xs={12}>
             {reportData.reportData?.map((tree, treeIndex) => (
               <Grid item xs={12} pt={1} pb={1} key={tree.refId}>
