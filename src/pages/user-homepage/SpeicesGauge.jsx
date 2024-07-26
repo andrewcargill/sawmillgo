@@ -7,7 +7,7 @@ import { app } from "../../firebase-config"; // Make sure this path is correct
 import { useNavigate } from "react-router-dom";
 import ForestIcon from "@mui/icons-material/Forest";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { IconButton } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 
 const SpeciesGauge = () => {
   const [species, setSpecies] = useState([]); // Updated variable name to 'species'
@@ -47,35 +47,41 @@ const SpeciesGauge = () => {
   }, []); // Dependency array is empty, so this runs once on component mount
 
   const handleAddClick = () => {
-    navigate("/species"); // Updated navigation path
+    navigate("/species"); 
   };
 
   return (
-    <Grid
-    border={1}
-    borderRadius={3}
-    p={2}
-    boxShadow={5}
-    bgcolor={"white.main"}
-    textAlign="center"
-    onClick={handleAddClick}
-    sx={{
-      cursor: "pointer",
-      "&:hover": {
-        backgroundColor: "primary.main",
-      },
-      transition: "background-color 0.5s",
-    }}
-  >    
-    <ForestIcon fontSize='large'/>
-      <Typography color="initial">SPECIES
-      <Typography component="span" variant="body2" color="initial"> ({species.length})</Typography>
-      </Typography>
-    
-      {/* Updated text to 'Total Species' */}
-      
-  
-    </Grid>
+    <>
+      <Tooltip title="View and edit species list">
+        <Grid
+          border={1}
+          borderRadius={3}
+          p={2}
+          boxShadow={5}
+          bgcolor={"white.main"}
+          textAlign="center"
+          onClick={handleAddClick}
+          sx={{
+            cursor: "pointer",
+            "&:hover": {
+              backgroundColor: "primary.main",
+            },
+            transition: "background-color 0.5s",
+          }}
+        >
+          <ForestIcon fontSize="large" />
+          <Typography color="initial">
+            Species
+            <Typography component="span" variant="body2" color="initial">
+              {" "}
+              ({species.length})
+            </Typography>
+          </Typography>
+
+          {/* Updated text to 'Total Species' */}
+        </Grid>
+      </Tooltip>
+    </>
   );
 };
 

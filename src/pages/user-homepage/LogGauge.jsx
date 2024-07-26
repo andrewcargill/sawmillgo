@@ -75,7 +75,7 @@ const LogGauge = () => {
         >
           <WorkspacesIcon fontSize="large" />
           <Typography color="initial">
-            LOGS
+            Logs
             <Typography component="span" variant="body2" color="initial">
               {" "}
               ({logs.length})

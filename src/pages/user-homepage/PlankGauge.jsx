@@ -74,7 +74,7 @@ const PlankGauge = () => {
         >
           <TableRowsIcon fontSize="large" />
           <Typography color="initial">
-            PLANKS
+            Planks
             <Typography component="span" variant="body2" color="initial">
               {" "}
               ({planks.length})

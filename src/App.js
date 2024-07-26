@@ -43,6 +43,8 @@ import ProjectComponent from "./components/project-report/report-data-testing/Pr
 import ProjectReportGenerator from "./components/project-report/ProjectReportGenerator";
 import ProductDocumentation from "./pages/ProductDocumentation";
 import LinkTest from "./pages/LinkTest";
+import SawmillDetails from "./components/sawmill/SawmillDetails";
+import EditSawmillForm from "./components/sawmill/EditSawmillForm";
 
 function App() {
  
@@ -75,6 +77,7 @@ function App() {
         <Route path="/signup" element={<SignUpComponent />} />
         <Route path="/home" element={<UserHomePage />} />
         <Route path="/creatorhome" element={<CreatorHomePage />} />
+      
 
         <Route path="/loggedoutpage" element={<LoggedOutPage />} />
         <Route path="/profile" element={<UserProfilePage />} />
@@ -82,6 +85,8 @@ function App() {
         <Route path="/product/:projectId" element={<ProductForm />} />
 
         <Route path="/addsawmill" element={<AddSawmillForm />} />
+        <Route path="/edit-sawmill" element={<EditSawmillForm />} />
+        <Route path="/sawmill-details" element={<SawmillDetails />} />
 
         <Route path="/addtree" element={<AddTreeForm />} />
         <Route path="/trees" element={<TreesPage />} />

@@ -71,7 +71,7 @@ const ProjectGauge = () => {
         >
           <EventNoteIcon fontSize="large" />
           <Typography color="initial">
-            PROJECTS
+            Projects
             <Typography component="span" variant="body2" color="initial">
               {" "}
               ({projects.length})

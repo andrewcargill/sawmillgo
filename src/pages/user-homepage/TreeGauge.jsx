@@ -76,7 +76,7 @@ const TreeGauge = () => {
       >
         <ParkIcon fontSize="large" />
         <Typography color="initial">
-          TREES
+          Trees
           <Typography component="span" variant="body2" color="initial">
             {" "}
             ({trees.length})
