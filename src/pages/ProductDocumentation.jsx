@@ -37,6 +37,7 @@ import {
 import { app } from "../firebase-config";
 import WoodworkerIcon from "@mui/icons-material/Handyman";
 import SawmillIcon from "@mui/icons-material/Forest";
+import certImage from "../media/images/cert-image3.png";
 
 const ProductDocumentation = () => {
   const { projectId } = useParams();
@@ -341,114 +342,164 @@ const ProductDocumentation = () => {
               </Typography>
             </Grid>
           </Grid>
-         
+          <Grid container spacing={0} pb={6}>
+            <Grid item xs={12} m={1}>
+              <Typography className="sacramento-regular" align="left">
+                Created by:
+              </Typography>
+            </Grid>
+
+            <Grid
+              item
+              xs={12}
+              m={1}
+              className="sacramento-regular"
+              align="left"
+            >
+              {creatorProfile?.username || "No Username"}
+            </Grid>
+          </Grid>
         </Grid>
         {/*Creator Profile*/}
 
-        <Grid item xs={12} p={3}>
+        {/* <Grid item xs={12} p={3}>
           <Typography variant="h5" align="center">
-            <FingerprintIcon /> THE STORY BEHIND YOUR WOOD
+            <FingerprintIcon /> The Story Behind the Wood
           </Typography>
-        </Grid>
+        </Grid> */}
 
         <Grid
           container
-          p={3}
-          bgcolor={"primary.main"}
+          p={2}
           color={"primary.contrastText"}
           justifyContent={"center"}
           mb={6}
         >
-          <Paper>
-            <Grid container p={2}>
-              <Typography variant="h5">
-                Why is it important to know the source of your wood?
-              </Typography>
-              <Typography variant="body1" align="left" pt={1}>
-                The product that you own is honest and transparent. It is made
-                with craftmanship and care from the start to the end. We believe
-                in promoting sustainable forestry and the importance of knowing
-                where your wood comes from.
-              </Typography>
-              <Typography variant="body1" align="left" pt={1}>
-                True sustainable forestry is selective cutting and encouraging
-                mixed species forests. It is the practice of cutting down trees
-                in a way that allows the forest to regenerate itself.
-              </Typography>
-              <Typography variant="body1" align="left" pt={1}>
-                Clear-cut forestry is the practice of cutting down all the trees
-                in an area. This is not sustainable and can lead to
-                deforestation.
-              </Typography>
+          <Paper elevation={3}>
+            <Grid
+              container
+              p={4}
+              style={{
+                backgroundImage: `url(${certImage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            >
+              <Grid item className="tangerine-bold">
+                The Story Behind the Product
+              </Grid>
+              <Grid item pb={2}>
+                <Typography variant="body1" align="left" pt={2}>
+                  Understanding the origin of the wood used in your product is
+                  essential for appreciating its true value. Our commitment to
+                  sustainability and craftsmanship ensures that every piece of
+                  wood is ethically sourced and meticulously processed. Let us
+                  take you on a journey through the lifecycle of the wood that
+                  makes your product unique.
+                </Typography>
+                <Typography variant="body1" align="left" pt={2}>
+                  Transparency in sourcing is not just about ethical
+                  responsibility; it is about honoring the trees, the
+                  environment, and the artisans who transform raw wood into
+                  beautiful products. By tracking the journey from forest to
+                  finished product, we ensure that every step is documented and
+                  shared with you.
+                </Typography>
+                <Typography variant="body1" align="left" pt={2}>
+                  Our advanced tracking system records every detail from the
+                  moment a tree is selected to the final product creation. This
+                  system ensures complete transparency, allowing you to trace
+                  the origins and journey of your wood. Our goal is to connect
+                  you with the story behind your product.
+                </Typography>
+              </Grid>
+              <Grid item container>
+              <Typography variant="h5" align="left" pt={2}>
+                Certified Authencity of the Wood by:
+                
+                </Typography>
+                <Grid
+              item
+              xs={12}
+              m={1}
+              className="sacramento-regular"
+              align="left"
+            >
+              Andrew Cargill
+            
+             
+
+              </Grid>
+              <Typography variant="" align="left">
+                CEO SAWMILL GO!
+                
+                </Typography>
+              </Grid>
 
               <Grid xs={6}>
-              <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <WoodworkerIcon />
-              <Typography variant="h6" sx={{ marginLeft: 1 }}>
-                Woodworker Information
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={4}>
-                  <Avatar
-                    src={creatorProfile?.imageUrl || ""}
-                    alt={`avatar for creator called ${
-                      creatorProfile?.username || "No Name"
-                    }`}
-                    sx={{ width: 56, height: 56 }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={8}>
-                  <Typography variant="body1" fontWeight={500}>
-                    {creatorProfile?.companyName || "No Company"} (
-                    {creatorProfile?.username || "No Username"})
-                    {creatorProfile?.country || "No Country"}
-                  </Typography>
-                </Grid>
+                <Accordion>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <WoodworkerIcon />
+                    <Typography variant="h6" sx={{ marginLeft: 1 }}>
+                      Woodworker Information
+                    </Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} md={4}>
+                        <Avatar
+                          src={creatorProfile?.imageUrl || ""}
+                          alt={`avatar for creator called ${
+                            creatorProfile?.username || "No Name"
+                          }`}
+                          sx={{ width: 56, height: 56 }}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={8}>
+                        <Typography variant="body1" fontWeight={500}>
+                          {creatorProfile?.companyName || "No Company"} (
+                          {creatorProfile?.username || "No Username"})
+                          {creatorProfile?.country || "No Country"}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
-            </AccordionDetails>
-          </Accordion>
-          </Grid>
 
-          <Grid xs={6}>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <SawmillIcon />
-              <Typography variant="h6" sx={{ marginLeft: 1 }}>
-                Sawmill Information
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={4}>
-                  <Avatar
-                    src={creatorProfile?.imageUrl || ""}
-                    alt={`avatar for creator called ${
-                      creatorProfile?.username || "No Name"
-                    }`}
-                    sx={{ width: 56, height: 56 }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={8}>
-                  <Typography variant="body1" fontWeight={500}>
-                    {creatorProfile?.companyName || "No Company"} (
-                    {creatorProfile?.username || "No Username"})
-                    {creatorProfile?.country || "No Country"}
-                  </Typography>
-                </Grid>
+              <Grid xs={6}>
+                <Accordion>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <SawmillIcon />
+                    <Typography variant="h6" sx={{ marginLeft: 1 }}>
+                      Sawmill Information
+                    </Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} md={4}>
+                        <Avatar
+                          src={creatorProfile?.imageUrl || ""}
+                          alt={`avatar for creator called ${
+                            creatorProfile?.username || "No Name"
+                          }`}
+                          sx={{ width: 56, height: 56 }}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={8}>
+                        <Typography variant="body1" fontWeight={500}>
+                          {creatorProfile?.companyName || "No Company"} (
+                          {creatorProfile?.username || "No Username"})
+                          {creatorProfile?.country || "No Country"}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
-            </AccordionDetails>
-          </Accordion>
-          </Grid>
             </Grid>
           </Paper>
-
-          
         </Grid>
-
-
 
         {/*Google Maps*/}
 
