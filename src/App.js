@@ -45,6 +45,7 @@ import ProductDocumentation from "./pages/ProductDocumentation";
 import LinkTest from "./pages/LinkTest";
 import SawmillDetails from "./components/sawmill/SawmillDetails";
 import EditSawmillForm from "./components/sawmill/EditSawmillForm";
+import AllSawmill from "./pages/AllSawmill";
 
 function App() {
  
@@ -65,6 +66,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/sawmills" element={<AllSawmill />} />
         <Route path="/productreport/:projectId" element={<ProductDocumentation /> } />
 
         <Route path="/authreport/:reportId" element={<ReportMockUp 

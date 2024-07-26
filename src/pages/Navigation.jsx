@@ -75,7 +75,7 @@ const Navigation = () => {
     setAnchorElUser(null);
   };
 
-  const pages = ["About", "Report"];
+  const pages = ["About", "Sawmills", "Report"];
   const sawmillPages = ["home", "Report"];
   //   const settings = ['home_secure', 'Quick_Add', 'Trees', 'Logs', 'Planks', 'water_crud', 'Logout'];
 

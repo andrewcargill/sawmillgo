@@ -129,10 +129,6 @@ const HomePage = () => {
         </Paper>
        
       </Grid>
-      <Grid p={2}>
-      <AllSawmillsMap />
-      </Grid>
-     
 
   
     </>
