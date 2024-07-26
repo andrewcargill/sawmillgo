@@ -431,7 +431,7 @@ const ProductDocumentation = () => {
 
               </Grid>
               <Typography variant="" align="left">
-                CEO SAWMILL GO!
+              SAWMILL GO!
                 
                 </Typography>
               </Grid>
