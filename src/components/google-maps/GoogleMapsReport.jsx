@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import loader from '../../utils/mapLoader';  // Adjust the path as necessary
+import loader from '../../utils/mapLoader';  
 
 
 
@@ -29,7 +29,7 @@ function GoogleMapsTour( { trees, getPlankBorderColor }) {
       const map = new google.maps.Map(mapRef.current, {
         center: defaultCenter,
         zoom: 18,
-        mapId: "56127499ee1ce2ef",  // Replace with your actual Map ID
+        mapId: "56127499ee1ce2ef", 
         mapTypeId: "satellite",
         styles: [
           {

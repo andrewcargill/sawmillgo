@@ -15,6 +15,7 @@ import HandymanIcon from "@mui/icons-material/Handyman";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import image1  from "../media/images/trees.png";
+import AllSawmillsMap from "../components/google-maps/AllSawmillsMaps";
 
 const HomePage = () => {
 
@@ -126,11 +127,14 @@ const HomePage = () => {
 
           </List>
         </Paper>
+       
       </Grid>
+      <Grid p={2}>
+      <AllSawmillsMap />
+      </Grid>
+     
 
-      {/* <Grid container justifyContent={'center'}>
-     <Typography variant="h2" color="initial">Maximize the Value of Your Wood.</Typography>
-    </Grid> */}
+  
     </>
   );
 };

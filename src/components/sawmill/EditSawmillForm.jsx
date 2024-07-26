@@ -8,7 +8,7 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import CountrySelect from "../country-components/CountrySelect";
-import FlagIcon from "../country-components/FlagIcon";
+import MapWithPin from "../google-maps/MapWithPin";
 
 const EditSawmillForm = () => {
   const [name, setName] = useState('');
@@ -18,6 +18,7 @@ const EditSawmillForm = () => {
   const [forestPlan, setForestPlan] = useState('');
   const [contactEmail, setContactEmail] = useState('');
   const [country, setCountry] = useState('');
+  const [mapLocation, setMapLocation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [images, setImages] = useState([null, null, null]);
   const [imageURLs, setImageURLs] = useState([null, null, null]);
@@ -49,6 +50,7 @@ const EditSawmillForm = () => {
           setForestPlan(sawmillData.forestPlan);
           setContactEmail(sawmillData.contactEmail);
           setCountry(sawmillData.country);
+          setMapLocation(sawmillData.mapLocation || null);
           setImageURLs([
             sawmillData.imageURL1 || null,
             sawmillData.imageURL2 || null,
@@ -91,6 +93,7 @@ const EditSawmillForm = () => {
       forestPlan,
       contactEmail,
       country,
+      mapLocation,
       imageDescription1: imageDescriptions[0],
       imageDescription2: imageDescriptions[1],
       imageDescription3: imageDescriptions[2],
@@ -205,6 +208,10 @@ const EditSawmillForm = () => {
             country={country}
             setCountry={setCountry}
           />
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="h6">Location on Map</Typography>
+          <MapWithPin location={mapLocation} setLocation={setMapLocation} />
         </Grid>
         {[0, 1, 2].map((index) => (
           <Grid item xs={12} key={index}>

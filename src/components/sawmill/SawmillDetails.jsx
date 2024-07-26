@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-import { app } from "../../firebase-config";
-import { useNavigate } from "react-router-dom";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
+import React, { useEffect, useState } from 'react';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { app } from '../../firebase-config';
+import { useNavigate } from 'react-router-dom';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 import FlagIcon from "../country-components/FlagIcon";
 import CountryNameFromCode from "../country-components/CountryNameFromCode";
+import ReadOnlyMapWithPin from "../google-maps/ReadOnlyMapWithPin";
 import { ImageCarousel } from "../image-components/SawmillImageGallery";
 import FullImageModal from "../image-components/SawmillImageGallery";
 
@@ -19,11 +20,11 @@ const SawmillDetails = () => {
 
   useEffect(() => {
     const fetchSawmill = async () => {
-      const userLocalStorage = JSON.parse(localStorage.getItem("user"));
+      const userLocalStorage = JSON.parse(localStorage.getItem('user'));
       const sawmillId = userLocalStorage?.sawmillId;
 
       if (!sawmillId) {
-        console.log("Sawmill ID not found.");
+        console.log('Sawmill ID not found.');
         return;
       }
 
@@ -33,10 +34,10 @@ const SawmillDetails = () => {
         if (sawmillDoc.exists()) {
           setSawmill({ id: sawmillDoc.id, ...sawmillDoc.data() });
         } else {
-          console.log("No such sawmill document!");
+          console.log('No such sawmill document!');
         }
       } catch (error) {
-        console.error("Error fetching sawmill details: ", error);
+        console.error('Error fetching sawmill details: ', error);
       }
     };
 
@@ -44,7 +45,7 @@ const SawmillDetails = () => {
   }, [db]);
 
   const handleEditClick = () => {
-    navigate("/edit-sawmill");
+    navigate('/edit-sawmill');
   };
 
   const openImageModal = (index) => {
@@ -65,17 +66,31 @@ const SawmillDetails = () => {
             <Typography variant="h4">Sawmill Details</Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="h6">Sawmill Name: {sawmill.name}</Typography>
+            <Typography variant="h6">Name: {sawmill.name}</Typography>
+          </Grid>
+          <Grid item xs={12}>
             <Typography variant="h6">Owners: {sawmill.owners}</Typography>
-            <Typography variant="h6">Location: {sawmill.location},  <CountryNameFromCode countryCode={sawmill.country} /></Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6">Location: {sawmill.location}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6">Description: {sawmill.description}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6">Forest Plan: {sawmill.forestPlan}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6">Contact Email: {sawmill.contactEmail}</Typography>
+          </Grid>
+          <Grid item xs={12}>
             <Typography variant="h6">
-            <FlagIcon countryCode={sawmill.country} />
-             
+              Country: <FlagIcon countryCode={sawmill.country} /> <CountryNameFromCode countryCode={sawmill.country} />
             </Typography>
           </Grid>
-  
-
-
+          <Grid item xs={12}>
+            <ReadOnlyMapWithPin location={sawmill.mapLocation} />
+          </Grid>
           <Grid item xs={12}>
             <ImageCarousel
               items={[
@@ -98,7 +113,11 @@ const SawmillDetails = () => {
               openModal={openImageModal}
             />
           </Grid>
-        
+          <Grid item xs={12}>
+            <Button variant="contained" color="primary" onClick={handleEditClick}>
+              Edit Sawmill
+            </Button>
+          </Grid>
           <FullImageModal
             isOpen={openModal}
             handleClose={closeImageModal}
@@ -106,42 +125,13 @@ const SawmillDetails = () => {
               selectedImage !== null
                 ? {
                     src: sawmill[`imageURL${selectedImage + 1}`],
-                    description:
-                      sawmill[`imageDescription${selectedImage + 1}`],
+                    description: sawmill[`imageDescription${selectedImage + 1}`],
                     altText: `Image ${selectedImage + 1}`,
                   }
                 : null
             }
           />
-       
-       
-          <Grid item xs={12}>
-            <Typography variant="h6">
-              Description: {sawmill.description}
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="h6">
-              Forest Plan: {sawmill.forestPlan}
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="h6">
-              Contact Email: {sawmill.contactEmail}
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleEditClick}
-            >
-              Edit Sawmill
-            </Button>
-          </Grid>
-         
         </Grid>
-
       ) : (
         <Typography variant="h6">Loading sawmill details...</Typography>
       )}
