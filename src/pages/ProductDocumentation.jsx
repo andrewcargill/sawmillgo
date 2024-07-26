@@ -414,29 +414,30 @@ const ProductDocumentation = () => {
                 </Typography>
               </Grid>
               <Grid item container>
-              <Typography variant="h5" align="left" pt={2}>
-                Certified Authencity of the Wood by:
-                
+                <Typography variant="h6" align="left" pt={2}>
+                  Certified Authencity of the Wood by:
                 </Typography>
                 <Grid
-              item
-              xs={12}
-              m={1}
-              className="sacramento-regular"
-              align="left"
-            >
-              Andrew Cargill
-            
-             
-
-              </Grid>
-              <Typography variant="" align="left">
-              SAWMILL GO!
-                
+                  item
+                  xs={12}
+                  m={1}
+                  className="sacramento-regular"
+                  align="left"
+                >
+                  Andrew Cargill
+                </Grid>
+                <Typography variant="" align="left">
+                  SAWMILL GO!
                 </Typography>
               </Grid>
 
-              <Grid xs={6}>
+              
+            </Grid>
+          </Paper>
+        </Grid>
+
+              {/*Woodworker and Sawmill Information*/}
+        <Grid xs={6}>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <WoodworkerIcon />
@@ -497,9 +498,6 @@ const ProductDocumentation = () => {
                   </AccordionDetails>
                 </Accordion>
               </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
 
         {/*Google Maps*/}
 
