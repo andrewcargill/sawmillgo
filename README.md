@@ -22,9 +22,15 @@ The system focuses on the verified path from trees to end products, but also all
 
 ### Interwoven Sub-Systems
 - **Projects:** Manage the availability of a tree, log, or plank. Projects include details on allocated items, start date, deadline, and project information.
-- **End Reports:** Generated from projects to provide the final report for the customer.
 - **Locations:** Manage where each item is stored, including forest areas, drying areas, or sawmill processing/storage locations.
 - **Users:** Store information about system users, their roles, and their activities, such as creating and modifying records.
+
+### Verfied stock, Source transparency = Added value
+You can use this system to simply take care of your stock but there is much more under the hood which is accessable to selective-cut and mixed-species wood stock.
+- **Projects:** Along with the standard features of projects you can also allocate 'creators'. These are woodworkers who turn the wood stock into end products
+- **Creators** Sawmill Go! has a dedicated login for creators who document thier creation process via image diary posts and also add images of the end product
+- **End Reports:** A QR code is added to the end product which takes the customer to a web-page where all the information about the life journey of the wood is presented
+- **Added Value:**  A true high-end product offering true transparency to the end customer. Meaning you can charge more for your verified wood-stock.
 
 
 
@@ -49,7 +55,7 @@ Every user must have a username. Additionally, users can upload a profile image 
 ### Dashboard Overview
 You will see a home icon. This displays all components within Sawmill Go.
 ### Modules
-These are the everyday modules used to add, view and manipulate stock within the sawmill.
+This is the part of the software that will be used to add, view and manipulate stock within the sawmill.
 * Trees - This is where you add, edit, delete and search trees
 * Logs - This is where you add, edit, delete and search logs
 * Planks - This is where you add, edit, delete and search planks / lumber

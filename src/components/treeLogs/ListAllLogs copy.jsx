@@ -93,29 +93,26 @@ const ListAllLogs = () => {
         {logs.length > 0 ? (
           logs.map((log) => (
             <Grid
-            item
-            xs={3}
+              className="item-select"
+              item
+              container
+              xs={3}
               sm={2}
               lg={2}
               key={log.id}
               m={1}
-            border={1}
-            borderRadius={3}
-            p={2}
-            boxShadow={2}
-            bgcolor={"white.main"}
-            textAlign="center"
-            style={{
-               position: "relative",
-            }}
-           
-            sx={{
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "primary.main",
-              },
-              transition: "background-color 0.5s",
-            }}
+              bgcolor={"white.main"}
+              style={{
+                position: "relative", // Ensure this container is the positioning context
+                border: "2px solid lightgrey",
+                borderRadius: "5px",
+                padding: "12px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
               onClick={handleLogClick(log.id)}
             >
               <Grid item>

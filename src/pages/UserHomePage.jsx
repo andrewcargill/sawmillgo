@@ -94,8 +94,9 @@ const UserHomePage = () => {
             mt={2}
             mb={2}
             borderRadius={3}
-            border="solid black 1px"
-            sx={{ backgroundColor: "#f5f5f5" }}
+            border="solid #79c000 5px"
+            // sx={{ backgroundColor: "#f5f5f5" }}
+            
           >
             <Grid item container xs={12} p={1} alignContent={"flex-start"}>
               <ViewModuleIcon fontSize="large" />
