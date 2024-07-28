@@ -40,7 +40,6 @@ const CreatorContainer = ({ creator }) => {
         <DialogContent>
         <Typography><img src={creator.imageUrl} alt="woodworker" style={{maxWidth: '100%'}} /></Typography>
 
-          <Typography>Company Name: </Typography>
           <Typography>Country: <CountryNameFromCode countryCode={creator.country} /></Typography>
           <Typography>About: {creator.about}</Typography>
           <Typography>Portfolio URL: <a href={creator.portfolioUrl} target="_blank" rel="noopener noreferrer">{creator.portfolioUrl}</a></Typography>

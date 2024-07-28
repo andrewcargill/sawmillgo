@@ -151,11 +151,11 @@ export function SlideFive({ plank }) {
         </Box>
     );
 }
-export function SlideSix({ moistureContent }) {
+export function SlideSix({ moistureChecks }) {
     return (
         <Box textAlign="center">
-            <Typography variant="h4">Drying Data</Typography>
-            <ReportMoistureGraph plankData={moistureContent} />
+            {/* <Typography variant="h4">Drying Data</Typography> */}
+            <ReportMoistureGraph plankData={moistureChecks} />
         </Box>
     );
 }

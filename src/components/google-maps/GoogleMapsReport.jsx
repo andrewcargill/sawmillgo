@@ -2,6 +2,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import loader from '../../utils/mapLoader';  
+import { Padding } from '@mui/icons-material';
+import treeLabelColors from '../project-report/treeLabelColors.json';
 
 
 
@@ -13,7 +15,7 @@ const containerStyle = {
 
 
 const colors = ["#FF5733", "#33FFB8", "#3361FF", "#F4FF33", "#8333FF"];
-const textColors = ["white", "black", "white", "white", "white"];
+const textColors = ["white", "white", "white", "white", "white"];
 
 
 function GoogleMapsTour( { trees, getPlankBorderColor }) {
@@ -51,12 +53,13 @@ function GoogleMapsTour( { trees, getPlankBorderColor }) {
             title: `${i + 1}. ${tree?.title}`,
             content: new PinElement({
 
-              glyph: refId,
+              // glyph: refId,
+              glyph: `Tree ${i + 1}`,
               scale: 1.5,
 
-                background: colors[i],
+                background: treeLabelColors.colors[i],
                 borderColor: 'white',
-                glyphColor: textColors[i],
+                glyphColor: treeLabelColors.textColors[i],
                 
             
             }).element
@@ -78,7 +81,7 @@ function GoogleMapsTour( { trees, getPlankBorderColor }) {
   };
 
   return (
-    <div>
+    <div >
       <div ref={mapRef} style={containerStyle} />
       {selectedTree && (
         <Dialog open={open} onClose={handleClose}>

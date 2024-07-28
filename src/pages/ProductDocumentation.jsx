@@ -8,24 +8,10 @@ import {
   AccordionSummary,
   AccordionDetails,
   Avatar,
-  Container,
+  Chip,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import FingerprintIcon from "@mui/icons-material/Fingerprint";
-import FullImageModal, {
-  ImageCarousel,
-} from "../components/image-components/ImageGalleryComponents";
-import { PlankReportCarousel } from "../components/project-report/sub-components/PlankReportCarousel";
-import {
-  SlideFive,
-  SlideFour,
-  SlideOne,
-  SlideSix,
-  SlideThree,
-  SlideTwo,
-} from "../components/project-report/sub-components/PlankTestData";
-import GoogleMapsReport from "../components/google-maps/GoogleMapsReport";
-import CustomBox from "../components/customContainers/CustomBox";
+import NatureIcon from "@mui/icons-material/Nature";
 import {
   getFirestore,
   doc,
@@ -36,11 +22,21 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { app } from "../firebase-config";
-import WoodworkerIcon from "@mui/icons-material/Handyman";
-import SawmillIcon from "@mui/icons-material/Forest";
-import certImage from "../media/images/cert-image3.png";
+import treeLabelColors from "../components/project-report/treeLabelColors.json";
+import FullImageModal, { ImageCarousel } from "../components/image-components/ImageGalleryComponents";
+import { PlankReportCarousel } from "../components/project-report/sub-components/PlankReportCarousel";
+import {
+  SlideFive,
+  SlideFour,
+  SlideOne,
+  SlideSix,
+  SlideThree,
+  SlideTwo,
+} from "../components/project-report/sub-components/PlankTestData";
+import GoogleMapsReport from "../components/google-maps/GoogleMapsReport";
 import CreatorContainer from "../components/project-report/sub-components/CreatorContainer";
 import SawmillContainer from "../components/project-report/sub-components/SawmillContainer";
+import certImage from "../media/images/cert-image3.png";
 
 const ProductDocumentation = () => {
   const { projectId } = useParams();
@@ -55,13 +51,24 @@ const ProductDocumentation = () => {
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
 
   useEffect(() => {
+    const fetchMoistureChecks = async (plankId) => {
+      const moistureChecksRef = collection(db, `sawmill/${sawmillId}/planks/${plankId}/moistureChecks`);
+      const moistureChecksSnapshot = await getDocs(moistureChecksRef);
+      return moistureChecksSnapshot.docs.map((doc) => doc.data());
+    };
+
     const fetchPlanks = async (projectId) => {
       const planksQuery = query(
         collection(db, `sawmill/${sawmillId}/planks`),
         where("projectId", "==", projectId)
       );
       const querySnapshot = await getDocs(planksQuery);
-      return querySnapshot.docs.map((doc) => doc.data());
+      const planks = await Promise.all(querySnapshot.docs.map(async (doc) => {
+        const plankData = doc.data();
+        const moistureChecks = await fetchMoistureChecks(doc.id);
+        return { ...plankData, moistureChecks };
+      }));
+      return planks;
     };
 
     const fetchLogsAndTrees = async (planks) => {
@@ -158,6 +165,7 @@ const ProductDocumentation = () => {
           "construction",
           "liveEdge",
           "general",
+          "moistureChecks", // Ensure moistureChecks is kept
         ],
       };
 
@@ -291,7 +299,7 @@ const ProductDocumentation = () => {
   };
 
   const getPlankBorderColor = (treeIndex) => {
-    const colors = ["#FF5733", "#33FFB8", "#3361FF", "#F4FF33", "#8333FF"];
+    const colors = treeLabelColors.colors;
     return colors[treeIndex % colors.length];
   };
 
@@ -302,7 +310,7 @@ const ProductDocumentation = () => {
       <Grid container position="relative" top={0} left={0}>
         {/*Half Page image*/}
         <Grid xs={12} md={8} p={3}>
-          <Grid item xs={12} pb={6} style={{}}>
+          <Grid item xs={12} pb={6}>
             {imageGalleryData.length > 0 ? (
               <>
                 <ImageCarousel items={imageGalleryData} openModal={openModal} />
@@ -433,30 +441,32 @@ const ProductDocumentation = () => {
 
         {/*Woodworker and Sawmill Information*/}
         <Grid container>
-          {/*Woodworker Information*/}
-          <Grid item xs={6}>
-          <CreatorContainer creator={creatorProfile} />
-          </Grid>
-       
           {/*Sawmill Information*/}
           <Grid item xs={6}>
-           <SawmillContainer sawmillId={sawmillId} />
+            <SawmillContainer sawmillId={sawmillId} />
           </Grid>
         </Grid>
 
         {/*Google Maps*/}
-
         <Grid item xs={12} md={8} p={1}>
-          <Paper>
-            <GoogleMapsReport
-              trees={reportData.reportData}
-              getPlankBorderColor={getPlankBorderColor}
-            />
+          <Paper elevation={3}>
+            <Grid padding={4}>
+              <Typography variant="h4" align="center">
+                Interactive Tree Map
+              </Typography>
+              <GoogleMapsReport
+                trees={reportData.reportData}
+                getPlankBorderColor={getPlankBorderColor}
+              />
+            </Grid>
           </Paper>
         </Grid>
 
         <Grid container xs={12} md={4} p={1}>
           <Grid item xs={12}>
+            <Typography variant="h4" align="center">
+              Plank History Timeline
+            </Typography>
             {reportData.reportData?.map((tree, treeIndex) => (
               <Grid item xs={12} pt={1} pb={1} key={tree.refId}>
                 {tree.logs.map((log, logIndex) => (
@@ -478,13 +488,21 @@ const ProductDocumentation = () => {
                           id={`panel${treeIndex}-${logIndex}-${plankIndex}-header`}
                         >
                           <Grid container xs={12} spacing={1}>
-                            <Grid
-                              item
-                              xs={1}
-                              bgcolor={getPlankBorderColor(treeIndex)}
-                              height={30}
-                            ></Grid>
-                            <Grid item xs={10}>
+                            <Grid item xs={4}>
+                              <Chip
+                                avatar={
+                                  <Avatar>
+                                    <NatureIcon />
+                                  </Avatar>
+                                }
+                                label={`Tree ${treeIndex + 1}`}
+                                style={{
+                                  backgroundColor:
+                                    getPlankBorderColor(treeIndex),
+                                }}
+                              />
+                            </Grid>
+                            <Grid item xs={8}>
                               <Typography variant="h6">
                                 PLANK {plank.refId}
                               </Typography>
@@ -512,7 +530,7 @@ const ProductDocumentation = () => {
                                 ),
                                 (tree, log, plank) => (
                                   <SlideSix
-                                    moistureContent={plank.moistureContent}
+                                    moistureChecks={plank.moistureChecks}
                                   />
                                 ),
                               ]}
