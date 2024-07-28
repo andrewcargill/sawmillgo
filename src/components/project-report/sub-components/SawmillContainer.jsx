@@ -30,6 +30,8 @@ const SawmillContainer = ({ sawmillId }) => {
        
         label="Sawmill Profile"
         onClick={handleClickOpen}
+        variant="outlined"
+
    
       />
       <Dialog open={open} onClose={handleClose}>

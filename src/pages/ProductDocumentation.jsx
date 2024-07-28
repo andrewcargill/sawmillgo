@@ -23,7 +23,9 @@ import {
 } from "firebase/firestore";
 import { app } from "../firebase-config";
 import treeLabelColors from "../components/project-report/treeLabelColors.json";
-import FullImageModal, { ImageCarousel } from "../components/image-components/ImageGalleryComponents";
+import FullImageModal, {
+  ImageCarousel,
+} from "../components/image-components/ImageGalleryComponents";
 import { PlankReportCarousel } from "../components/project-report/sub-components/PlankReportCarousel";
 import {
   SlideFive,
@@ -46,13 +48,17 @@ const ProductDocumentation = () => {
   const [imageGalleryData, setImageGalleryData] = useState([]);
   const [creatorProfile, setCreatorProfile] = useState([]);
   const [reportData, setReportData] = useState(null);
+  const [sawmillName, setSawmillName] = useState("");
 
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
 
   useEffect(() => {
     const fetchMoistureChecks = async (plankId) => {
-      const moistureChecksRef = collection(db, `sawmill/${sawmillId}/planks/${plankId}/moistureChecks`);
+      const moistureChecksRef = collection(
+        db,
+        `sawmill/${sawmillId}/planks/${plankId}/moistureChecks`
+      );
       const moistureChecksSnapshot = await getDocs(moistureChecksRef);
       return moistureChecksSnapshot.docs.map((doc) => doc.data());
     };
@@ -63,11 +69,13 @@ const ProductDocumentation = () => {
         where("projectId", "==", projectId)
       );
       const querySnapshot = await getDocs(planksQuery);
-      const planks = await Promise.all(querySnapshot.docs.map(async (doc) => {
-        const plankData = doc.data();
-        const moistureChecks = await fetchMoistureChecks(doc.id);
-        return { ...plankData, moistureChecks };
-      }));
+      const planks = await Promise.all(
+        querySnapshot.docs.map(async (doc) => {
+          const plankData = doc.data();
+          const moistureChecks = await fetchMoistureChecks(doc.id);
+          return { ...plankData, moistureChecks };
+        })
+      );
       return planks;
     };
 
@@ -127,6 +135,15 @@ const ProductDocumentation = () => {
       }));
 
       return { ...projectData, posts };
+    };
+
+    const fetchSawmillName = async (sawmillId) => {
+      const sawmillRef = doc(db, `sawmill`, sawmillId);
+      const sawmillDoc = await getDoc(sawmillRef);
+      console.log("sawmillDoc", sawmillDoc);
+      if (sawmillDoc.exists()) {
+        setSawmillName(sawmillDoc.data().name);
+      }
     };
 
     const removeUnnecessaryFields = (data, type) => {
@@ -277,6 +294,7 @@ const ProductDocumentation = () => {
         setReportData(compiledReportData);
         setCreatorProfile(compiledReportData.creatorProfile);
         processImageGalleryData(compiledReportData);
+        fetchSawmillName(sawmillId); // Fetch sawmill name
       } catch (error) {
         console.error("Error fetching report data:", error);
       }
@@ -353,22 +371,48 @@ const ProductDocumentation = () => {
             </Grid>
           </Grid>
           <Grid container spacing={0} pb={6}>
-            <Grid item xs={12} m={1}>
-              <Typography className="sacramento-regular" align="left">
-                Created by:
-              </Typography>
-            </Grid>
+            <Grid item xs={6}>
+              <Grid item xs={12} m={1}>
+                <Typography className="sacramento-regular" align="left">
+                  Created by:
+                </Typography>
+              </Grid>
 
-            <Grid
-              item
-              xs={12}
-              m={1}
-              className="sacramento-regular"
-              align="left"
-            >
-              {creatorProfile?.companyName || "No Username"}
+              <Grid
+                item
+                xs={12}
+                m={1}
+                className="sacramento-regular"
+                align="left"
+              >
+                {creatorProfile?.companyName || "No Username"}
+              </Grid>
+             
             </Grid>
-            <CreatorContainer creator={creatorProfile} />
+            <Grid item xs={6}>
+              <Grid item xs={12} m={1}>
+                <Typography className="sacramento-regular" align="left">
+                  Wood Supplier:
+                </Typography>
+              </Grid>
+
+              <Grid
+                item
+                xs={12}
+                m={1}
+                className="sacramento-regular"
+                align="left"
+              >
+                {sawmillName || "No Sawmill Name"}
+              </Grid>
+         
+            </Grid>
+            <Grid item xs={6} align='left'>
+            <CreatorContainer creator={creatorProfile}  />
+              </Grid>
+            <Grid item xs={6} align='left'>
+            <SawmillContainer sawmillId={sawmillId} />
+              </Grid>
           </Grid>
         </Grid>
 
@@ -439,13 +483,7 @@ const ProductDocumentation = () => {
           </Paper>
         </Grid>
 
-        {/*Woodworker and Sawmill Information*/}
-        <Grid container>
-          {/*Sawmill Information*/}
-          <Grid item xs={6}>
-            <SawmillContainer sawmillId={sawmillId} />
-          </Grid>
-        </Grid>
+       
 
         {/*Google Maps*/}
         <Grid item xs={12} md={8} p={1}>
@@ -465,7 +503,7 @@ const ProductDocumentation = () => {
         <Grid container xs={12} md={4} p={1}>
           <Grid item xs={12}>
             <Typography variant="h4" align="center">
-              Plank History Timeline
+              Plank Timeline
             </Typography>
             {reportData.reportData?.map((tree, treeIndex) => (
               <Grid item xs={12} pt={1} pb={1} key={tree.refId}>
@@ -503,7 +541,7 @@ const ProductDocumentation = () => {
                               />
                             </Grid>
                             <Grid item xs={8}>
-                              <Typography variant="h6">
+                              <Typography variant="h6" align="left">
                                 PLANK {plank.refId}
                               </Typography>
                             </Grid>

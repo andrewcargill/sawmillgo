@@ -27,9 +27,9 @@ const CreatorContainer = ({ creator }) => {
   };
 
   return (
-    <div className="creator-container">
+    <div>
       <Chip
-        label="View Profile"
+        label="Creator Profile"
         onClick={handleClickOpen}
         variant="outlined"
         
