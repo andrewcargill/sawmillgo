@@ -11,7 +11,7 @@ import ReadOnlyMapWithPin from "../google-maps/ReadOnlyMapWithPin";
 import { ImageCarousel } from "../image-components/SawmillImageGallery";
 import FullImageModal from "../image-components/SawmillImageGallery";
 
-const SawmillDetails = () => {
+const SawmillDetails = ({ sawmillId: propSawmillId }) => {
   const [sawmill, setSawmill] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -21,7 +21,7 @@ const SawmillDetails = () => {
   useEffect(() => {
     const fetchSawmill = async () => {
       const userLocalStorage = JSON.parse(localStorage.getItem('user'));
-      const sawmillId = userLocalStorage?.sawmillId;
+      const sawmillId = propSawmillId || userLocalStorage?.sawmillId;
 
       if (!sawmillId) {
         console.log('Sawmill ID not found.');
@@ -42,7 +42,7 @@ const SawmillDetails = () => {
     };
 
     fetchSawmill();
-  }, [db]);
+  }, [db, propSawmillId]);
 
   const handleEditClick = () => {
     navigate('/edit-sawmill');
@@ -113,11 +113,13 @@ const SawmillDetails = () => {
               openModal={openImageModal}
             />
           </Grid>
-          <Grid item xs={12}>
-            <Button variant="contained" color="primary" onClick={handleEditClick}>
-              Edit Sawmill
-            </Button>
-          </Grid>
+          { !propSawmillId && (
+            <Grid item xs={12}>
+              <Button variant="contained" color="primary" onClick={handleEditClick}>
+                Edit Sawmill
+              </Button>
+            </Grid>
+          )}
           <FullImageModal
             isOpen={openModal}
             handleClose={closeImageModal}

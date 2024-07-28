@@ -8,6 +8,7 @@ import {
   AccordionSummary,
   AccordionDetails,
   Avatar,
+  Container,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
@@ -38,6 +39,8 @@ import { app } from "../firebase-config";
 import WoodworkerIcon from "@mui/icons-material/Handyman";
 import SawmillIcon from "@mui/icons-material/Forest";
 import certImage from "../media/images/cert-image3.png";
+import CreatorContainer from "../components/project-report/sub-components/CreatorContainer";
+import SawmillContainer from "../components/project-report/sub-components/SawmillContainer";
 
 const ProductDocumentation = () => {
   const { projectId } = useParams();
@@ -52,7 +55,6 @@ const ProductDocumentation = () => {
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
 
   useEffect(() => {
-    console.log("projectId: ", projectId);
     const fetchPlanks = async (projectId) => {
       const planksQuery = query(
         collection(db, `sawmill/${sawmillId}/planks`),
@@ -356,18 +358,13 @@ const ProductDocumentation = () => {
               className="sacramento-regular"
               align="left"
             >
-              {creatorProfile?.username || "No Username"}
+              {creatorProfile?.companyName || "No Username"}
             </Grid>
+            <CreatorContainer creator={creatorProfile} />
           </Grid>
         </Grid>
-        {/*Creator Profile*/}
 
-        {/* <Grid item xs={12} p={3}>
-          <Typography variant="h5" align="center">
-            <FingerprintIcon /> The Story Behind the Wood
-          </Typography>
-        </Grid> */}
-
+        {/*Certification*/}
         <Grid
           container
           p={2}
@@ -375,7 +372,7 @@ const ProductDocumentation = () => {
           justifyContent={"center"}
           mb={6}
         >
-          <Paper elevation={3}>
+          <Paper elevation={5}>
             <Grid
               container
               p={4}
@@ -430,74 +427,22 @@ const ProductDocumentation = () => {
                   SAWMILL GO!
                 </Typography>
               </Grid>
-
-              
             </Grid>
           </Paper>
         </Grid>
 
-              {/*Woodworker and Sawmill Information*/}
-        <Grid xs={6}>
-                <Accordion>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <WoodworkerIcon />
-                    <Typography variant="h6" sx={{ marginLeft: 1 }}>
-                      Woodworker Information
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12} md={4}>
-                        <Avatar
-                          src={creatorProfile?.imageUrl || ""}
-                          alt={`avatar for creator called ${
-                            creatorProfile?.username || "No Name"
-                          }`}
-                          sx={{ width: 56, height: 56 }}
-                        />
-                      </Grid>
-                      <Grid item xs={12} md={8}>
-                        <Typography variant="body1" fontWeight={500}>
-                          {creatorProfile?.companyName || "No Company"} (
-                          {creatorProfile?.username || "No Username"})
-                          {creatorProfile?.country || "No Country"}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </AccordionDetails>
-                </Accordion>
-              </Grid>
-
-              <Grid xs={6}>
-                <Accordion>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <SawmillIcon />
-                    <Typography variant="h6" sx={{ marginLeft: 1 }}>
-                      Sawmill Information
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12} md={4}>
-                        <Avatar
-                          src={creatorProfile?.imageUrl || ""}
-                          alt={`avatar for creator called ${
-                            creatorProfile?.username || "No Name"
-                          }`}
-                          sx={{ width: 56, height: 56 }}
-                        />
-                      </Grid>
-                      <Grid item xs={12} md={8}>
-                        <Typography variant="body1" fontWeight={500}>
-                          {creatorProfile?.companyName || "No Company"} (
-                          {creatorProfile?.username || "No Username"})
-                          {creatorProfile?.country || "No Country"}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </AccordionDetails>
-                </Accordion>
-              </Grid>
+        {/*Woodworker and Sawmill Information*/}
+        <Grid container>
+          {/*Woodworker Information*/}
+          <Grid item xs={6}>
+          <CreatorContainer creator={creatorProfile} />
+          </Grid>
+       
+          {/*Sawmill Information*/}
+          <Grid item xs={6}>
+           <SawmillContainer sawmillId={sawmillId} />
+          </Grid>
+        </Grid>
 
         {/*Google Maps*/}
 
