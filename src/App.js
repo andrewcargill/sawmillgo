@@ -46,6 +46,7 @@ import LinkTest from "./pages/LinkTest";
 import SawmillDetails from "./components/sawmill/SawmillDetails";
 import EditSawmillForm from "./components/sawmill/EditSawmillForm";
 import AllSawmill from "./pages/AllSawmill";
+import LocationsHomePage from "./components/locations-components/LocationsHomePage";
 
 function App() {
  
@@ -101,7 +102,8 @@ function App() {
         <Route path="/editplank/:plankId" element={<EditPlank />} />
         <Route path="/addplank" element={<AddPlank />} />
         <Route path="/monitorplank/:plankId" element={<AddMoistureCheck />} />
-        <Route path="/locations" element={<LocationsPage />} />
+        {/* <Route path="/locations" element={<LocationsPage />} /> */}
+        <Route path="/locations" element={<LocationsHomePage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         {/* <Route path="/report/:projectId" element={<ProjectComponent />} /> */}
         <Route path="/report/:projectId" element={<ProjectReportGenerator />} />

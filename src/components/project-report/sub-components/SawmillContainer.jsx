@@ -27,12 +27,9 @@ const SawmillContainer = ({ sawmillId }) => {
   return (
     <div className="creator-container">
       <Chip
-       
         label="Sawmill Profile"
         onClick={handleClickOpen}
         variant="outlined"
-
-   
       />
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Sawmill Profile</DialogTitle>
