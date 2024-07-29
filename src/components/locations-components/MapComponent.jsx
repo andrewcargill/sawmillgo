@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import loader from '../../utils/mapLoader'; // Adjust the path to where your mapLoader.js is located
 
 const MapComponent = ({ onPolygonComplete }) => {
@@ -7,7 +7,6 @@ const MapComponent = ({ onPolygonComplete }) => {
   const drawingManagerRef = useRef(null);
   const polygonRef = useRef(null);
   const mapInitialized = useRef(false); // To ensure the map is only initialized once
-  const [map, setMap] = useState(null);
 
   useEffect(() => {
     console.log('MapComponent useEffect called'); // Log when useEffect is called
@@ -39,7 +38,6 @@ const MapComponent = ({ onPolygonComplete }) => {
       });
 
       drawingManagerRef.current.setMap(initializedMap);
-      setMap(initializedMap);
       mapInitialized.current = true;
       console.log('Drawing Manager initialized:', drawingManagerRef.current); // Log drawing manager initialization
 
@@ -80,9 +78,10 @@ const MapComponent = ({ onPolygonComplete }) => {
 
       autocomplete.addListener('place_changed', () => {
         const place = autocomplete.getPlace();
+        console.log('Place selected:', place); // Log the selected place
         if (place.geometry) {
-          map.setCenter(place.geometry.location);
-          map.setZoom(15);
+          initializedMap.setCenter(place.geometry.location);
+          initializedMap.setZoom(15);
         }
       });
     });
