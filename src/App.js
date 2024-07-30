@@ -47,6 +47,7 @@ import SawmillDetails from "./components/sawmill/SawmillDetails";
 import EditSawmillForm from "./components/sawmill/EditSawmillForm";
 import AllSawmill from "./pages/AllSawmill";
 import LocationsHomePage from "./components/locations-components/LocationsHomePage";
+import EditLocationForm from "./components/locations-components/EditLocationForm";
 
 function App() {
  
@@ -104,6 +105,7 @@ function App() {
         <Route path="/monitorplank/:plankId" element={<AddMoistureCheck />} />
         {/* <Route path="/locations" element={<LocationsPage />} /> */}
         <Route path="/locations" element={<LocationsHomePage />} />
+        <Route path="/edit-location/:locationId" element={<EditLocationForm />} />
         <Route path="/projects" element={<ProjectsPage />} />
         {/* <Route path="/report/:projectId" element={<ProjectComponent />} /> */}
         <Route path="/report/:projectId" element={<ProjectReportGenerator />} />

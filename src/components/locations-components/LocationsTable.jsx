@@ -72,6 +72,7 @@ const LocationsTable = () => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell>Edit</TableCell>
                   <TableCell>Name</TableCell>
                   <TableCell>Type</TableCell>
                   <TableCell>Description</TableCell>
@@ -80,6 +81,7 @@ const LocationsTable = () => {
               <TableBody>
                 {locations.map(location => (
                   <TableRow key={location.id}>
+                    <TableCell>Edit Button</TableCell>
                     <TableCell>{location.name}</TableCell>
                     <TableCell>{location.type}</TableCell>
                     <TableCell>{location.description}</TableCell>
