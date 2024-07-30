@@ -9,13 +9,13 @@ import UserProvider from './Contexts/UserProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <UserProvider>
     <ThemeProvider theme={customTheme}>
     <App />
     </ThemeProvider>
     </UserProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

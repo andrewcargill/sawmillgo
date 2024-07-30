@@ -49,6 +49,8 @@ import AllSawmill from "./pages/AllSawmill";
 import LocationsHomePage from "./components/locations-components/LocationsHomePage";
 import EditLocationForm from "./components/locations-components/EditLocationForm";
 import AddLocationForm from "./components/locations-components/AddLocationForm";
+import UnifiedStockWireFrame from "./components/components-for-dev/projects/UnifiedStockWireFrame";
+import Dashboard from "./components/components-for-dev/projects/DashboardWireFrame";
 
 function App() {
  
@@ -113,6 +115,8 @@ function App() {
         <Route path="/report/:projectId" element={<ProjectReportGenerator />} />
 
         <Route path="/species" element={<SpeciesPage />} />
+
+        <Route path="/wireframe" element={<Dashboard />} />
 
       </Routes>
       </PageContentContainer>
