@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import loader from '../../utils/mapLoader'; // Adjust the path as necessary
 
-const StockMapComponent = ({ locations, planks, label }) => {
+const StockMapComponent = ({ locations, planks }) => {
   const mapRef = useRef(null);
   const mapInitialized = useRef(false);
   const polygonsRef = useRef([]); // Store references to polygons for cleanup
@@ -65,7 +65,7 @@ const StockMapComponent = ({ locations, planks, label }) => {
           const infoWindowContent = `
             <div>
               <strong>${location.name}</strong><br>
-              ${locationPlanks.map(plank => `${label}: ${plank.refId}`).join('<br>')}
+              ${locationPlanks.map(plank => `Plank: ${plank.refId}`).join('<br>')}
             </div>`;
 
           const infoWindow = new google.maps.InfoWindow({

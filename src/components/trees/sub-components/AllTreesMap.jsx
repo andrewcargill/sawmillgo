@@ -4,7 +4,7 @@ import { app } from '../../../firebase-config'; // Adjust the path as necessary
 import StockMapComponent from '../../google-maps/StockMapComponent'; // Adjust the path as necessary
 import { Grid } from '@mui/material';
 
-const AllPlanksMap = () => {
+const AllTreesMap = () => {
   const [locations, setLocations] = useState([]);
   const [planks, setPlanks] = useState([]);
 
@@ -21,7 +21,7 @@ const AllPlanksMap = () => {
     try {
       console.log('Fetching locations and planks from Firestore...');
       const locationsSnapshot = await getDocs(collection(db, `sawmill/${sawmillId}/locations`));
-      const planksSnapshot = await getDocs(collection(db, `sawmill/${sawmillId}/planks`));
+      const planksSnapshot = await getDocs(collection(db, `sawmill/${sawmillId}/trees`));
 
       const locationsData = locationsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       const planksData = planksSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -50,9 +50,9 @@ const AllPlanksMap = () => {
   return (
     <Grid container>
       <h3>All Planks Map</h3>
-      <StockMapComponent locations={locations} planks={planks} label={'Plank'} />
+      <StockMapComponent locations={locations} planks={planks} label={'Tree'}  />
     </Grid>
   );
 };
 
-export default AllPlanksMap;
+export default AllTreesMap;

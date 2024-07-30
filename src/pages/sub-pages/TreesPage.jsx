@@ -5,6 +5,7 @@ import ListAllTrees from '../../components/trees/ListAllTrees';
 import IconButton from '@mui/material/IconButton'
 import { Add } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import AllTreesMap from '../../components/trees/sub-components/AllTreesMap';
 
 
 
@@ -19,6 +20,9 @@ const TreesPage = () => {
    
     <Grid p={1} >
       <ListAllTrees />
+      <Grid container item>
+          <AllTreesMap />
+        </Grid>
       </Grid>
       </>
   );
