@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { app } from '../../firebase-config'; // Adjust the path as necessary
+import { useNavigate } from 'react-router-dom';
 import {
   Accordion,
   AccordionSummary,
@@ -13,7 +14,7 @@ import {
   TableRow,
   Paper,
   Typography,
- 
+  Button
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -24,6 +25,8 @@ const LocationsTable = () => {
     storage: [],
     drying: [],
   });
+
+  const navigate = useNavigate();
 
   const fetchLocations = async () => {
     const db = getFirestore(app);
@@ -59,6 +62,10 @@ const LocationsTable = () => {
     fetchLocations();
   }, []);
 
+  const handleEditClick = (locationId) => {
+    navigate(`/edit-location/${locationId}`);
+  };
+
   const renderTable = (locations, type) => {
     if (locations.length === 0) return null;
 
@@ -81,7 +88,15 @@ const LocationsTable = () => {
               <TableBody>
                 {locations.map(location => (
                   <TableRow key={location.id}>
-                    <TableCell>Edit Button</TableCell>
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleEditClick(location.id)}
+                      >
+                        Edit
+                      </Button>
+                    </TableCell>
                     <TableCell>{location.name}</TableCell>
                     <TableCell>{location.type}</TableCell>
                     <TableCell>{location.description}</TableCell>

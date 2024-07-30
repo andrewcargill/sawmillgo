@@ -36,7 +36,7 @@ const EditLocationForm = () => {
       } else {
         console.error('No such document!');
         alert('Location not found');
-        navigate('/'); // Redirect to some other page if location not found
+        navigate('/locations'); 
       }
     } catch (error) {
       console.error('Error fetching location:', error);
@@ -56,7 +56,7 @@ const EditLocationForm = () => {
   };
 
   const handlePolygonComplete = useCallback((coordinates) => {
-    console.log('Polygon complete callback:', coordinates); // Log the coordinates in the callback
+    console.log('Polygon complete callback:', coordinates); 
     setLocationData((prevState) => ({
       ...prevState,
       coordinates,
@@ -77,7 +77,7 @@ const EditLocationForm = () => {
       const docRef = doc(db, `sawmill/${sawmillId}/locations`, locationId);
       await updateDoc(docRef, locationData);
       alert('Location updated successfully!');
-      navigate('/'); // Redirect to some other page after success
+      navigate('/locations'); // Redirect to some other page after success
     } catch (error) {
       console.error('Error updating location:', error);
       alert('Failed to update location. See console for details.');
@@ -126,7 +126,7 @@ const EditLocationForm = () => {
           />
         </label>
       </div>
-      <MapComponent onPolygonComplete={handlePolygonComplete} />
+      <MapComponent onPolygonComplete={handlePolygonComplete} initialCoordinates={locationData.coordinates} />
       <button type="submit">Update Location</button>
     </form>
   );

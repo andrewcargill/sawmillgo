@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import loader from '../../utils/mapLoader'; // Adjust the path to where your mapLoader.js is located
 
-const MapComponent = ({ onPolygonComplete }) => {
+const MapComponent = ({ onPolygonComplete, initialCoordinates = [] }) => {
   const mapRef = useRef(null);
   const inputRef = useRef(null);
   const drawingManagerRef = useRef(null);
@@ -23,6 +23,49 @@ const MapComponent = ({ onPolygonComplete }) => {
       });
 
       console.log('Map initialized:', initializedMap); // Log map initialization
+
+      if (initialCoordinates.length > 0) {
+        const bounds = new google.maps.LatLngBounds();
+        initialCoordinates.forEach(coord => bounds.extend(new google.maps.LatLng(coord.lat, coord.lng)));
+        initializedMap.fitBounds(bounds);
+
+        const polygon = new google.maps.Polygon({
+          paths: initialCoordinates,
+          strokeColor: '#FF0000',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#FF0000',
+          fillOpacity: 0.35,
+          editable: true,
+          draggable: true,
+        });
+        polygon.setMap(initializedMap);
+        polygonRef.current = polygon;
+
+        google.maps.event.addListener(polygon.getPath(), 'set_at', () => {
+          const path = polygon.getPath();
+          const coordinates = [];
+          for (let i = 0; i < path.getLength(); i++) {
+            coordinates.push({
+              lat: path.getAt(i).lat(),
+              lng: path.getAt(i).lng(),
+            });
+          }
+          onPolygonComplete(coordinates);
+        });
+
+        google.maps.event.addListener(polygon.getPath(), 'insert_at', () => {
+          const path = polygon.getPath();
+          const coordinates = [];
+          for (let i = 0; i < path.getLength(); i++) {
+            coordinates.push({
+              lat: path.getAt(i).lat(),
+              lng: path.getAt(i).lng(),
+            });
+          }
+          onPolygonComplete(coordinates);
+        });
+      }
 
       drawingManagerRef.current = new google.maps.drawing.DrawingManager({
         drawingMode: google.maps.drawing.OverlayType.POLYGON,
@@ -63,6 +106,31 @@ const MapComponent = ({ onPolygonComplete }) => {
         console.log('Polygon coordinates:', coordinates); // Log polygon coordinates
         onPolygonComplete(coordinates);
 
+        // Add an event listener to update the polygon on path change
+        google.maps.event.addListener(polygon.getPath(), 'set_at', () => {
+          const updatedPath = polygon.getPath();
+          const updatedCoordinates = [];
+          for (let i = 0; i < updatedPath.getLength(); i++) {
+            updatedCoordinates.push({
+              lat: updatedPath.getAt(i).lat(),
+              lng: updatedPath.getAt(i).lng(),
+            });
+          }
+          onPolygonComplete(updatedCoordinates);
+        });
+
+        google.maps.event.addListener(polygon.getPath(), 'insert_at', () => {
+          const updatedPath = polygon.getPath();
+          const updatedCoordinates = [];
+          for (let i = 0; i < updatedPath.getLength(); i++) {
+            updatedCoordinates.push({
+              lat: updatedPath.getAt(i).lat(),
+              lng: updatedPath.getAt(i).lng(),
+            });
+          }
+          onPolygonComplete(updatedCoordinates);
+        });
+
         // Add an event listener to remove the polygon on double click
         google.maps.event.addListener(polygon, 'dblclick', () => {
           polygon.setMap(null); // Remove polygon from the map
@@ -85,7 +153,7 @@ const MapComponent = ({ onPolygonComplete }) => {
         }
       });
     });
-  }, [onPolygonComplete]);
+  }, [onPolygonComplete, initialCoordinates]);
 
   return (
     <div>

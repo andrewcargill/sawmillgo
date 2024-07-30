@@ -48,6 +48,7 @@ import EditSawmillForm from "./components/sawmill/EditSawmillForm";
 import AllSawmill from "./pages/AllSawmill";
 import LocationsHomePage from "./components/locations-components/LocationsHomePage";
 import EditLocationForm from "./components/locations-components/EditLocationForm";
+import AddLocationForm from "./components/locations-components/AddLocationForm";
 
 function App() {
  
@@ -106,6 +107,7 @@ function App() {
         {/* <Route path="/locations" element={<LocationsPage />} /> */}
         <Route path="/locations" element={<LocationsHomePage />} />
         <Route path="/edit-location/:locationId" element={<EditLocationForm />} />
+        <Route path="/add-location" element={<AddLocationForm />} />
         <Route path="/projects" element={<ProjectsPage />} />
         {/* <Route path="/report/:projectId" element={<ProjectComponent />} /> */}
         <Route path="/report/:projectId" element={<ProjectReportGenerator />} />
