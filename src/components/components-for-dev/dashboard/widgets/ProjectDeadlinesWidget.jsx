@@ -1,5 +1,5 @@
 import React from 'react';
-import { CardContent, Typography, Paper } from '@mui/material';
+import { CardContent, Typography, Paper, Grid } from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const projectDeadlinesData = [
@@ -19,10 +19,10 @@ const formatXAxis = (tickItem) => {
 
 const ProjectDeadlinesWidget = () => {
   return (
-    <Paper elevation={3} style={{ width: '100%', height: 150 }}>
-      <CardContent>
+    <Grid container style={{ height: 150 }}>
+      <CardContent style={{ width: '100%' }}>
         <Typography variant="h6" gutterBottom>
-          Project Deadlines Timeline
+          Deadlines
         </Typography>
         <ResponsiveContainer width="100%" height={100}>
           <LineChart data={projectDeadlinesData}>
@@ -30,11 +30,11 @@ const ProjectDeadlinesWidget = () => {
             <XAxis dataKey="deadline" tickFormatter={formatXAxis} />
             <YAxis />
             <Tooltip />
-            <Line type="monotone" dataKey="daysLeft" stroke="#8884d8" />
+            <Line type="monotone" dataKey="daysLeft" stroke="#24211e" />
           </LineChart>
         </ResponsiveContainer>
       </CardContent>
-    </Paper>
+    </Grid>
   );
 };
 

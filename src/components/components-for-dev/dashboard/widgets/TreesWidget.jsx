@@ -1,17 +1,47 @@
-import React from 'react';
-import { CardContent, Typography, Paper } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
+import { app } from '../../../../firebase-config';
+import { CardContent, Typography, Paper, Grid } from '@mui/material';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const treesData = [
-  { name: 'Pine', age: '60-80', count: 30 },
-  { name: 'Oak', age: '40-60', count: 20 },
-  { name: 'Maple', age: '20-40', count: 10 },
-];
-
 const TreesWidget = () => {
+  const [treesData, setTreesData] = useState([]);
+  const db = getFirestore(app);
+  const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
+
+  useEffect(() => {
+    const fetchTrees = async () => {
+      if (!sawmillId) {
+        console.log("Sawmill ID not found. Cannot fetch trees.");
+        return;
+      }
+
+      const q = query(
+        collection(db, `sawmill/${sawmillId}/trees`),
+        where("logged", "==", false)
+      );
+      const snapshot = await getDocs(q);
+      const treesList = snapshot.docs.map((doc) => doc.data());
+
+      const speciesCount = treesList.reduce((acc, tree) => {
+        acc[tree.speciesName] = (acc[tree.speciesName] || 0) + 1;
+        return acc;
+      }, {});
+
+      const data = Object.keys(speciesCount).map((species) => ({
+        name: species,
+        count: speciesCount[species],
+      }));
+
+      setTreesData(data);
+    };
+
+    fetchTrees();
+  }, [sawmillId, db]);
+
   return (
-    <Paper elevation={3} style={{ width: '100%', height: 150 }}>
-      <CardContent>
+    <Grid container style={{ height: 150 }}>
+      <CardContent style={{ width: '100%' }}>
         <Typography variant="h6" gutterBottom>
           Trees
         </Typography>
@@ -21,11 +51,11 @@ const TreesWidget = () => {
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="count" fill="#8884d8" />
+            <Bar dataKey="count" fill="#24211e" />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>
-    </Paper>
+    </Grid>
   );
 };
 

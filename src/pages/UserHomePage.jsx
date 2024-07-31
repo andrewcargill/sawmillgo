@@ -13,14 +13,14 @@ import LocationGauge from "./user-homepage/LocationGauge";
 import MovementsGauge from "./user-homepage/Movements";
 import ProjectGauge from "./user-homepage/ProjectGauge";
 import SpeciesGauge from "./user-homepage/SpeicesGauge";
-import { Button, Tooltip } from "@mui/material";
+import { Button, Paper, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Flag } from "@mui/icons-material";
 import FlagIcon from "../components/country-components/FlagIcon";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import AddSawmillGauge from "./user-homepage/AddSawmillGauge";
-import KeyIcon from '@mui/icons-material/Key';
+import KeyIcon from "@mui/icons-material/Key";
 import LocationsGauge from "./user-homepage/LocationsGauge";
 import TreeAgeGauge from "./user-homepage/TreeAgeGauge";
 import DryingGauge from "./user-homepage/DryingGauge";
@@ -28,6 +28,14 @@ import ContactsGauge from "./user-homepage/ContactsGauge";
 import UsersGauge from "./user-homepage/UsersGauge";
 import SawmillProfileGauge from "./user-homepage/SawmillProfileGauge";
 import UserProfileGauge from "./user-homepage/UserProfileGauge";
+import TreesWidget from "../components/components-for-dev/dashboard/widgets/TreesWidget";
+import LogsWidget from "../components/components-for-dev/dashboard/widgets/LogsWidget";
+import PlanksWidget from "../components/components-for-dev/dashboard/widgets/PlanksWidget";
+import StockLevelsWidget from "../components/components-for-dev/dashboard/widgets/StockLevelsWidget";
+import ProjectStatusWidget from "../components/components-for-dev/dashboard/widgets/ProjectStatusWidget";
+import ProjectDeadlinesWidget from "../components/components-for-dev/dashboard/widgets/ProjectDeadlinesWidget";
+import StockSearchWidget from "../components/components-for-dev/dashboard/widgets/StockSearchWidget";
+import PlanksWidgetNew from "../components/components-for-dev/dashboard/widgets/PlanksWidgetNew";
 
 const UserHomePage = () => {
   // Access user information from context
@@ -87,6 +95,76 @@ const UserHomePage = () => {
         </>
       ) : (
         <Grid container>
+                    <Grid
+            container
+            item
+            xs={12}
+            md={6}
+            p={1}
+            mt={2}
+            mb={2}
+            // borderRadius={3}
+            // border="solid #79c000 5px"
+            // sx={{ backgroundColor: "#f5f5f5" }}
+          >
+            {/* <Grid item container xs={12} p={1} alignContent={"flex-start"}>
+              <ViewModuleIcon fontSize="large" />
+              <Typography variant="body1" p={1}>
+                {" "}
+                Search Stock{" "}
+              </Typography>
+            </Grid> */}
+            <Grid item xs={12}>
+              <StockSearchWidget />
+            </Grid>
+          </Grid>
+
+          <Grid
+            container
+            item
+            xs={12}
+            md={6}
+            p={1}
+            mt={2}
+            mb={2}
+            // borderRadius={3}
+            // border="solid #79c000 5px"
+            // sx={{ backgroundColor: "#f5f5f5" }}
+          >
+            {/* <Grid item container xs={12} p={1} alignContent={"flex-start"}>
+              <ViewModuleIcon fontSize="large" />
+              <Typography variant="body1" p={1}>
+                {" "}
+                Dashboard{" "}
+              </Typography>
+            </Grid> */}
+             <Paper elevation={3}>
+            <Grid container spacing={2}>
+              <Grid item xs={6} sm={4} md={6}>
+                <TreesWidget />
+              </Grid>
+              <Grid item xs={6} sm={4} md={6}>
+                <LogsWidget />
+              </Grid>
+              <Grid item xs={6} sm={4} md={6}>
+                <PlanksWidgetNew />
+              </Grid>
+              <Grid item xs={6} sm={4} md={6}>
+                <StockLevelsWidget />
+              </Grid>
+              <Grid item xs={6} sm={4} md={6}>
+                <ProjectStatusWidget />
+              </Grid>
+              <Grid item xs={6} md={6} lg={12}>
+                <ProjectDeadlinesWidget />
+              </Grid>
+
+            </Grid>
+            </Paper>
+          </Grid>
+
+
+
           <Grid
             container
             item
@@ -97,7 +175,6 @@ const UserHomePage = () => {
             borderRadius={3}
             border="solid #79c000 5px"
             // sx={{ backgroundColor: "#f5f5f5" }}
-            
           >
             <Grid item container xs={12} p={1} alignContent={"flex-start"}>
               <ViewModuleIcon fontSize="large" />

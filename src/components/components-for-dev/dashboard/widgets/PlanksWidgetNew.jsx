@@ -1,31 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, query } from 'firebase/firestore';
 import { app } from '../../../../firebase-config';
-import { CardContent, Typography, Paper, Grid } from '@mui/material';
+import { CardContent, Typography, Grid } from '@mui/material';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const LogsWidget = () => {
-  const [logsData, setLogsData] = useState([]);
+const PlanksWidgetNew = () => {
+  const [planksData, setPlanksData] = useState([]);
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
 
   useEffect(() => {
-    const fetchLogs = async () => {
+    const fetchPlanks = async () => {
       if (!sawmillId) {
-        console.log("Sawmill ID not found. Cannot fetch logs.");
+        console.log("Sawmill ID not found. Cannot fetch planks.");
         return;
       }
 
-      const q = query(
-        collection(db, `sawmill/${sawmillId}/logs`),
-        where("planked", "==", false)
-      );
+      const q = query(collection(db, `sawmill/${sawmillId}/planks`));
       const snapshot = await getDocs(q);
-      const logsList = snapshot.docs.map((doc) => doc.data());
+      const planksList = snapshot.docs.map((doc) => doc.data());
 
-      const speciesCount = logsList.reduce((acc, log) => {
-        const species = log.speciesName;
-        const verifiedStatus = log.verified ? 'verified' : 'standard';
+      const speciesCount = planksList.reduce((acc, plank) => {
+        const species = plank.speciesName;
+        const verifiedStatus = plank.verified ? 'verified' : 'standard';
         
         if (!acc[species]) {
           acc[species] = { verified: 0, standard: 0 };
@@ -40,20 +37,20 @@ const LogsWidget = () => {
         standard: speciesCount[species].standard,
       }));
 
-      setLogsData(data);
+      setPlanksData(data);
     };
 
-    fetchLogs();
+    fetchPlanks();
   }, [sawmillId, db]);
 
   return (
     <Grid container style={{ height: 150 }}>
       <CardContent style={{ width: '100%' }}>
         <Typography variant="h6" gutterBottom>
-          Logs
+          Planks
         </Typography>
         <ResponsiveContainer width="100%" height={100}>
-          <BarChart data={logsData}>
+          <BarChart data={planksData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
             <YAxis />
@@ -67,4 +64,4 @@ const LogsWidget = () => {
   );
 };
 
-export default LogsWidget;
+export default PlanksWidgetNew;
