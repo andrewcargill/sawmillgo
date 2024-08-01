@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
-import { app } from '../../firebase-config'; // Adjusted path
-import loader from '../../utils/mapLoader'; // Adjusted path
+import { app } from '../../firebase-config';
+import loader from '../../utils/mapLoader'; 
 
 const AreasMap = () => {
   const mapRef = useRef(null);
@@ -62,9 +62,9 @@ const AreasMap = () => {
         console.log('Google Maps loaded');
 
         const map = new google.maps.Map(mapRef.current, {
-          zoom: 3,
+          zoom: 2,
           center: { lat: 24.886, lng: -70.268 },
-          mapTypeId: 'satellite', // Set map type to satellite
+          mapTypeId: 'satellite', 
         });
 
         console.log('Map initialized:', map);

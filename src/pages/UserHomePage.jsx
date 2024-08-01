@@ -32,6 +32,7 @@ import ProjectDeadlinesWidget from "../components/components-for-dev/dashboard/w
 import Carousel from "react-material-ui-carousel"; // Import the carousel
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ParkIcon from "@mui/icons-material/Park";
+import AreasMap from "../components/locations-components/AreasMap";
 
 const UserHomePage = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -85,11 +86,9 @@ const UserHomePage = () => {
         <Grid container spacing={2}>
           {/* Stock Search Widget */}
           <Grid item container xs={12} md={6} p={1} mt={2} mb={2}>
-            
-
             {/* Quick Add Section */}
 
-            <Grid
+            {/* <Grid
               container
               item
               xs={12}
@@ -99,16 +98,10 @@ const UserHomePage = () => {
               borderRadius={3}
               border="solid #79c000 5px"
             >
-              {/* <Grid item container xs={12} alignContent={"flex-start"}>
-                <ViewModuleIcon fontSize="large" />
-                <Typography variant="body1" p={1}>
-                  {" "}
-                  Quick Add{" "}
-                </Typography>
-              </Grid> */}
+         
 
               <Grid item container justifyContent={"space-around"} p={1}>
-                {/* Tree Button */}
+         
                 <Button
                   component="label"
                   role={undefined}
@@ -121,7 +114,7 @@ const UserHomePage = () => {
                   Tree
                 </Button>
 
-                {/* Log Button */}
+              
                 <Button
                   component="label"
                   role={undefined}
@@ -134,7 +127,7 @@ const UserHomePage = () => {
                   Log
                 </Button>
 
-                {/* Plank Button */}
+               
                 <Button
                   component="label"
                   role={undefined}
@@ -147,7 +140,7 @@ const UserHomePage = () => {
                   Plank
                 </Button>
 
-                {/* Project Button */}
+               
                 <Button
                   component="label"
                   role={undefined}
@@ -160,8 +153,8 @@ const UserHomePage = () => {
                   Project
                 </Button>
               </Grid>
-              
-            </Grid>
+            </Grid> */}
+            
             <Grid item xs={12} mb={2}>
               <StockSearchWidget />
             </Grid>
@@ -184,7 +177,7 @@ const UserHomePage = () => {
                 indicators={true}
                 cycleNavigation={true}
                 autoPlay={false}
-                height={"450px"}
+                height={"350px"}
                 navButtonsProps={{
                   style: {
                     opacity: 0,
@@ -224,6 +217,11 @@ const UserHomePage = () => {
                   <Grid item xs={12} md={12}>
                     <ProjectDeadlinesWidget />
                   </Grid>
+                </Grid>
+                {/* Page 3: Stock and Projects Widgets */}
+                <Grid container spacing={2} padding={2}>
+                  
+                  <AreasMap />
                 </Grid>
               </Carousel>
             </Paper>
