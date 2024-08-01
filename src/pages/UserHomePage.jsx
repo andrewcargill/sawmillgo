@@ -29,7 +29,9 @@ import PlanksWidgetNew from "../components/components-for-dev/dashboard/widgets/
 import StockLevelsWidget from "../components/components-for-dev/dashboard/widgets/StockLevelsWidget";
 import ProjectStatusWidget from "../components/components-for-dev/dashboard/widgets/ProjectStatusWidget";
 import ProjectDeadlinesWidget from "../components/components-for-dev/dashboard/widgets/ProjectDeadlinesWidget";
-import Carousel from 'react-material-ui-carousel'; // Import the carousel
+import Carousel from "react-material-ui-carousel"; // Import the carousel
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import ParkIcon from "@mui/icons-material/Park";
 
 const UserHomePage = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -82,20 +84,109 @@ const UserHomePage = () => {
       ) : (
         <Grid container spacing={2}>
           {/* Stock Search Widget */}
-          <Grid item xs={12} md={6} p={1} mt={2} mb={2}>
-            <StockSearchWidget />
+          <Grid item container xs={12} md={6} p={1} mt={2} mb={2}>
+            <Grid item xs={12} mb={2}>
+              <StockSearchWidget />
+            </Grid>
+
+            {/* Modules Section */}
+            <Grid
+              container
+              item
+              xs={12}
+              p={1}
+              mt={2}
+              mb={2}
+              borderRadius={3}
+              border="solid #79c000 5px"
+            >
+              <Grid item container xs={12} p={1} alignContent={"flex-start"}>
+                <ViewModuleIcon fontSize="large" />
+                <Typography variant="body1" p={1}>
+                  {" "}
+                  Quick Add{" "}
+                </Typography>
+              </Grid>
+
+              <Grid item container justifyContent={"space-around"} p={1}>
+
+          
+                {/* <TreeGauge /> */}
+                <Button
+               component="label"
+               role={undefined}
+               variant="contained"
+               tabIndex={-1}
+               startIcon={<ParkIcon />}
+               size="large"
+               color="dark"
+                >
+                  Tree
+                </Button>
+            
+                {/* <LogGauge /> */}
+                <Button
+                 component="label"
+                 role={undefined}
+                 variant="contained"
+                 tabIndex={-1}
+                 startIcon={<ParkIcon />}
+                 size="large"
+                 color="dark"
+                >
+                  Log
+                </Button>
+             
+              
+                {/* <PlankGauge /> */}
+                <Button
+                  component="label"
+                  role={undefined}
+                  variant="contained"
+                  tabIndex={-1}
+                  startIcon={<ParkIcon />}
+                  size="large"
+                  color="dark"
+                >
+                  Plank
+                </Button>
+           
+            
+                {/* <ProjectGauge /> */}
+                <Button
+                  component="label"
+                  role={undefined}
+                  variant="contained"
+                  tabIndex={-1}
+                  startIcon={<ParkIcon />}
+                  size="large"
+                  color="dark"
+                >
+                  Project
+                </Button>
+                </Grid>
+           
+            </Grid>
           </Grid>
 
           {/* Carousel Section */}
           <Grid item xs={12} md={6} p={1} mt={2} mb={2}>
             <Paper elevation={3}>
               {/* Carousel with pages */}
+              <Grid item container xs={12} p={1} alignContent={"flex-start"}>
+                <DashboardIcon fontSize="large" />
+                <Typography variant="body1" p={1}>
+                  {" "}
+                  Dashboard{" "}
+                </Typography>
+              </Grid>
               <Carousel
                 animation="slide"
                 navButtonsAlwaysVisible={true}
                 indicators={true} // Show dots for navigation
                 cycleNavigation={true} // Enable cycling through slides
                 autoPlay={false} // Disable auto-play
+                height={"450px"}
               >
                 {/* Page 1: General Widgets */}
                 <Grid container spacing={2} padding={2}>
