@@ -2,46 +2,37 @@ import React, { useContext, useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import UserContext from "../Contexts/UserContext"; // Adjust the import path as needed
-import UserProfileForm from "../components/users/UserProfileForm";
-import UserProfilesList from "../components/users/UserProfilesList";
-import AddSawmillForm from "../components/sawmill/AddSawmillForm";
+import { Button, Paper } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import FlagIcon from "../components/country-components/FlagIcon";
+import ViewModuleIcon from "@mui/icons-material/ViewModule";
+import SettingsIcon from "@mui/icons-material/Settings";
+import KeyIcon from "@mui/icons-material/Key";
 import TreeGauge from "./user-homepage/TreeGauge";
 import LogGauge from "./user-homepage/LogGauge";
 import PlankGauge from "./user-homepage/PlankGauge";
-import WaterGauge from "./user-homepage/WaterGauge";
-import LocationGauge from "./user-homepage/LocationGauge";
-import MovementsGauge from "./user-homepage/Movements";
 import ProjectGauge from "./user-homepage/ProjectGauge";
-import SpeciesGauge from "./user-homepage/SpeicesGauge";
-import { Button, Paper, Tooltip } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { Flag } from "@mui/icons-material";
-import FlagIcon from "../components/country-components/FlagIcon";
-import SettingsIcon from "@mui/icons-material/Settings";
-import ViewModuleIcon from "@mui/icons-material/ViewModule";
-import AddSawmillGauge from "./user-homepage/AddSawmillGauge";
-import KeyIcon from "@mui/icons-material/Key";
+import UserProfileGauge from "./user-homepage/UserProfileGauge";
 import LocationsGauge from "./user-homepage/LocationsGauge";
-import TreeAgeGauge from "./user-homepage/TreeAgeGauge";
 import DryingGauge from "./user-homepage/DryingGauge";
 import ContactsGauge from "./user-homepage/ContactsGauge";
-import UsersGauge from "./user-homepage/UsersGauge";
+import LocationGauge from "./user-homepage/LocationGauge";
+import SpeciesGauge from "./user-homepage/SpeicesGauge";
 import SawmillProfileGauge from "./user-homepage/SawmillProfileGauge";
-import UserProfileGauge from "./user-homepage/UserProfileGauge";
+import TreeAgeGauge from "./user-homepage/TreeAgeGauge";
+import UsersGauge from "./user-homepage/UsersGauge";
+import AddSawmillGauge from "./user-homepage/AddSawmillGauge";
+import StockSearchWidget from "../components/components-for-dev/dashboard/widgets/StockSearchWidget";
 import TreesWidget from "../components/components-for-dev/dashboard/widgets/TreesWidget";
 import LogsWidget from "../components/components-for-dev/dashboard/widgets/LogsWidget";
-import PlanksWidget from "../components/components-for-dev/dashboard/widgets/PlanksWidget";
+import PlanksWidgetNew from "../components/components-for-dev/dashboard/widgets/PlanksWidgetNew";
 import StockLevelsWidget from "../components/components-for-dev/dashboard/widgets/StockLevelsWidget";
 import ProjectStatusWidget from "../components/components-for-dev/dashboard/widgets/ProjectStatusWidget";
 import ProjectDeadlinesWidget from "../components/components-for-dev/dashboard/widgets/ProjectDeadlinesWidget";
-import StockSearchWidget from "../components/components-for-dev/dashboard/widgets/StockSearchWidget";
-import PlanksWidgetNew from "../components/components-for-dev/dashboard/widgets/PlanksWidgetNew";
+import Carousel from 'react-material-ui-carousel'; // Import the carousel
 
 const UserHomePage = () => {
-  // Access user information from context
-  //   const { userProfile } = useContext(UserContext);
   const [userInfo, setUserInfo] = useState(null);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,11 +53,6 @@ const UserHomePage = () => {
 
   return (
     <Grid container padding={2}>
-      {/* <Typography variant="h6" gutterBottom>
-        {userInfo ? userInfo.displayName : "Not Available"}
-        {userInfo?.country && <FlagIcon countryCode={userInfo.country} />}
-      </Typography> */}
-
       {isCreator ? (
         <>
           <Grid item xs={12} border={"2px solid black"}>
@@ -76,11 +62,11 @@ const UserHomePage = () => {
             </Typography>
             <Typography variant="h5" p={2}>
               {" "}
-              This is where you manage your on going projects{" "}
+              This is where you manage your ongoing projects{" "}
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            You Projects will be displayed here
+            Your Projects will be displayed here
           </Grid>
           <Grid item xs={12} p={3}>
             <Button
@@ -94,77 +80,53 @@ const UserHomePage = () => {
           </Grid>
         </>
       ) : (
-        <Grid container>
-                    <Grid
-            container
-            item
-            xs={12}
-            md={6}
-            p={1}
-            mt={2}
-            mb={2}
-            // borderRadius={3}
-            // border="solid #79c000 5px"
-            // sx={{ backgroundColor: "#f5f5f5" }}
-          >
-            {/* <Grid item container xs={12} p={1} alignContent={"flex-start"}>
-              <ViewModuleIcon fontSize="large" />
-              <Typography variant="body1" p={1}>
-                {" "}
-                Search Stock{" "}
-              </Typography>
-            </Grid> */}
-            <Grid item xs={12}>
-              <StockSearchWidget />
-            </Grid>
+        <Grid container spacing={2}>
+          {/* Stock Search Widget */}
+          <Grid item xs={12} md={6} p={1} mt={2} mb={2}>
+            <StockSearchWidget />
           </Grid>
 
-          <Grid
-            container
-            item
-            xs={12}
-            md={6}
-            p={1}
-            mt={2}
-            mb={2}
-            // borderRadius={3}
-            // border="solid #79c000 5px"
-            // sx={{ backgroundColor: "#f5f5f5" }}
-          >
-            {/* <Grid item container xs={12} p={1} alignContent={"flex-start"}>
-              <ViewModuleIcon fontSize="large" />
-              <Typography variant="body1" p={1}>
-                {" "}
-                Dashboard{" "}
-              </Typography>
-            </Grid> */}
-             <Paper elevation={3}>
-            <Grid container spacing={2}>
-              <Grid item xs={6} sm={4} md={6}>
-                <TreesWidget />
-              </Grid>
-              <Grid item xs={6} sm={4} md={6}>
-                <LogsWidget />
-              </Grid>
-              <Grid item xs={6} sm={4} md={6}>
-                <PlanksWidgetNew />
-              </Grid>
-              <Grid item xs={6} sm={4} md={6}>
-                <StockLevelsWidget />
-              </Grid>
-              <Grid item xs={6} sm={4} md={6}>
-                <ProjectStatusWidget />
-              </Grid>
-              <Grid item xs={6} md={6} lg={12}>
-                <ProjectDeadlinesWidget />
-              </Grid>
+          {/* Carousel Section */}
+          <Grid item xs={12} md={6} p={1} mt={2} mb={2}>
+            <Paper elevation={3}>
+              {/* Carousel with pages */}
+              <Carousel
+                animation="slide"
+                navButtonsAlwaysVisible={true}
+                indicators={true} // Show dots for navigation
+                cycleNavigation={true} // Enable cycling through slides
+                autoPlay={false} // Disable auto-play
+              >
+                {/* Page 1: General Widgets */}
+                <Grid container spacing={2} padding={2}>
+                  <Grid item xs={6} sm={4} md={6}>
+                    <TreesWidget />
+                  </Grid>
+                  <Grid item xs={6} sm={4} md={6}>
+                    <LogsWidget />
+                  </Grid>
+                  <Grid item xs={6} sm={4} md={6}>
+                    <PlanksWidgetNew />
+                  </Grid>
+                </Grid>
 
-            </Grid>
+                {/* Page 2: Stock and Projects Widgets */}
+                <Grid container spacing={2} padding={2}>
+                  <Grid item xs={6} sm={4} md={6}>
+                    <StockLevelsWidget />
+                  </Grid>
+                  <Grid item xs={6} sm={4} md={6}>
+                    <ProjectStatusWidget />
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <ProjectDeadlinesWidget />
+                  </Grid>
+                </Grid>
+              </Carousel>
             </Paper>
           </Grid>
 
-
-
+          {/* Modules Section */}
           <Grid
             container
             item
@@ -174,7 +136,6 @@ const UserHomePage = () => {
             mb={2}
             borderRadius={3}
             border="solid #79c000 5px"
-            // sx={{ backgroundColor: "#f5f5f5" }}
           >
             <Grid item container xs={12} p={1} alignContent={"flex-start"}>
               <ViewModuleIcon fontSize="large" />
@@ -210,6 +171,7 @@ const UserHomePage = () => {
             </Grid>
           </Grid>
 
+          {/* Sawmill Settings Section */}
           <Grid
             container
             borderRadius={3}
@@ -244,6 +206,7 @@ const UserHomePage = () => {
             </Grid>
           </Grid>
 
+          {/* Superuser Settings Section */}
           <Grid
             container
             borderRadius={3}
