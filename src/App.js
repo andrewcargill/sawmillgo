@@ -52,6 +52,7 @@ import AddLocationForm from "./components/locations-components/AddLocationForm";
 import UnifiedStockWireFrame from "./components/components-for-dev/projects/UnifiedStockWireFrame";
 import Dashboard from "./components/components-for-dev/projects/DashboardWireFrame";
 import DashboardWireFrame from "./components/components-for-dev/dashboard/DashboardWireFrame";
+import ItemManager from "./components/components-for-dev/dashboard/ItemManager";
 
 function App() {
  
@@ -118,7 +119,7 @@ function App() {
         <Route path="/species" element={<SpeciesPage />} />
 
         <Route path="/wireframe" element={<Dashboard />} />
-        <Route path="/wireframe-home" element={<DashboardWireFrame />} />
+        <Route path="/wireframe-home" element={<ItemManager />} />
 
       </Routes>
       </PageContentContainer>

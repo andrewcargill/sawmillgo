@@ -85,12 +85,10 @@ const UserHomePage = () => {
         <Grid container spacing={2}>
           {/* Stock Search Widget */}
           <Grid item container xs={12} md={6} p={1} mt={2} mb={2}>
-            <Grid item xs={12} mb={2}>
-              <StockSearchWidget />
-            </Grid>
+            
 
-            {/* Quiet Add Section */}
-           
+            {/* Quick Add Section */}
+
             <Grid
               container
               item
@@ -101,14 +99,13 @@ const UserHomePage = () => {
               borderRadius={3}
               border="solid #79c000 5px"
             >
-          
-              <Grid item container xs={12}  alignContent={"flex-start"}>
+              {/* <Grid item container xs={12} alignContent={"flex-start"}>
                 <ViewModuleIcon fontSize="large" />
                 <Typography variant="body1" p={1}>
                   {" "}
                   Quick Add{" "}
                 </Typography>
-              </Grid>
+              </Grid> */}
 
               <Grid item container justifyContent={"space-around"} p={1}>
                 {/* Tree Button */}
@@ -165,9 +162,10 @@ const UserHomePage = () => {
               </Grid>
               
             </Grid>
-           
+            <Grid item xs={12} mb={2}>
+              <StockSearchWidget />
+            </Grid>
           </Grid>
-          
 
           {/* Carousel Section */}
           <Grid item xs={12} md={6} p={1} mt={2} mb={2}>

@@ -94,7 +94,7 @@ const ListAllTrees = () => {
   const handleTreeClick = (treeId) => {
     const tree = trees.find((t) => t.id === treeId);
     setSelectedTreeDetails(tree);
-    setModalMode("view"); // or 'edit' based on the condition you determine
+    setModalMode("view"); 
     setIsModalOpen(true);
   };
 
@@ -202,29 +202,6 @@ const ListAllTrees = () => {
       >
         {trees.length > 0 ? (
           trees.map((tree) => (
-            // <Grid
-            //   className="item-select"
-            //   item
-            //   container
-            //   xs={3}
-            //   sm={2}
-            //   lg={2}
-            //   key={tree.id}
-            //   m={1}
-            //   bgcolor={"white.main"}
-            //   style={{
-            //     position: "relative",
-            //     border: `2px solid ${tree.logged ? "orange" : "green"}`,
-            //     borderRadius: "5px",
-            //     padding: "12px",
-            //     display: "flex",
-            //     flexDirection: "column",
-            //     justifyContent: "center",
-            //     alignItems: "center",
-            //     cursor: "pointer",
-            //   }}
-            //   onClick={() => handleTreeClick(tree.id)}
-            // >
             <Grid
             item
             xs={3}

@@ -52,6 +52,7 @@ function TreeListModal({ isOpen, onClose, treeDetails, mode, setMode }) {
         {mode === "add" && <AddEditTreeForm onClose={onClose} />}
       </Box>
     </Modal>
+    
   );
 }
 

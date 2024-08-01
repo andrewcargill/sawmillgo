@@ -18,26 +18,6 @@ function TreeDetailsModal({ treeDetails, onClose, setMode }) {
   const sawmillId = userLocalStorage?.sawmillId;
   const treeUid = treeDetails?.id;
 
-  // const handleDelete = async () => {
-  //   // Use prompt to ask the user to input the refId
-  //   const userInput = window.prompt(
-  //     `This action will delete ${treeDetails.refId}. Type the Ref ID to confirm.`
-  //   );
-
-  //   if (userInput === treeDetails.refId) {
-  //     try {
-  //       if (treeUid) {
-  //         await deleteDoc(doc(db, `sawmill/${sawmillId}/trees`, treeUid));
-  //         alert("Tree deleted successfully.");
-  //         onClose(); // Close the modal or redirect user
-  //       }
-  //     } catch (error) {
-  //       console.error("Error deleting tree: ", error);
-  //       alert(`Failed to delete tree. Error: ${error.message}`);
-  //     }
-  //   }
-  // };
-
   const handleDelete = async () => {
     // Use prompt to ask the user to input the refId
     const userInput = window.prompt(

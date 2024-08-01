@@ -145,7 +145,6 @@ const AddEditTreeForm = ({ treeDetails, onClose }) => {
         console.log("No such document!");
       }
     };
-
     fetchTreeData();
   }, [db, currentUserUID, sawmillId]);
 
