@@ -89,7 +89,8 @@ const UserHomePage = () => {
               <StockSearchWidget />
             </Grid>
 
-            {/* Modules Section */}
+            {/* Quiet Add Section */}
+           
             <Grid
               container
               item
@@ -100,7 +101,8 @@ const UserHomePage = () => {
               borderRadius={3}
               border="solid #79c000 5px"
             >
-              <Grid item container xs={12} p={1} alignContent={"flex-start"}>
+          
+              <Grid item container xs={12}  alignContent={"flex-start"}>
                 <ViewModuleIcon fontSize="large" />
                 <Typography variant="body1" p={1}>
                   {" "}
@@ -109,36 +111,33 @@ const UserHomePage = () => {
               </Grid>
 
               <Grid item container justifyContent={"space-around"} p={1}>
-
-          
-                {/* <TreeGauge /> */}
+                {/* Tree Button */}
                 <Button
-               component="label"
-               role={undefined}
-               variant="contained"
-               tabIndex={-1}
-               startIcon={<ParkIcon />}
-               size="large"
-               color="dark"
+                  component="label"
+                  role={undefined}
+                  variant="contained"
+                  tabIndex={-1}
+                  startIcon={<ParkIcon />}
+                  size="large"
+                  color="dark"
                 >
                   Tree
                 </Button>
-            
-                {/* <LogGauge /> */}
+
+                {/* Log Button */}
                 <Button
-                 component="label"
-                 role={undefined}
-                 variant="contained"
-                 tabIndex={-1}
-                 startIcon={<ParkIcon />}
-                 size="large"
-                 color="dark"
+                  component="label"
+                  role={undefined}
+                  variant="contained"
+                  tabIndex={-1}
+                  startIcon={<ParkIcon />}
+                  size="large"
+                  color="dark"
                 >
                   Log
                 </Button>
-             
-              
-                {/* <PlankGauge /> */}
+
+                {/* Plank Button */}
                 <Button
                   component="label"
                   role={undefined}
@@ -150,9 +149,8 @@ const UserHomePage = () => {
                 >
                   Plank
                 </Button>
-           
-            
-                {/* <ProjectGauge /> */}
+
+                {/* Project Button */}
                 <Button
                   component="label"
                   role={undefined}
@@ -164,10 +162,12 @@ const UserHomePage = () => {
                 >
                   Project
                 </Button>
-                </Grid>
-           
+              </Grid>
+              
             </Grid>
+           
           </Grid>
+          
 
           {/* Carousel Section */}
           <Grid item xs={12} md={6} p={1} mt={2} mb={2}>
@@ -183,10 +183,24 @@ const UserHomePage = () => {
               <Carousel
                 animation="slide"
                 navButtonsAlwaysVisible={true}
-                indicators={true} // Show dots for navigation
-                cycleNavigation={true} // Enable cycling through slides
-                autoPlay={false} // Disable auto-play
+                indicators={true}
+                cycleNavigation={true}
+                autoPlay={false}
                 height={"450px"}
+                navButtonsProps={{
+                  style: {
+                    opacity: 0,
+                    transition: "opacity 0.5s",
+                  },
+                }}
+                navButtonsWrapperProps={{
+                  onMouseEnter: (e) => {
+                    e.currentTarget.style.opacity = 1;
+                  },
+                  onMouseLeave: (e) => {
+                    e.currentTarget.style.opacity = 0;
+                  },
+                }}
               >
                 {/* Page 1: General Widgets */}
                 <Grid container spacing={2} padding={2}>
