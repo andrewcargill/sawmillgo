@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import UserContext from "../Contexts/UserContext"; // Adjust the import path as needed
 import { Button, Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import FlagIcon from "../components/country-components/FlagIcon";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import SettingsIcon from "@mui/icons-material/Settings";
 import KeyIcon from "@mui/icons-material/Key";
@@ -22,17 +20,17 @@ import SawmillProfileGauge from "./user-homepage/SawmillProfileGauge";
 import TreeAgeGauge from "./user-homepage/TreeAgeGauge";
 import UsersGauge from "./user-homepage/UsersGauge";
 import AddSawmillGauge from "./user-homepage/AddSawmillGauge";
-import StockSearchWidget from "../components/components-for-dev/dashboard/widgets/StockSearchWidget";
+import StockSearchWidget from "../components/search/StockSearchWidget";
 import TreesWidget from "../components/components-for-dev/dashboard/widgets/TreesWidget";
 import LogsWidget from "../components/components-for-dev/dashboard/widgets/LogsWidget";
 import PlanksWidgetNew from "../components/components-for-dev/dashboard/widgets/PlanksWidgetNew";
 import StockLevelsWidget from "../components/components-for-dev/dashboard/widgets/StockLevelsWidget";
 import ProjectStatusWidget from "../components/components-for-dev/dashboard/widgets/ProjectStatusWidget";
 import ProjectDeadlinesWidget from "../components/components-for-dev/dashboard/widgets/ProjectDeadlinesWidget";
-import Carousel from "react-material-ui-carousel"; // Import the carousel
+import Carousel from "react-material-ui-carousel";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import ParkIcon from "@mui/icons-material/Park";
-import AreasMap from "../components/locations-components/AreasMap";
+import SearchIcon from "@mui/icons-material/Search";
+import WidgetMap from "../components/locations-components/WidgetMap";
 
 const UserHomePage = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -83,160 +81,103 @@ const UserHomePage = () => {
           </Grid>
         </>
       ) : (
-        <Grid container spacing={2}>
+        <Grid container>
           {/* Stock Search Widget */}
-          <Grid item container xs={12} md={6} p={1} mt={2} mb={2}>
-            {/* Quick Add Section */}
-
-            {/* <Grid
-              container
-              item
-              xs={12}
-              p={1}
-              mt={2}
-              mb={2}
-              borderRadius={3}
-              border="solid #79c000 5px"
-            >
-         
-
-              <Grid item container justifyContent={"space-around"} p={1}>
-         
-                <Button
-                  component="label"
-                  role={undefined}
-                  variant="contained"
-                  tabIndex={-1}
-                  startIcon={<ParkIcon />}
-                  size="large"
-                  color="dark"
-                >
-                  Tree
-                </Button>
-
-              
-                <Button
-                  component="label"
-                  role={undefined}
-                  variant="contained"
-                  tabIndex={-1}
-                  startIcon={<ParkIcon />}
-                  size="large"
-                  color="dark"
-                >
-                  Log
-                </Button>
-
-               
-                <Button
-                  component="label"
-                  role={undefined}
-                  variant="contained"
-                  tabIndex={-1}
-                  startIcon={<ParkIcon />}
-                  size="large"
-                  color="dark"
-                >
-                  Plank
-                </Button>
-
-               
-                <Button
-                  component="label"
-                  role={undefined}
-                  variant="contained"
-                  tabIndex={-1}
-                  startIcon={<ParkIcon />}
-                  size="large"
-                  color="dark"
-                >
-                  Project
-                </Button>
-              </Grid>
-            </Grid> */}
-            
-            <Grid item xs={12} mb={2}>
-              <StockSearchWidget />
+          <Grid item container xs={12} spacing={2} className="top-container">
+            <Grid item xs={12} md={6} mb={2} className="search">
+              <Paper elevation={3}>
+                <Grid item container xs={12} p={1} alignContent={"flex-start"}>
+                  <SearchIcon fontSize="large" />
+                  <Typography variant="body1" p={1}>
+                    {" "}
+                    Search{" "}
+                  </Typography>
+                </Grid>
+                <StockSearchWidget />
+              </Paper>
             </Grid>
-          </Grid>
 
-          {/* Carousel Section */}
-          <Grid item xs={12} md={6} p={1} mt={2} mb={2}>
-            <Paper elevation={3}>
-              {/* Carousel with pages */}
-              <Grid item container xs={12} p={1} alignContent={"flex-start"}>
-                <DashboardIcon fontSize="large" />
-                <Typography variant="body1" p={1}>
-                  {" "}
-                  Dashboard{" "}
-                </Typography>
-              </Grid>
-              <Carousel
-                animation="slide"
-                navButtonsAlwaysVisible={true}
-                indicators={true}
-                cycleNavigation={true}
-                autoPlay={false}
-                height={"350px"}
-                navButtonsProps={{
-                  style: {
-                    opacity: 0,
-                    transition: "opacity 0.5s",
-                  },
-                }}
-                navButtonsWrapperProps={{
-                  onMouseEnter: (e) => {
-                    e.currentTarget.style.opacity = 1;
-                  },
-                  onMouseLeave: (e) => {
-                    e.currentTarget.style.opacity = 0;
-                  },
-                }}
-              >
-                {/* Page 1: General Widgets */}
-                <Grid container spacing={2} padding={2}>
-                  <Grid item xs={6} sm={4} md={6}>
-                    <TreesWidget />
-                  </Grid>
-                  <Grid item xs={6} sm={4} md={6}>
-                    <LogsWidget />
-                  </Grid>
-                  <Grid item xs={6} sm={4} md={6}>
-                    <PlanksWidgetNew />
-                  </Grid>
+            {/* Carousel Section */}
+            <Grid item xs={12} md={6} mb={2} className="widgets">
+              <Paper elevation={3}>
+                {/* Carousel with pages */}
+                <Grid item container xs={12} p={1} alignContent={"flex-start"}>
+                  <DashboardIcon fontSize="large" />
+                  <Typography variant="body1" p={1}>
+                    {" "}
+                    Dashboard{" "}
+                  </Typography>
                 </Grid>
+                <Carousel
+                  animation="slide"
+                  navButtonsAlwaysVisible={true}
+                  indicators={true}
+                  cycleNavigation={true}
+                  autoPlay={false}
+                  height={"350px"}
+                  navButtonsProps={{
+                    style: {
+                      opacity: 0,
+                      transition: "opacity 0.5s",
+                    },
+                  }}
+                  navButtonsWrapperProps={{
+                    onMouseEnter: (e) => {
+                      e.currentTarget.style.opacity = 1;
+                    },
+                    onMouseLeave: (e) => {
+                      e.currentTarget.style.opacity = 0;
+                    },
+                  }}
+                >
+                  {/* Page 1: General Widgets */}
+                  <Grid container spacing={2} padding={2}>
+                    <Grid item xs={6} sm={4} md={6}>
+                      <TreesWidget />
+                    </Grid>
+                    <Grid item xs={6} sm={4} md={6}>
+                      <LogsWidget />
+                    </Grid>
+                    <Grid item xs={6} sm={4} md={6}>
+                      <PlanksWidgetNew />
+                    </Grid>
+                  </Grid>
 
-                {/* Page 2: Stock and Projects Widgets */}
-                <Grid container spacing={2} padding={2}>
-                  <Grid item xs={6} sm={4} md={6}>
-                    <StockLevelsWidget />
+                  {/* Page 2: Stock and Projects Widgets */}
+                  <Grid container spacing={2} padding={2}>
+                    <Grid item xs={6} sm={4} md={6}>
+                      <StockLevelsWidget />
+                    </Grid>
+                    <Grid item xs={6} sm={4} md={6}>
+                      <ProjectStatusWidget />
+                    </Grid>
+                    <Grid item xs={12} md={12}>
+                      <ProjectDeadlinesWidget />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={6} sm={4} md={6}>
-                    <ProjectStatusWidget />
+                  {/* Page 3: Stock and Projects Widgets */}
+                  <Grid container p={2}>
+                    <Grid item xs={12} sx={{ padding: "0 30px" }}>
+                      <Typography variant="body2" align="left" gutterBottom>
+                        Active locations
+                      </Typography>
+                      <WidgetMap />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} md={12}>
-                    <ProjectDeadlinesWidget />
-                  </Grid>
-                </Grid>
-                {/* Page 3: Stock and Projects Widgets */}
-                <Grid container spacing={2} padding={2}>
-                  
-                  <AreasMap />
-                </Grid>
-              </Carousel>
-            </Paper>
+                </Carousel>
+              </Paper>
+            </Grid>
           </Grid>
 
           {/* Modules Section */}
           <Grid
             container
+            borderRadius={3}
             item
             xs={12}
             p={1}
-            mt={2}
             mb={2}
-            borderRadius={3}
-            border="solid #79c000 5px"
+            border="solid black 1px"
           >
             <Grid item container xs={12} p={1} alignContent={"flex-start"}>
               <ViewModuleIcon fontSize="large" />
@@ -279,7 +220,6 @@ const UserHomePage = () => {
             item
             xs={12}
             p={1}
-            mt={2}
             mb={2}
             border="solid black 1px"
           >
@@ -314,7 +254,6 @@ const UserHomePage = () => {
             item
             xs={12}
             p={1}
-            mt={2}
             mb={2}
             border="solid black 1px"
           >

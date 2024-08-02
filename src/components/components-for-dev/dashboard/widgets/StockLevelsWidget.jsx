@@ -28,6 +28,9 @@ const StockLevelsWidget = () => {
   return (
     <Grid container style={{ height: 150 }}>
       <CardContent style={{ width: '100%' }}>
+      <Typography variant="body2" align='left' gutterBottom>
+          Overall Stock Levels
+        </Typography>
         <ResponsiveContainer width="100%" height={100}>
           <PieChart>
             <Pie

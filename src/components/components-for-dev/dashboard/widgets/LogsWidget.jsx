@@ -49,8 +49,8 @@ const LogsWidget = () => {
   return (
     <Grid container style={{ height: 150 }}>
       <CardContent style={{ width: '100%' }}>
-        <Typography variant="h6" gutterBottom>
-          Logs
+        <Typography variant="body2" align='left' gutterBottom>
+          Total available logs
         </Typography>
         <ResponsiveContainer width="100%" height={100}>
           <BarChart data={logsData}>

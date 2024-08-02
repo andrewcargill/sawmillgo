@@ -1,5 +1,5 @@
 import React from 'react';
-import { CardContent, Typography, Paper, Grid } from '@mui/material';
+import { CardContent, Grid, Typography } from '@mui/material';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Tooltip, ResponsiveContainer } from 'recharts';
 
 const projectStatusData = [
@@ -11,15 +11,16 @@ const projectStatusData = [
 
 const ProjectStatusWidget = () => {
   return (
-    <Grid container style={{ height: 150 }}>
+    <Grid container style={{ height: 160 }}>
       <CardContent style={{ width: '100%' }}>
-        {/* <Typography variant="h6" gutterBottom>
-          Project Status
-        </Typography> */}
+  
         <ResponsiveContainer width="100%" height={'100%'}>
           <RadarChart data={projectStatusData}>
             <PolarGrid />
-            <PolarAngleAxis dataKey="subject" />
+            <PolarAngleAxis 
+              dataKey="subject" 
+              tick={{ fontSize: 12 }}  // Set the font size here
+            />
             <PolarRadiusAxis angle={30} domain={[0, 5]} />
             <Radar name="Projects" dataKey="A" stroke="#24211e" fill="#24211e" fillOpacity={0.6} />
             <Tooltip />
