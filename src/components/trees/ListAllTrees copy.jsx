@@ -94,7 +94,7 @@ const ListAllTrees = () => {
   const handleTreeClick = (treeId) => {
     const tree = trees.find((t) => t.id === treeId);
     setSelectedTreeDetails(tree);
-    setModalMode("view"); // or 'edit' based on the condition you determine
+    setModalMode("view"); 
     setIsModalOpen(true);
   };
 
@@ -203,28 +203,31 @@ const ListAllTrees = () => {
         {trees.length > 0 ? (
           trees.map((tree) => (
             <Grid
-              className="item-select"
-              item
-              container
-              xs={3}
+            item
+            xs={3}
               sm={2}
               lg={2}
               key={tree.id}
               m={1}
-              bgcolor={"white.main"}
-              style={{
-                position: "relative",
-                border: `2px solid ${tree.logged ? "orange" : "green"}`,
-                borderRadius: "5px",
-                padding: "12px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                cursor: "pointer",
-              }}
-              onClick={() => handleTreeClick(tree.id)}
-            >
+            border={1}
+            borderRadius={3}
+            p={2}
+            boxShadow={2}
+            bgcolor={"white.main"}
+            textAlign="center"
+            style={{
+               position: "relative",
+            }}
+           
+            sx={{
+              cursor: "pointer",
+              "&:hover": {
+                backgroundColor: "primary.main",
+              },
+              transition: "background-color 0.5s",
+            }}
+            onClick={() => handleTreeClick(tree.id)}
+          >
               <Grid item>
                 <h3>{tree.refId}</h3>
               </Grid>

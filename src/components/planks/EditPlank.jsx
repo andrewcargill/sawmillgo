@@ -65,15 +65,6 @@ const EditPlank = () => {
     fetchLocationsForSawmill(db, sawmillId)
       .then(setLocations)
       .catch((error) => alert(error.message));
-    // fetchProjectsForSawmill(db, sawmillId)
-    //   .then((fetchedProjects) => {
-    //     const normalizedProjects = fetchedProjects.map((project) => ({
-    //       id: project.id,
-    //       name: project.projectName,
-    //     }));
-    //     setProjects(normalizedProjects);
-    //   })
-    //   .catch(console.error);
     fetchSpeciesForSawmill(db, sawmillId)
       .then(setSpecies)
       .catch((error) => alert(error.message));

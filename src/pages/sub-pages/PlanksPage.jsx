@@ -5,6 +5,7 @@ import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import ListAllPlanks from "../../components/planks/ListAllPlanks";
 import AllPlanksMap from "../../components/planks/sub-components/AllPlanksMap";
+import ListAllPlanksRef from "../../components/planks/ListAllPlanksRef";
 
 const PlanksPage = () => {
   const navigate = useNavigate();
@@ -13,8 +14,9 @@ const PlanksPage = () => {
     <>
       <Grid p={1}>
         <ListAllPlanks />
+        {/* <ListAllPlanksRef /> */}
         <Grid container item>
-          <AllPlanksMap />
+          {/* <AllPlanksMap /> */}
         </Grid>
       </Grid>
     </>

@@ -18,9 +18,6 @@ import {
   TableRow,
   Button,
   Divider,
-  Dialog,
-  DialogTitle,
-  DialogContent,
   useMediaQuery,
   useTheme,
   ToggleButtonGroup,
@@ -32,6 +29,8 @@ import { Search as SearchIcon, FilterList as FilterListIcon } from '@mui/icons-m
 import { getFirestore, collection, getDocs, query, where, orderBy, limit, startAfter } from 'firebase/firestore';
 import { app } from '../../firebase-config';
 
+import ItemDialog from '../item-dialogs/ItemDialog'; 
+
 const StockSearchWidget = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState('Tree');
@@ -41,6 +40,8 @@ const StockSearchWidget = () => {
   const [hasMore, setHasMore] = useState(true);
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [dialogMode, setDialogMode] = useState('view');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem('user'))?.sawmillId;
@@ -198,10 +199,20 @@ const StockSearchWidget = () => {
   const handleItemClick = (item) => {
     console.log('Item clicked:', item);
     setSelectedItem(item);
+    setDialogMode('view'); // Set dialog mode to view when an item is clicked
+    setIsDialogOpen(true); // Open the ItemDialog
   };
 
   const handleCloseDialog = () => {
+    setIsDialogOpen(false);
     setSelectedItem(null);
+  };
+
+  const handleSaveItem = (updatedItem) => {
+    // Logic to save the updated or new item
+    console.log('Save item:', updatedItem);
+    setIsDialogOpen(false);
+    fetchStockData(); // Refresh the list after saving
   };
 
   // Filter stock data based on search query
@@ -211,7 +222,6 @@ const StockSearchWidget = () => {
   );
 
   return (
-    // <div style={{ width: '100%', position: 'relative', height: '379px'  }} className='search-widget-container'>
     <Grid sx={{ width: '100%', position: 'relative', height: {xs: '415px', sm: '400px', md: '379px', lg: '379px'} }} className='search-widget-container'>
       <CardContent>
         {/* Top Section: Type Selection and Search */}
@@ -362,41 +372,14 @@ const StockSearchWidget = () => {
         </Box>
 
         {/* Item Details Dialog */}
-        <Dialog open={!!selectedItem} onClose={handleCloseDialog}>
-          <DialogTitle>Item Details</DialogTitle>
-          <DialogContent>
-            {selectedItem && (
-              <Box>
-                <Typography variant="body1">
-                  <strong>Name:</strong> {selectedItem.refId}
-                </Typography>
-                <Typography variant="body1">
-                  <strong>Species:</strong> {selectedItem.speciesName}
-                </Typography>
-                {selectedItem.age && (
-                  <Typography variant="body1">
-                    <strong>Age:</strong> {selectedItem.age}
-                  </Typography>
-                )}
-                {selectedItem.diameter && (
-                  <Typography variant="body1">
-                    <strong>Diameter:</strong> {selectedItem.diameter}
-                  </Typography>
-                )}
-                {selectedItem.grade && (
-                  <Typography variant="body1">
-                    <strong>Grade:</strong> {selectedItem.grade}
-                  </Typography>
-                )}
-                {selectedItem.verified !== undefined && (
-                  <Typography variant="body1">
-                    <strong>Verified:</strong> {selectedItem.verified ? 'Yes' : 'No'}
-                  </Typography>
-                )}
-              </Box>
-            )}
-          </DialogContent>
-        </Dialog>
+        <ItemDialog
+          isOpen={isDialogOpen}
+          onClose={handleCloseDialog}
+          itemDetails={selectedItem}
+          mode={dialogMode}
+          type={selectedType.toLowerCase()} // Pass the type as lowercase
+          onSave={handleSaveItem}
+        />
       </CardContent>
     </Grid>
   );
