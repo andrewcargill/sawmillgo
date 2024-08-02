@@ -141,6 +141,9 @@ const UserHomePage = () => {
                     <Grid item xs={6} sm={4} md={6}>
                       <PlanksWidgetNew />
                     </Grid>
+                    <Grid item xs={6} sm={4} md={6}>
+                      <StockLevelsWidget />
+                    </Grid>
                   </Grid>
 
                   {/* Page 2: Stock and Projects Widgets */}

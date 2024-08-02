@@ -13,7 +13,7 @@ const PlanksWidget = () => {
     <Grid container style={{ height: 150 }}>
       <CardContent style={{ width: '80%' }}>
         <Typography variant="body2" align='left' gutterBottom>
-          Total available planks
+          Available Planks
         </Typography>
         <ResponsiveContainer width="100%" height={100}>
           <BarChart data={planksData}>

@@ -1,6 +1,5 @@
-// LogForm.js
-import React from 'react';
-import { Grid, TextField } from '@mui/material';
+import React from "react";
+import { Grid, TextField } from "@mui/material";
 
 const LogForm = ({ log, onChange, disabled }) => {
   return (
@@ -10,7 +9,7 @@ const LogForm = ({ log, onChange, disabled }) => {
           fullWidth
           label="Reference ID"
           name="refId"
-          value={log.refId || ''}
+          value={log.refId || ""}
           onChange={onChange}
           disabled={disabled}
         />
@@ -30,7 +29,7 @@ const LogForm = ({ log, onChange, disabled }) => {
           fullWidth
           label="Diameter"
           name="diameter"
-          value={log.diameter || ''}
+          value={log.diameter || ""}
           onChange={onChange}
           disabled={disabled}
         />
@@ -40,7 +39,7 @@ const LogForm = ({ log, onChange, disabled }) => {
           fullWidth
           label="Length"
           name="length"
-          value={log.length || ''}
+          value={log.length || ""}
           onChange={onChange}
           disabled={disabled}
         />
@@ -50,7 +49,7 @@ const LogForm = ({ log, onChange, disabled }) => {
           fullWidth
           label="Location"
           name="location"
-          value={log.location || ''}
+          value={log.location || ""}
           onChange={onChange}
           disabled={disabled}
         />

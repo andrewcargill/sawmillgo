@@ -1,6 +1,11 @@
-// TreeForm.js
-import React from 'react';
-import { Grid, TextField, Checkbox, FormControlLabel, Button } from '@mui/material';
+import React from "react";
+import {
+  Grid,
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  Button,
+} from "@mui/material";
 
 const TreeForm = ({
   tree,
@@ -10,7 +15,7 @@ const TreeForm = ({
   onSelectChange,
   onFileChange,
   onSubmit,
-  mode
+  mode,
 }) => {
   return (
     <form onSubmit={onSubmit}>
@@ -23,7 +28,7 @@ const TreeForm = ({
             value={tree.refId}
             onChange={onChange}
             required
-            disabled={mode === 'view'}
+            disabled={mode === "view"}
           />
         </Grid>
         <Grid item xs={12}>
@@ -34,7 +39,7 @@ const TreeForm = ({
             value={tree.speciesName}
             onChange={onChange}
             required
-            disabled={mode === 'view'}
+            disabled={mode === "view"}
           />
         </Grid>
         <Grid item xs={12}>
@@ -42,10 +47,10 @@ const TreeForm = ({
             fullWidth
             label="Age"
             name="age"
-            value={tree.age || ''}
+            value={tree.age || ""}
             onChange={onChange}
             required
-            disabled={mode === 'view'}
+            disabled={mode === "view"}
           />
         </Grid>
         <Grid item xs={12}>
@@ -53,10 +58,10 @@ const TreeForm = ({
             fullWidth
             label="Height"
             name="height"
-            value={tree.height || ''}
+            value={tree.height || ""}
             onChange={onChange}
             required
-            disabled={mode === 'view'}
+            disabled={mode === "view"}
           />
         </Grid>
         <Grid item xs={12}>
@@ -64,10 +69,10 @@ const TreeForm = ({
             fullWidth
             label="Location"
             name="location"
-            value={tree.location || ''}
+            value={tree.location || ""}
             onChange={onChange}
             required
-            disabled={mode === 'view'}
+            disabled={mode === "view"}
           />
         </Grid>
         <Grid item xs={12}>
@@ -77,13 +82,13 @@ const TreeForm = ({
                 name="protected"
                 checked={tree.protected}
                 onChange={onChange}
-                disabled={mode === 'view'}
+                disabled={mode === "view"}
               />
             }
             label="Protected"
           />
         </Grid>
-        {mode !== 'view' && (
+        {mode !== "view" && (
           <Grid item xs={12}>
             <Button type="submit" variant="contained" color="primary">
               Save
