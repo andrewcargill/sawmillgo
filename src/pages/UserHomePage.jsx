@@ -90,7 +90,7 @@ const UserHomePage = () => {
                   <SearchIcon fontSize="large" />
                   <Typography variant="body1" p={1}>
                     {" "}
-                    Search{" "}
+                    Stock Search{" "}
                   </Typography>
                 </Grid>
                 <StockSearchWidget />
