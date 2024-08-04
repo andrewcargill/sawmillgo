@@ -79,13 +79,13 @@ const ItemDialog = ({
 
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>
+      {/* <DialogTitle>
         {mode === "view"
           ? `View ${type}`
           : mode === "edit"
           ? `Edit ${type}`
           : `Add New ${type}`}
-      </DialogTitle>
+      </DialogTitle> */}
       <DialogContent>
         {loading ? (
           <CircularProgress />

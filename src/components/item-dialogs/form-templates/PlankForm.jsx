@@ -72,26 +72,25 @@ const PlankForm = ({
     );
   }
 
-
-
   return (
     <Grid container>
-      <Grid item xs={12}>
+      <Grid item xs={12} pb={3}>
         <Typography variant="h6" p={1}>
           {mode === "view"
-            ? `View Plank: ${plank?.refId}`
+            ? `Plank: ${plank?.refId}`
             : `${mode === "edit" ? "Edit" : "Add"} Plank: ${plank?.refId}`}
         </Typography>
       </Grid>
-      <Grid container spacing={2}>
+      <Grid container>
         <Grid
           item
           container
           xs={12}
-          spacing={2}
           p={2}
-          border={"solid 1px lightgray"}
-          borderRadius={3}
+          spacing={1}
+          // border={"solid 1px lightgray"}
+          // borderRadius={3}
+
         >
           <TextFieldGridThird
             name="date"
@@ -164,8 +163,11 @@ const PlankForm = ({
           xs={12}
           spacing={2}
           p={2}
-          border={"solid 1px lightgray"}
-          borderRadius={3}
+          pb={5}
+        
+          // border={"solid 1px lightgray"}
+          // borderRadius={3}
+         
         >
           <TextFieldGridFull
             name="notes"
@@ -174,25 +176,26 @@ const PlankForm = ({
             onChange={onChange}
             multiline
             disabled={mode === "view"}
+          
           />
 
           {mode === "view" ? (
-            <Grid container spacing={2}>
+            <Grid container spacing={2} p={2} >
               {plank.image1 && (
-                <Grid item xs={6}>
+                <Grid item xs={6} >
                   <img
                     src={plank.image1}
                     alt="Plank Image 1"
-                    style={{ width: "100%" }}
+                    style={{ width: "50%" }}
                   />
                 </Grid>
               )}
               {plank.image2 && (
-                <Grid item xs={6}>
+                <Grid item xs={6} >
                   <img
                     src={plank.image2}
                     alt="Plank Image 2"
-                    style={{ width: "100%" }}
+                    style={{ width: "50%" }}
                   />
                 </Grid>
               )}
@@ -204,14 +207,16 @@ const PlankForm = ({
               xs={12}
               spacing={2}
               p={2}
-              border={"solid 1px lightgray"}
-              borderRadius={3}
+           
+              // border={"solid 1px lightgray"}
+              // borderRadius={3}
             >
               <Grid
                 container
                 item
                 xs={12}
                 sm={12}
+            
                 alignContent={"center"}
                 justifyContent={"space-around"}
               >
@@ -263,8 +268,8 @@ const PlankForm = ({
             xs={12}
             spacing={2}
             p={2}
-            border={"solid 1px lightgray"}
-            borderRadius={3}
+            // border={"solid 1px lightgray"}
+            // borderRadius={3}
           >
             <CheckboxGrid
               name="furniture"
