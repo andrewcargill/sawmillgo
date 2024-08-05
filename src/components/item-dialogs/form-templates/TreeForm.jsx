@@ -10,6 +10,7 @@ import {
   InputLabel,
   MenuItem,
   Typography,
+  Chip,
 } from "@mui/material";
 
 const TreeForm = ({
@@ -23,22 +24,28 @@ const TreeForm = ({
   onSubmit,
   mode,
 }) => {
+
+  const hasLogs = tree && Array.isArray(tree.logIds) && tree.logIds.length > 0;
+  const hasImage = tree && Array.isArray(tree.image);
+
   return (
     <form onSubmit={onSubmit}>
        <Grid item xs={12} pb={3}>
-        <Typography variant="h6" p={1}>
+        <Typography variant="h6">
           {mode === "view"
             ? `Tree: ${tree?.refId}`
             : `${mode === "edit" ? "Edit" : "Add"} Tree: ${tree?.refId}`}
         </Typography>
+        <Typography>Status: {tree?.status}</Typography>
       </Grid>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <TextField
             fullWidth
-            label="Reference ID"
-            name="refId"
-            value={tree.refId}
+            label="Date Felled"
+            type="date"
+            name="date"
+            value={tree.date}
             onChange={onChange}
             required
             disabled={mode === "view"}
@@ -91,9 +98,10 @@ const TreeForm = ({
             disabled={mode === "view"}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <TextField
             fullWidth
+          
             label="Lumberjack"
             name="lumberjackName"
             value={tree.lumberjackName || ""}
@@ -104,6 +112,8 @@ const TreeForm = ({
         </Grid>
         <Grid item xs={12}>
           <TextField
+              multiline={true}
+              rows={3}
             fullWidth
             label="Reason"
             name="reason"
@@ -113,19 +123,19 @@ const TreeForm = ({
             disabled={mode === "view"}
           />
         </Grid>
-        <Grid item xs={12}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                name="protected"
-                checked={tree.protected}
-                onChange={onChange}
-                disabled={mode === "view"}
-              />
-            }
-            label="Protected"
-          />
-        </Grid>
+          { hasImage && (
+        <Grid container spacing={2} p={2} >
+             
+                <Grid item xs={6} >
+                  <img
+                    src={tree.image}
+                    alt="Plank Image"
+                    style={{ width: "50%" }}
+                  />
+                </Grid>
+                </Grid>
+          )}
+   
         {mode !== "view" && (
           <Grid item xs={12}>
             <Button type="submit" variant="contained" color="primary">
@@ -134,6 +144,34 @@ const TreeForm = ({
           </Grid>
         )}
       </Grid>
+      <Grid container spacing={2}>
+      {hasLogs && (
+        <>
+          <Grid item xs={12} mt={3}>
+            <Typography variant="body1" gutterBottom>
+              Logs
+            </Typography>
+          </Grid>
+          {tree.logIds.map((logId) => (
+            <Grid item xs={12} key={logId}>
+              <Chip
+                label={logId}
+           
+                // onClick={}
+                variant="outlined"
+                color="primary"
+                clickable
+              />
+            </Grid>
+          ))}
+        </>
+      )}
+      {!hasLogs && (
+        <Grid item xs={12}>
+          <Typography variant="body1">Tree is not logged</Typography>
+        </Grid>
+      )}
+    </Grid>
     </form>
   );
 };

@@ -358,7 +358,7 @@ function TextFieldGridThird({
   disabled = false,
 }) {
   return (
-    <Grid item xs={12} sm={4}>
+    <Grid item xs={12} sm={6}>
       <TextField
         fullWidth
         label={label}
@@ -422,7 +422,7 @@ function CheckboxGrid({ name, label, checked, onChange, disabled = false }) {
 
 function renderSelect(name, label, options, onChange, value, disabled = false) {
   return (
-    <Grid item xs={12} sm={4}>
+    <Grid item xs={12} sm={6}>
       <FormControl fullWidth>
         <InputLabel id={`${name}-label`}>{label}</InputLabel>
         <Select
