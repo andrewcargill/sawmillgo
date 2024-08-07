@@ -6,7 +6,7 @@ import {
   where,
   query,
 } from "firebase/firestore";
-import { app } from "../../firebase-config"; 
+import { app } from "../../firebase-config";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
@@ -16,7 +16,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import TextField from "@mui/material/TextField";
-import TreeListModal from "./TreeListModal";
+import ItemDialog from "../item-dialogs/ItemDialog"; // Use the new ItemDialog component
 import { fetchSpeciesForSawmill } from "../../utils/filestoreOperations";
 import CarpenterIcon from "@mui/icons-material/Carpenter";
 import BlockIcon from "@mui/icons-material/Block";
@@ -28,7 +28,6 @@ const ListAllTrees = () => {
   const [speciesFilter, setSpeciesFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("available");
   const [refIdFilter, setRefIdFilter] = useState("");
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTreeDetails, setSelectedTreeDetails] = useState(null);
   const [species, setSpecies] = useState([]);
@@ -43,15 +42,13 @@ const ListAllTrees = () => {
 
     let q = collection(db, `sawmill/${sawmillId}/trees`);
 
-    let conditions = []; // Array to hold query conditions
-    // Add condition for logging status
+    let conditions = [];
 
     if (statusFilter) {
       conditions.push(where("status", "==", statusFilter));
     }
 
     if (refIdFilter.trim()) {
-      // Filter by refId if it is provided
       q = query(q, where("refId", "==", refIdFilter.trim()));
     } else {
       if (loggingFilter === "logged") {
@@ -68,6 +65,7 @@ const ListAllTrees = () => {
         q = query(q, ...conditions);
       }
     }
+
     const snapshot = await getDocs(q);
     const treesList = snapshot.docs.map((doc) => ({
       id: doc.id,
@@ -82,30 +80,40 @@ const ListAllTrees = () => {
         setSpecies(fetchedSpecies);
       })
       .catch((error) => {
-        console.error("Error fetching projects:", error);
-        alert("Failed to fetch projects: " + error.message);
+        console.error("Error fetching species:", error);
+        alert("Failed to fetch species: " + error.message);
       });
-  }, []);
+  }, [db, sawmillId]);
 
   useEffect(() => {
     fetchTrees(statusFilter);
-  }, [loggingFilter, speciesFilter, refIdFilter, statusFilter]); // Re-run fetchTrees when filter changes
+  }, [loggingFilter, speciesFilter, refIdFilter, statusFilter]);
 
   const handleTreeClick = (treeId) => {
     const tree = trees.find((t) => t.id === treeId);
     setSelectedTreeDetails(tree);
-    setModalMode("view"); 
+    setModalMode("view");
     setIsModalOpen(true);
   };
 
   const handleAddTreeClick = () => {
     setModalMode("add");
+    setSelectedTreeDetails(null); // Clear previous details for add
     setIsModalOpen(true);
   };
 
-  function refreshTreeList() {
-    fetchTrees(statusFilter);
-  }
+  const handleSave = (updatedTree) => {
+    // Logic to save the updated or new tree
+    console.log("Save tree:", updatedTree);
+    setIsModalOpen(false);
+    fetchTrees(statusFilter); // Refresh the list after saving
+  };
+
+  const handleCloseDialog = () => {
+    setIsModalOpen(false);
+    setSelectedTreeDetails(null); // Clear selected tree to ensure fresh state
+    console.log("Dialog closed");
+  };
 
   return (
     <Grid container spacing={2} p={2}>
@@ -122,7 +130,7 @@ const ListAllTrees = () => {
             onClick={handleAddTreeClick}
             startIcon={<AddIcon />}
           >
-            add
+            Add
           </Button>
         </Grid>
       </Grid>
@@ -134,7 +142,7 @@ const ListAllTrees = () => {
             labelId="status-filter-select-label"
             id="status-filter-select"
             value={statusFilter}
-            label="avaliability"
+            label="availability"
             onChange={(e) => setStatusFilter(e.target.value)}
           >
             <MenuItem value="available">Available</MenuItem>
@@ -191,7 +199,6 @@ const ListAllTrees = () => {
             variant="outlined"
             value={refIdFilter}
             onChange={(e) => setRefIdFilter(e.target.value.toUpperCase())}
-            // helperText="Enter a Ref ID to filter by specific tree"
           />
         </FormControl>
       </Grid>
@@ -203,31 +210,30 @@ const ListAllTrees = () => {
         {trees.length > 0 ? (
           trees.map((tree) => (
             <Grid
-            item
-            xs={3}
+              item
+              xs={3}
               sm={2}
               lg={2}
               key={tree.id}
               m={1}
-            border={1}
-            borderRadius={3}
-            p={2}
-            boxShadow={2}
-            bgcolor={"white.main"}
-            textAlign="center"
-            style={{
-               position: "relative",
-            }}
-           
-            sx={{
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "primary.main",
-              },
-              transition: "background-color 0.5s",
-            }}
-            onClick={() => handleTreeClick(tree.id)}
-          >
+              border={1}
+              borderRadius={3}
+              p={2}
+              boxShadow={2}
+              bgcolor={"white.main"}
+              textAlign="center"
+              style={{
+                position: "relative",
+              }}
+              sx={{
+                cursor: "pointer",
+                "&:hover": {
+                  backgroundColor: "primary.main",
+                },
+                transition: "background-color 0.5s",
+              }}
+              onClick={() => handleTreeClick(tree.id)}
+            >
               <Grid item>
                 <h3>{tree.refId}</h3>
               </Grid>
@@ -250,19 +256,14 @@ const ListAllTrees = () => {
           </Grid>
         )}
       </Grid>
-      
-      <TreeListModal
+
+      <ItemDialog
         isOpen={isModalOpen}
-        onClose={(edited) => {
-          setIsModalOpen(false);
-          refreshTreeList();
-          if (edited) {
-            refreshTreeList();
-          }
-        }}
-        treeDetails={selectedTreeDetails}
+        onClose={handleCloseDialog}
+        itemDetails={selectedTreeDetails}
         mode={modalMode}
-        setMode={setModalMode}
+        type="tree"
+        onSave={handleSave}
       />
     </Grid>
   );

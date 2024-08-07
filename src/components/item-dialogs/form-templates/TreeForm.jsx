@@ -24,17 +24,16 @@ const TreeForm = ({
   onSubmit,
   mode,
 }) => {
-
   const hasLogs = tree && Array.isArray(tree.logIds) && tree.logIds.length > 0;
   const hasImage = tree && Array.isArray(tree.image);
 
   return (
     <form onSubmit={onSubmit}>
-       <Grid item xs={12} pb={3}>
+      <Grid item xs={12} pb={3}>
         <Typography variant="h6">
           {mode === "view"
             ? `Tree: ${tree?.refId}`
-            : `${mode === "edit" ? "Edit" : "Add"} Tree: ${tree?.refId}`}
+            : `${mode === "edit" ? "Edit" : "Add"} Tree: ${tree?.refId || ""}`}
         </Typography>
         <Typography>Status: {tree?.status}</Typography>
       </Grid>
@@ -45,48 +44,37 @@ const TreeForm = ({
             label="Date Felled"
             type="date"
             name="date"
-            value={tree.date}
+            value={tree.date || ""}
             onChange={onChange}
             required
             disabled={mode === "view"}
           />
         </Grid>
-        {/* <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Species Name"
-            name="speciesName"
-            value={tree.speciesName}
-            onChange={onChange}
-            required
-            disabled={mode === "view"}
-          />
-        </Grid> */}
 
-{renderSelect(
-            "projectId",
-            "Project",
-            projects,
-            (event) => onSelectChange(event, projects),
-            tree.projectId,
-            mode === "view"
-          )}
-          {renderSelect(
-            "speciesId",
-            "Species",
-            species,
-            (event) => onSelectChange(event, species),
-            tree.speciesId,
-            mode === "view"
-          )}
-           {renderSelect(
-            "locationId",
-            "Location",
-            locations,
-            (event) => onSelectChange(event, locations),
-            tree.locationId,
-            mode === "view"
-          )}
+        {renderSelect(
+          "projectId",
+          "Project",
+          projects,
+          (event) => onSelectChange(event, projects),
+          tree.projectId,
+          mode === "view"
+        )}
+        {renderSelect(
+          "speciesId",
+          "Species",
+          species,
+          (event) => onSelectChange(event, species),
+          tree.speciesId,
+          mode === "view"
+        )}
+        {renderSelect(
+          "locationId",
+          "Location",
+          locations,
+          (event) => onSelectChange(event, locations),
+          tree.locationId,
+          mode === "view"
+        )}
         <Grid item xs={6}>
           <TextField
             fullWidth
@@ -101,7 +89,6 @@ const TreeForm = ({
         <Grid item xs={6}>
           <TextField
             fullWidth
-          
             label="Lumberjack"
             name="lumberjackName"
             value={tree.lumberjackName || ""}
@@ -112,8 +99,8 @@ const TreeForm = ({
         </Grid>
         <Grid item xs={12}>
           <TextField
-              multiline={true}
-              rows={3}
+            multiline={true}
+            rows={3}
             fullWidth
             label="Reason"
             name="reason"
@@ -123,19 +110,18 @@ const TreeForm = ({
             disabled={mode === "view"}
           />
         </Grid>
-          { hasImage && (
-        <Grid container spacing={2} p={2} >
-             
-                <Grid item xs={6} >
-                  <img
-                    src={tree.image}
-                    alt="Plank Image"
-                    style={{ width: "50%" }}
-                  />
-                </Grid>
-                </Grid>
-          )}
-   
+        {hasImage && (
+          <Grid container spacing={2} p={2}>
+            <Grid item xs={6}>
+              <img
+                src={tree.image}
+                alt="Tree Image"
+                style={{ width: "50%" }}
+              />
+            </Grid>
+          </Grid>
+        )}
+
         {mode !== "view" && (
           <Grid item xs={12}>
             <Button type="submit" variant="contained" color="primary">
@@ -145,33 +131,31 @@ const TreeForm = ({
         )}
       </Grid>
       <Grid container spacing={2}>
-      {hasLogs && (
-        <>
-          <Grid item xs={12} mt={3}>
-            <Typography variant="body1" gutterBottom>
-              Logs
-            </Typography>
-          </Grid>
-          {tree.logIds.map((logId) => (
-            <Grid item xs={12} key={logId}>
-              <Chip
-                label={logId}
-           
-                // onClick={}
-                variant="outlined"
-                color="primary"
-                clickable
-              />
+        {hasLogs && (
+          <>
+            <Grid item xs={12} mt={3}>
+              <Typography variant="body1" gutterBottom>
+                Logs
+              </Typography>
             </Grid>
-          ))}
-        </>
-      )}
-      {!hasLogs && (
-        <Grid item xs={12}>
-          <Typography variant="body1">Tree is not logged</Typography>
-        </Grid>
-      )}
-    </Grid>
+            {tree.logIds.map((logId) => (
+              <Grid item xs={12} key={logId}>
+                <Chip
+                  label={logId}
+                  variant="outlined"
+                  color="primary"
+                  clickable
+                />
+              </Grid>
+            ))}
+          </>
+        )}
+        {!hasLogs && (
+          <Grid item xs={12}>
+            <Typography variant="body1">Tree is not logged</Typography>
+          </Grid>
+        )}
+      </Grid>
     </form>
   );
 };
@@ -201,6 +185,5 @@ function renderSelect(name, label, options, onChange, value, disabled = false) {
     </Grid>
   );
 }
-
 
 export default TreeForm;

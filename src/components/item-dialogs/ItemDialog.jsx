@@ -10,6 +10,7 @@ import {
 import ItemForm from "./ItemForm"; // Ensure this is correctly imported
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { app } from "../../firebase-config";
+import { useNavigate } from "react-router-dom";
 
 const ItemDialog = ({
   isOpen,
@@ -24,6 +25,8 @@ const ItemDialog = ({
   const [loading, setLoading] = useState(false);
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchItemData = async () => {
@@ -77,6 +80,16 @@ const ItemDialog = ({
     onSave(updatedItemData);
   };
 
+  const handlePlankEditClick = () => {
+    onClose();
+    navigate(`/editplank/${itemData.id}`);
+  };
+
+  const handleLogEditClick = () => {
+    onClose();
+    navigate(`/editlog/${itemData.id}`);
+  };
+
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm">
       {/* <DialogTitle>
@@ -106,6 +119,16 @@ const ItemDialog = ({
         {mode !== "view" && (
           <Button color="primary" onClick={() => handleSave(itemData)}>
             Save
+          </Button>
+        )}
+        {type == "plank" && (
+          <Button color="primary" onClick={handlePlankEditClick}>
+            Edit
+          </Button>
+        )}
+        {type == "log" && (
+          <Button color="primary" onClick={handleLogEditClick}>
+            Edit
           </Button>
         )}
       </DialogActions>

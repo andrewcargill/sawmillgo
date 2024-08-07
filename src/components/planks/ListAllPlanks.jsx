@@ -26,6 +26,7 @@ import DynamicView from "./views/DynamicView";
 import BasicView from "./views/BasicView";
 import ListView from "./views/ListView";
 import ItemDialog from "../item-dialogs/ItemDialog";
+import AllPlanksMap from "./sub-components/AllPlanksMap";
 
 const ListAllPlanks = () => {
   const [planks, setPlanks] = useState([]);
@@ -451,7 +452,11 @@ const ListAllPlanks = () => {
         ) : (
           <Typography variant="body1">No planks found.</Typography>
         )}
+
       </Grid>
+
+      <AllPlanksMap />
+        
 
       <ItemDialog
         isOpen={isDialogOpen}

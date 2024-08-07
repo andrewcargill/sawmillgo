@@ -18,6 +18,7 @@ import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 import { useNavigate } from "react-router-dom";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import ItemDialog from "../item-dialogs/ItemDialog";
+import AllLogsMap from "./sub-conponents/AllLogsMap";
 
 const ListAllLogs = () => {
   const [logs, setLogs] = useState([]);
@@ -173,6 +174,8 @@ const ListAllLogs = () => {
           </Grid>
         )}
       </Grid>
+      
+      <AllLogsMap />
 
       <ItemDialog
         isOpen={isModalOpen}

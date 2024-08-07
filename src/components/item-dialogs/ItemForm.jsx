@@ -41,7 +41,11 @@ const ItemForm = ({ type, itemDetails, onChange, onSave, mode }) => {
           await Promise.all([
             fetchSpeciesForSawmill(db, sawmillId),
             fetchLocationsForSawmill(db, sawmillId),
-            fetchProjectsForSawmill(db, sawmillId, itemDetails?.verified || false),
+            fetchProjectsForSawmill(
+              db,
+              sawmillId,
+              itemDetails?.verified || false
+            ),
           ]);
 
         setSpecies(fetchedSpecies);
@@ -66,8 +70,22 @@ const ItemForm = ({ type, itemDetails, onChange, onSave, mode }) => {
     }
   }, [db, sawmillId, itemDetails?.verified]);
 
-  const handleInputChange = (e) => {
-    const { name, value, checked, type } = e.target;
+  const handleInputChange = (event) => {
+    if (!event) return;
+
+    const target = event.target || event.currentTarget;
+
+    // Handle the case when the target is missing
+    if (!target) {
+      console.error("The event target is missing. Event data:", event);
+      return;
+    }
+
+    const { name, value, checked, type } = target;
+
+    // Use console.log to debug the target object
+    console.log("Target", { name, value, checked, type });
+
     let actualValue;
 
     switch (type) {
@@ -89,13 +107,22 @@ const ItemForm = ({ type, itemDetails, onChange, onSave, mode }) => {
       ...prev,
       [name]: actualValue,
     }));
+
     onChange({ name, value: actualValue });
   };
 
   const handleSelectChange = (event, data) => {
-    const { name, value } = event.target;
+    const target = event.target || event.currentTarget;
+
+    if (!target) {
+      console.error("The event target is missing. Event data:", event);
+      return;
+    }
+
+    const { name, value } = target;
     const baseName = name.slice(0, -2);
     const selectedItem = data.find((item) => item.id === value);
+
     setItemData((prev) => ({
       ...prev,
       [name]: value,
@@ -156,7 +183,11 @@ const ItemForm = ({ type, itemDetails, onChange, onSave, mode }) => {
   }
 
   if (error) {
-    return <Typography variant="body2" color="error">{error}</Typography>;
+    return (
+      <Typography variant="body2" color="error">
+        {error}
+      </Typography>
+    );
   }
 
   const commonProps = {
