@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 import { app } from "../../firebase-config"; // Ensure you import your Firebase config appropriately
 import { Grid } from "@mui/material";
-import { Update } from "@mui/icons-material";
 import UpdateCreatorProfile from "./UpdateCreatorProfile";
 import FlagIcon from "../country-components/FlagIcon";
 import CountryNameFromCode from "../country-components/CountryNameFromCode";

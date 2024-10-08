@@ -1,5 +1,5 @@
 import React from 'react';
-import { CardContent, Grid, Typography } from '@mui/material';
+import { CardContent, Grid } from '@mui/material';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Tooltip, ResponsiveContainer } from 'recharts';
 
 const projectStatusData = [

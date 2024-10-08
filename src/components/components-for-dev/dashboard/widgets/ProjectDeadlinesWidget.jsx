@@ -1,5 +1,5 @@
 import React from 'react';
-import { CardContent, Typography, Paper, Grid } from '@mui/material';
+import { CardContent, Typography, Grid } from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const projectDeadlinesData = [

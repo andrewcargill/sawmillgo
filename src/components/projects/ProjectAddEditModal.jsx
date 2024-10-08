@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Modal,
   Box,
   Typography,
   Button,
@@ -13,13 +12,11 @@ import {
   MenuItem,
   FormControlLabel,
   Switch,
-  Menu,
 } from "@mui/material";
-import { doc, setDoc, updateDoc, addDoc, collection, getFirestore } from "firebase/firestore";
+import { doc, updateDoc, addDoc, collection, getFirestore } from "firebase/firestore";
 import { app } from "../../firebase-config";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { getAuth } from 'firebase/auth';
-import { Form } from "react-router-dom";
 import { fetchCreators } from "../../utils/filestoreOperations";
 
 

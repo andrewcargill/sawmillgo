@@ -15,11 +15,8 @@ import AddIcon from "@mui/icons-material/Add";
 import ProjectListModal from "./ProjectListModal";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import AdjustIcon from "@mui/icons-material/Adjust";
 import VerifiedIcon from "@mui/icons-material/Verified";
-import { Filter } from "@mui/icons-material";
 import FilteredProjectsTable from "./sub-components/FilteredProjectsTable";
-import AppsIcon from "@mui/icons-material/Apps";
 import GridOnIcon from "@mui/icons-material/GridOn";
 import ListIcon from "@mui/icons-material/List";
 

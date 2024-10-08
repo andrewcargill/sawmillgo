@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Grid, Typography, Slider, Box, Button } from "@mui/material";
 
 const DepthFilter = ({ allFilters, setAllFilters, setOpenModal, fetchPlanks }) => {

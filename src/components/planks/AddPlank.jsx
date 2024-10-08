@@ -94,7 +94,6 @@ const AddPlank = () => {
     logId: "",
     status: "available",
     verified: false,
-    grade: "",
   });
 
   useEffect(() => {

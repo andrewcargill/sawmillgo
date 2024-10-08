@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
 import { app } from '../../../../firebase-config';
-import { CardContent, Typography, Paper, Grid } from '@mui/material';
+import { CardContent, Typography, Grid } from '@mui/material';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const TreesWidget = () => {

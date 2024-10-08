@@ -1,0 +1,32 @@
+{
+    "extends": "eslint:recommended",
+    "plugins": ["unused-imports"],
+    "rules": {
+      "no-unused-vars": "warn",
+      "no-unused-expressions": "warn",
+      "unused-imports/no-unused-imports": "error",
+      "unused-imports/no-unused-vars": [
+        "warn",
+        { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+      ]
+    },
+    "env": {
+      "browser": true,
+      "node": true,
+      "es6": true,
+      "jest": true // Add Jest environment
+    },
+    "parserOptions": {
+      "ecmaVersion": 2020, // Use a more recent ECMAScript version
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true // Enable JSX parsing
+      }
+    },
+    "ignorePatterns": ["build/"], // Ignore build directory
+    "settings": {
+      "react": {
+        "version": "detect" // Automatically detect the React version
+      }
+    }
+  }

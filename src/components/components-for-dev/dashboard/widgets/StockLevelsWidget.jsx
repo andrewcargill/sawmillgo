@@ -1,5 +1,5 @@
 import React from 'react';
-import { CardContent, Typography, Paper, Grid } from '@mui/material';
+import { CardContent, Typography, Grid } from '@mui/material';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 
 const stockLevelsData = [

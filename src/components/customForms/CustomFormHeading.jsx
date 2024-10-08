@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 import CustomBox from '../customContainers/CustomBox';
 import CustomTypography from '../typography/CustomTypography';
 

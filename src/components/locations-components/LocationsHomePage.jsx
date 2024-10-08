@@ -1,5 +1,4 @@
 import React from "react";
-import AddLocationForm from "./AddLocationForm";
 import AreasMap from "./AreasMap";
 import LocationsTable from "./LocationsTable";
 import { Button, Grid, Typography } from "@mui/material";

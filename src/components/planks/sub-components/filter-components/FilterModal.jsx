@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Box, Typography, Modal } from "@mui/material";
 import GradeFilter from "./GradeFilter";
 import StatusFilter from "./StatusFilter";

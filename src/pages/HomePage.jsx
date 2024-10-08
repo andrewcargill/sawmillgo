@@ -22,37 +22,45 @@ const HomePage = () => {
 
   return (
     <>
-
-<Grid Container 
-      style={{ 
-        backgroundImage: `url(${image1})`,
-        backgroundSize: 'cover', 
-        backgroundPosition: 'center',
-        height: '30vh',
-        borderRadius: '10px',
-      }}
-      >
-      </Grid>
-      <Grid container p={10} 
-
-      >
-
-        <Grid item container xs={12} p={3}
+      <Grid
+        container
         style={{
-          backgroundColor: '',
-          backdropFilter: 'blur(5px)',
+          backgroundImage: `url(${image1})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          height: '30vh',
           borderRadius: '10px',
-        
         }}
+      ></Grid>
+      <Grid container p={10}>
+        <Grid
+          item
+          container
+          xs={12}
+          p={3}
+          style={{
+            backgroundColor: '',
+            backdropFilter: 'blur(5px)',
+            borderRadius: '10px',
+          }}
         >
-
-        <Typography variant="h4" color="initial">
-          The innovative forestry management system that brings together forest owners, sawmills and craftsmen to deliver the unique story
-          behind every wood product.
-        </Typography>
+          <Typography
+            variant="h4"
+            color="initial"
+            sx={{
+              fontSize: {
+                xs: '1.5rem', // font size for mobile devices
+                sm: '2rem', // font size for tablets
+                md: '2.5rem', // font size for small laptops
+                lg: '3rem', // font size for desktops
+              },
+            }}
+          >
+            The innovative forestry management system that brings together forest owners, sawmills and craftsmen to deliver the unique story
+            behind every wood product.
+          </Typography>
         </Grid>
       </Grid>
-
 
       <Grid
         container
@@ -63,9 +71,8 @@ const HomePage = () => {
         borderRadius={5}
       >
         <Paper>
-   
           <List>
-          <ListItem>
+            <ListItem>
               <ListItemAvatar>
                 <QrCodeIcon />
               </ListItemAvatar>
@@ -124,13 +131,9 @@ const HomePage = () => {
                 secondary=" Create custom locations and track the stock's movement between them."
               />
             </ListItem>
-
           </List>
         </Paper>
-       
       </Grid>
-
-  
     </>
   );
 };

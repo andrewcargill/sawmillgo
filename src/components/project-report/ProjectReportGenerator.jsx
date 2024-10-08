@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Typography, Grid } from "@mui/material";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
-import NotificationModal from './NotificationModal';
 import { app } from "../../firebase-config";
 import QRCode from 'qrcode.react';
 import html2canvas from 'html2canvas';

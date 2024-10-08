@@ -3,9 +3,6 @@ import {
   getFirestore,
   collection,
   addDoc,
-  query,
-  getDocs,
-  doc,
   getDoc,
 } from "firebase/firestore";
 import { app } from "../../../firebase-config";

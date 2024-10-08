@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Grid, Card, CardContent, Typography, Button, List, ListItem, ListItemText } from '@mui/material';
+import { Container, Grid, Card, CardContent, Typography, Button } from '@mui/material';
 import UnifiedStockWireFrame from './UnifiedStockWireFrame';
 
 const projects = [

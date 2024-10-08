@@ -3,7 +3,6 @@ import {
   getFirestore,
   collection,
   doc,
-  getDoc,
   updateDoc,
   addDoc,
 } from "firebase/firestore";

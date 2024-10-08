@@ -3,8 +3,6 @@ import {
   getFirestore,
   collection,
   addDoc,
-  query,
-  getDocs,
   doc,
   getDoc,
   setDoc,
@@ -13,7 +11,6 @@ import {
 } from "firebase/firestore";
 import { app } from "../../../firebase-config";
 import { getAuth } from "firebase/auth";
-import ListEditTree from "./ListEditTrees"; // Make sure this is correctly imported
 import {
   fetchLocationsForSawmill,
   fetchVerifiedProjectsForSawmill,
@@ -27,8 +24,6 @@ import {
 } from "firebase/storage";
 import { getGeolocation } from "../../../utils/geolocation";
 import {
-  Modal,
-  Box,
   Typography,
   Button,
   Grid,

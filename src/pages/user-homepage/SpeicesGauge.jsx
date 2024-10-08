@@ -2,12 +2,10 @@ import React, { useEffect, useState } from "react";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
 import { app } from "../../firebase-config"; // Make sure this path is correct
 import { useNavigate } from "react-router-dom";
 import ForestIcon from "@mui/icons-material/Forest";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { IconButton, Tooltip } from "@mui/material";
+import { Tooltip } from "@mui/material";
 
 const SpeciesGauge = () => {
   const [species, setSpecies] = useState([]); // Updated variable name to 'species'

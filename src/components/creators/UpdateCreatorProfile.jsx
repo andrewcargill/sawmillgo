@@ -1,18 +1,14 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import {
   getFirestore,
   doc,
   getDoc,
   setDoc,
-  collection,
-  query,
-  getDocs,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { app } from "../../firebase-config";
 import { Button, Grid, TextField, styled } from "@mui/material";
-import UserContext from "../../Contexts/UserContext";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CountrySelect from "../country-components/CountrySelect";
 

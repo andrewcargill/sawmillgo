@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { Typography, Grid, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router";
-import CustomTypography from "../../../components/typography/CustomTypography";
 
 
 const PlankListContent = ({ data }) => {

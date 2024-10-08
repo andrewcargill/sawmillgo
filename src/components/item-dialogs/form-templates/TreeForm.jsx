@@ -2,8 +2,6 @@ import React from "react";
 import {
   Grid,
   TextField,
-  Checkbox,
-  FormControlLabel,
   Button,
   FormControl,
   Select,
@@ -20,7 +18,6 @@ const TreeForm = ({
   projects,
   onChange,
   onSelectChange,
-  onFileChange,
   onSubmit,
   mode,
 }) => {
