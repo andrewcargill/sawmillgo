@@ -8,18 +8,18 @@ import QRCode from 'qrcode.react';
 import html2canvas from 'html2canvas';
 
 const ProjectReportGenerator = () => {
-  const { projectId } = useParams();
+  const { projectId } = useParams();  // Still get projectId from URL or props
   const navigate = useNavigate();
   const [project, setProject] = useState(null);
   const [showNotification, setShowNotification] = useState(false);
   const [qrUrl, setQrUrl] = useState("");
 
   const db = getFirestore(app);
-  const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
+  const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;  // Fetch sawmillId from localStorage
 
   useEffect(() => {
     const fetchProjectData = async () => {
-      const projectRef = doc(db, `sawmill/${sawmillId}/projects`, projectId);
+      const projectRef = doc(db, `sawmill/${sawmillId}/projects`, projectId);  // Fetch project data using both IDs
       const projectDoc = await getDoc(projectRef);
       if (projectDoc.exists()) {
         setProject(projectDoc.data());
@@ -37,12 +37,14 @@ const ProjectReportGenerator = () => {
     } else if (!project.plankRefIds || project.plankRefIds.length === 0) {
       alert("No planks available for this project to generate a report.");
     } else {
-      const reportUrl = `/productreport/${projectId}`;
+      // Generate the new URL format with both sawmillId and projectId
+      const reportUrl = `/productreport/${sawmillId}/${projectId}`;
       setQrUrl(reportUrl);
     }
   };
 
   const handleViewReport = () => {
+    // Navigate to the new report URL
     navigate(qrUrl);
   };
 
@@ -66,11 +68,10 @@ const ProjectReportGenerator = () => {
         Generate Report
       </Button>
 
- 
-
       {qrUrl && (
         <Grid container direction="column" alignItems="center" spacing={2} mt={4}>
           <Grid item>
+            {/* Generate the QR code with the new URL */}
             <QRCode id="qrCode" value={window.location.origin + qrUrl} size={256} />
           </Grid>
           <Grid item>

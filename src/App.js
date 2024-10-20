@@ -74,7 +74,9 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/sawmills" element={<AllSawmill />} />
-        <Route path="/productreport/:projectId" element={<ProductDocumentation /> } />
+        {/* <Route path="/productreport/:projectId" element={<ProductDocumentation /> } /> */}
+        <Route path="/productreport/:sawmillId/:projectId" element={<ProductDocumentation />} />
+
 
         <Route path="/authreport/:reportId" element={<ReportMockUp 
          onLoad={() => setIsReportMockUpLoaded(true)}

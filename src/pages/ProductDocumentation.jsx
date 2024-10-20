@@ -41,7 +41,7 @@ import SawmillContainer from "../components/project-report/sub-components/Sawmil
 import certImage from "../media/images/cert-image3.png";
 
 const ProductDocumentation = () => {
-  const { projectId } = useParams();
+  const { sawmillId, projectId } = useParams();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [expanded, setExpanded] = useState(null);
@@ -51,7 +51,7 @@ const ProductDocumentation = () => {
   const [sawmillName, setSawmillName] = useState("");
 
   const db = getFirestore(app);
-  const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
+  // const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
 
   useEffect(() => {
     const fetchMoistureChecks = async (plankId) => {
