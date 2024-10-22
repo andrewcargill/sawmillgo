@@ -53,6 +53,7 @@ import UnifiedStockWireFrame from "./components/components-for-dev/projects/Unif
 import Dashboard from "./components/components-for-dev/projects/DashboardWireFrame";
 import DashboardWireFrame from "./components/components-for-dev/dashboard/DashboardWireFrame";
 import ItemManager from "./components/components-for-dev/dashboard/ItemManager";
+import SawmillGoOverview from "./pages/SawmillGoOverview";
 
 function App() {
  
@@ -74,6 +75,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/sawmills" element={<AllSawmill />} />
+        <Route path="/concept" element={<SawmillGoOverview />} />
         {/* <Route path="/productreport/:projectId" element={<ProductDocumentation /> } /> */}
         <Route path="/productreport/:sawmillId/:projectId" element={<ProductDocumentation />} />
 
