@@ -54,6 +54,7 @@ import Dashboard from "./components/components-for-dev/projects/DashboardWireFra
 import DashboardWireFrame from "./components/components-for-dev/dashboard/DashboardWireFrame";
 import ItemManager from "./components/components-for-dev/dashboard/ItemManager";
 import SawmillGoOverview from "./pages/SawmillGoOverview";
+import StatusPage from "./pages/StatusPage";
 
 function App() {
  
@@ -76,6 +77,7 @@ function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/sawmills" element={<AllSawmill />} />
         <Route path="/concept" element={<SawmillGoOverview />} />
+        <Route path="/status" element={<StatusPage />} />
         {/* <Route path="/productreport/:projectId" element={<ProductDocumentation /> } /> */}
         <Route path="/productreport/:sawmillId/:projectId" element={<ProductDocumentation />} />
 
