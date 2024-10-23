@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Container, Grid, Card, CardContent, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
@@ -13,6 +13,20 @@ import UpdateIcon from '@mui/icons-material/Update'; // Smaller goals
 
 const milestones = [
   { 
+    title: 'Launch Goal', 
+    description: "Launch of SawmillGo!",
+    date: 'Q2 2026', 
+    status: 'IN PROGRESS', 
+    details: 'Release of product.' 
+  },
+  { 
+    title: 'Development Goal', 
+    description: "Development of first release",
+    date: 'Q3 2025', 
+    status: 'IN PROGRESS', 
+    details: 'The programming team will be expanded and the ststem will be developed alongside real life testing and user trials.' 
+  },
+  { 
     title: 'MVP Goal', 
     description: "Completion of working software",
     date: 'Q1 2025', 
@@ -22,7 +36,7 @@ const milestones = [
   { 
     title: 'Current Goal', 
     description: "Feedback from user groups",
-    date: 'Nov 2024', 
+    date: 'Dec 2024', 
     status: 'IN PROGRESS', 
     details: 'Preparing test data and demos for user groups to feedback.' 
   },
@@ -159,10 +173,24 @@ const StatusPage = () => {
 
   return (
     <Container maxWidth="lg" style={{ padding: '40px 20px' }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-       Project Milestones
-      </Typography>
-
+        {/* Project Status Section */}
+      <Grid container spacing={4} style={{ marginBottom: '40px' }}>
+        <Grid item xs={12}>
+          <Card>
+            <CardContent>
+              <Typography variant="h4" component="h1" gutterBottom>
+                SawmillGo Project Status
+              </Typography>
+              <Typography variant="body1" paragraph>
+              SawmillGo is in development, with the next major milestone set for early 2025: completing the software for investment and testing.
+              </Typography>
+              <Typography variant="body1" paragraph>
+              Explore the timeline below to see key completed and ongoing milestones.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
       {/* Milestones Timeline */}
       <Timeline position="alternate">
         {milestones.map((milestone, index) => (
