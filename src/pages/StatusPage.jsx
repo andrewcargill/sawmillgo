@@ -176,11 +176,16 @@ const StatusPage = () => {
         {/* Project Status Section */}
       <Grid container spacing={4} style={{ marginBottom: '40px' }}>
         <Grid item xs={12}>
+        <Grid item xs={12} sx={{ mb: 2 }} className="fade-in-1">
+        <Typography variant="h4" align="left" color="primary">
+          Project Status
+        </Typography>
+      </Grid>
           <Card>
             <CardContent>
-              <Typography variant="h4" component="h1" gutterBottom>
+              {/* <Typography variant="h4" component="h1" gutterBottom>
                 SawmillGo Project Status
-              </Typography>
+              </Typography> */}
               <Typography variant="body1" paragraph>
               SawmillGo is in development, with the next major milestone set for early 2025: completing the software for investment and testing.
               </Typography>

@@ -60,7 +60,7 @@ const AllSawmillsMap = () => {
   }, [sawmills]);
 
   return (
-    <Grid xs={12}>
+    <Grid xs={12} className='fade-in-2'>
      
         
           

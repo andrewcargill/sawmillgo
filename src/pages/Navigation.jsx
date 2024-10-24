@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   AppBar,
   Box,
@@ -36,6 +36,7 @@ const Navigation = () => {
 
   const auth = getAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -75,7 +76,7 @@ const Navigation = () => {
     setAnchorElUser(null);
   };
 
-  const pages = ["About", "Features", "Sawmills", "Report", "Concept", "Status"];
+  const pages = ["Concept", "Features", "Sawmills", "Status", "About" ];
   const sawmillPages = ["home", "Report"];
   //   const settings = ['home_secure', 'Quick_Add', 'Trees', 'Logs', 'Planks', 'water_crud', 'Logout'];
 
@@ -222,7 +223,9 @@ const Navigation = () => {
     <MenuItem key={page} onClick={handleMenuClose}>
       <Link
         to={`/${page.toLowerCase()}`}
-        style={{ textDecoration: "none", color: "inherit" }}
+        style={{ 
+          textDecoration: "none", 
+        }}
       >
         <Typography textAlign="center">{page}</Typography>
       </Link>
@@ -349,18 +352,25 @@ const Navigation = () => {
   <>
     {pages.map((page) => (
       <Button
-        key={page}
-        component={Link}
-        to={`/${page.toLowerCase()}`}
-        sx={{
-          my: 2,
-          color: "white",
-          display: "block",
-          textDecoration: "none",
-        }}
-      >
-        {page}
-      </Button>
+  key={page}
+  component={Link}
+  to={`/${page.toLowerCase()}`}
+  sx={{
+    my: 2,
+    color: location.pathname === `/${page.toLowerCase()}` ? "primary.contrastText" : "white",
+    backgroundColor: location.pathname === `/${page.toLowerCase()}` ? "primary.main" : "white",
+    display: "block",
+    textDecoration: "none",
+    "&:hover": {
+      backgroundColor: location.pathname === `/${page.toLowerCase()}` ? "primary.main" : "white", // Ensures no background color change on hover
+      color: location.pathname === `/${page.toLowerCase()}` ? "primary.contrastText" : "white", // Ensures no text color change on hover
+      transition: "none", // Removes any transition effect
+    },
+  }}
+>
+  {page}
+</Button>
+
     ))}
   </>
 )}

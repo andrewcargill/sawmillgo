@@ -100,3 +100,64 @@
     max-height: 600px;
   }
 }
+
+
+/* Site animations */
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Animating of pages */
+.fade-in-1 {
+  animation: fadeIn 1s ease-in-out;
+}
+
+.fade-in-2 {
+  animation: fadeIn 1s ease-in-out;
+  animation-delay: 0.5s;
+  animation-fill-mode: both;
+}
+
+.fade-in-3 {
+  animation: fadeIn 1s ease-in-out;
+  animation-delay: 1s;
+  animation-fill-mode: both;
+}
+
+.fade-in-4 {
+  animation: fadeIn 1s ease-in-out;
+  animation-delay: 1.5s;
+  animation-fill-mode: both;
+}
+
+.fade-in-5 {
+  animation: fadeIn 1s ease-in-out;
+  animation-delay: 2s;
+  animation-fill-mode: both;
+}
+
+.hover-primary {
+  background-color: #ffffff;
+  color: black;
+  transition: background-color 2s ease-in-out, color 2s ease-in-out; /* Slower transition */
+  will-change: background-color, color;
+}
+
+/* Mouse over effect */
+.hover-primary:hover {
+  background-color: #79c001;
+  color: white;
+}
+
+/* Concept Page image effect */
+.cross-fade-image {
+  transition: background-image 7s ease-in-out;
+}
+
