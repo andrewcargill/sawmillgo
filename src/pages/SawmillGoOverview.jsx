@@ -11,12 +11,12 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemIcon
+  ListItemIcon,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ecoImage from "../media/images/trees.png"; // Example image imports
-import ecoImage2 from "../media/images/tree_dead.png"; // Example image imports
-import ecoThumbImage from "../media/images/env1.jpg"; // Example image imports
+import ecoImage from "../media/images/trees.png"; 
+import ecoImage2 from "../media/images/tree_dead.png";
+import ecoThumbImage from "../media/images/env1.jpg"; 
 import financeImage from "../media/images/finance2.jpg";
 import forestOwnerImage from "../media/images/forest_owner.jpg";
 import sawmillImage from "../media/images/sawmill.jpg";
@@ -24,15 +24,14 @@ import creatorImage from "../media/images/4.png";
 import customerImage from "../media/images/qr.jpg";
 import { Link } from "react-router-dom";
 
-import PublicIcon from '@mui/icons-material/Public';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import VerifiedIcon from '@mui/icons-material/Verified';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import PublicIcon from "@mui/icons-material/Public";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 
 const SawmillGoOverview = () => {
-
   const [hovered, setHovered] = useState(false);
 
   const handleMouseEnter = () => setHovered(true);
@@ -42,8 +41,7 @@ const SawmillGoOverview = () => {
     <Container maxWidth="lg" style={{ padding: "40px 20px" }}>
       {/* Hero Section */}
 
-
-<Box
+      <Box
         className="cross-fade-image"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -62,89 +60,98 @@ const SawmillGoOverview = () => {
 
       {/* Problem & Solution Section */}
       <Grid
-  className="fade-in-2"
-  container
-  spacing={4}
-  style={{ marginTop: "40px", marginBottom: "40px" }}
->
-<Grid item xs={12} md={6}>
-        <Card style={{ height: "100%" }} elevation={6}>
-          <CardContent>
-            <Typography 
-              variant="h4" 
-              component="h2" 
-              gutterBottom 
-              style={{ backgroundColor: '#79c000', color: 'white' }}
-            >
-              The Problem
-            </Typography>
-            <List>
-              <ListItem>
-                <ListItemIcon><PublicIcon style={{ color: "#79c000" }}/></ListItemIcon>
-                <ListItemText primary="Harmful Practices: Traditional logging practices damage ecosystems." />
-              </ListItem>
-              <ListItem>
-                <ListItemIcon><VisibilityOffIcon style={{ color: "#79c000" }}/></ListItemIcon>
-                <ListItemText primary="Lack of Transparency: Customers are unaware of wood sustainability." />
-              </ListItem>
-              <ListItem>
-                <ListItemIcon><MonetizationOnIcon style={{ color: "#79c000" }}/></ListItemIcon>
-                <ListItemText primary="Lost Value: Sustainable practices don’t always bring financial reward." />
-              </ListItem>
-            </List>
-          </CardContent>
-        </Card>
+        className="fade-in-2"
+        container
+        spacing={4}
+        style={{ marginTop: "40px", marginBottom: "40px" }}
+      >
+        <Grid item xs={12} md={6}>
+          <Card style={{ height: "100%" }} elevation={6}>
+            <CardContent>
+              <Typography
+                variant="h4"
+                component="h2"
+                gutterBottom
+                style={{ backgroundColor: "#79c000", color: "white" }}
+              >
+                The Problem
+              </Typography>
+              <List>
+                <ListItem>
+                  <ListItemIcon>
+                    <PublicIcon style={{ color: "#79c000" }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Harmful Practices: Traditional logging practices damage ecosystems." />
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <VisibilityOffIcon style={{ color: "#79c000" }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Lack of Transparency: Customers are unaware of wood sustainability." />
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <MonetizationOnIcon style={{ color: "#79c000" }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Lost Value: Sustainable practices don’t always bring financial reward." />
+                </ListItem>
+              </List>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Card style={{ height: "100%" }} elevation={6}>
+            <CardContent>
+              <Typography
+                variant="h4"
+                component="h2"
+                gutterBottom
+                style={{ backgroundColor: "#79c000", color: "white" }}
+              >
+                The Solution
+              </Typography>
+              <List>
+                <ListItem>
+                  <ListItemIcon>
+                    <VerifiedIcon style={{ color: "#79c000" }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Verified Sustainability: Track the lifecycle from tree to product." />
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <BarChartIcon style={{ color: "#79c000" }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Data-Driven: Share real-time data with customers, from felling to finished product." />
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <AttachMoneyIcon style={{ color: "#79c000" }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Increase Profits: Add value through transparency and authenticity." />
+                </ListItem>
+              </List>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
-
-      <Grid item xs={12} md={6}>
-        <Card style={{ height: "100%" }} elevation={6}>
-          <CardContent>
-            <Typography 
-              variant="h4" 
-              component="h2" 
-              gutterBottom 
-              style={{ backgroundColor: '#79c000', color: 'white' }}
-            >
-              The Solution
-            </Typography>
-            <List>
-              <ListItem>
-                <ListItemIcon><VerifiedIcon style={{ color: "#79c000" }}/></ListItemIcon>
-                <ListItemText primary="Verified Sustainability: Track the lifecycle from tree to product." />
-              </ListItem>
-              <ListItem>
-                <ListItemIcon><BarChartIcon style={{ color: "#79c000" }}/></ListItemIcon>
-                <ListItemText primary="Data-Driven: Share real-time data with customers, from felling to finished product." />
-              </ListItem>
-              <ListItem>
-                <ListItemIcon><AttachMoneyIcon style={{ color: "#79c000" }}/></ListItemIcon>
-                <ListItemText primary="Increase Profits: Add value through transparency and authenticity." />
-              </ListItem>
-            </List>
-          </CardContent>
-        </Card>
-      </Grid>
-
-</Grid>
-
 
       {/* Environmental & Financial Benefits */}
       <Grid
         className="fade-in-3"
         container
         spacing={4}
-        style={{  marginBottom: "40px" }}
-      
+        style={{ marginBottom: "40px" }}
       >
         <Grid item xs={12} md={6}>
-          <Card >
+          <Card>
             <CardMedia
               component="img"
               height="200"
               image={ecoThumbImage} // Image representing eco-friendly practices
               alt="Eco-friendly forestry"
             />
-        
+
             <CardContent>
               <Typography variant="h4" component="h2" gutterBottom>
                 Environmental Benefits
@@ -159,7 +166,7 @@ const SawmillGoOverview = () => {
           </Card>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Card >
+          <Card>
             <CardMedia
               component="img"
               height="200"
@@ -201,7 +208,7 @@ const SawmillGoOverview = () => {
           {
             title: "Forest Owners",
             image: forestOwnerImage,
-            text: "At the time of felling, essential tree data—such as GPS coordinates, species, images, and the reason for felling—is recorded and stored.",
+            text: "At the time of felling, essential tree data—such as GPS coordinates, species, images, and the reason for felling is recorded and stored.",
           },
           {
             title: "Sawmills",
@@ -220,43 +227,43 @@ const SawmillGoOverview = () => {
           },
         ].map((step, index) => (
           <Grid item xs={12} md={3} key={index}>
-          <Card sx={{ position: "relative" }}>
-            {/* Number Circle */}
-            <Box
-              sx={{
-                position: "absolute",
-                top: "10px",
-                left: "10px",
-                width: "30px",
-                height: "30px",
-                backgroundColor: "#79c001",
-                color: "white",
-                borderRadius: "50%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                fontSize: "18px",
-                fontWeight: "bold",
-              }}
-            >
-              {index + 1}
-            </Box>
+            <Card sx={{ position: "relative" }}>
+              {/* Number Circle */}
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "10px",
+                  left: "10px",
+                  width: "30px",
+                  height: "30px",
+                  backgroundColor: "#79c001",
+                  color: "white",
+                  borderRadius: "50%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  fontSize: "18px",
+                  fontWeight: "bold",
+                }}
+              >
+                {index + 1}
+              </Box>
 
-            {/* Image and Content */}
-            <CardMedia
-              component="img"
-              height="200"
-              image={step.image} // Dynamic images for each step
-              alt={step.title}
-            />
-            <CardContent>
-              <Typography variant="h6" component="h3" gutterBottom>
-                {step.title}
-              </Typography>
-              <Typography variant="body2">{step.text}</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+              {/* Image and Content */}
+              <CardMedia
+                component="img"
+                height="200"
+                image={step.image} // Dynamic images for each step
+                alt={step.title}
+              />
+              <CardContent>
+                <Typography variant="h6" component="h3" gutterBottom>
+                  {step.title}
+                </Typography>
+                <Typography variant="body2">{step.text}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
         ))}
       </Grid>
 

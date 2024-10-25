@@ -12,6 +12,8 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
+  Card,
+  CardContent,
 } from "@mui/material";
 
 const AboutSystem = () => {
@@ -23,11 +25,51 @@ const AboutSystem = () => {
 
   return (
     <Grid container>
+
+       {/* Our Vision */}
+       <Grid container spacing={4} sx={{ mb: 4 }}>
+        <Grid item xs={12}>
+          <Typography variant="h4" align="left" color="primary">
+            Our Vision
+          </Typography>
+          <Card elevation={3} sx={{ mt: 2 }}>
+            <CardContent>
+              <Typography variant="body1">
+                At SawmillGo, our vision is to connect small-scale forest
+                owners, sawmills, and creators by providing transparency and
+                traceability for sustainably sourced wood. By empowering end
+                customers with detailed information about the wood’s journey
+                from tree to final product, we aim to create a high-end market
+                for sustainably sourced wood products.
+              </Typography>
+              <Typography variant="body1" sx={{ mt: 2 }}>
+                Through our system, forest owners and sawmills can benefit from
+                increased profitability by promoting sustainability as a core
+                value. This not only boosts local economies but also promotes
+                environmental stewardship and sustainable forest management
+                practices. Our vision is to make sustainable forest management
+                competitive with large-scale operations while emphasizing the
+                importance of environmental responsibility.
+              </Typography>
+              <Typography variant="body1" sx={{ mt: 2 }}>
+                By linking our software with established forestry certification
+                bodies, we aspire to further strengthen the credibility and
+                marketability of sustainably sourced wood, fostering a network
+                of ethically conscious consumers and suppliers.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+    
       <Grid item xs={12} sx={{ mb: 2 }}>
         <Typography variant="h4" align="left" color="primary">
-          Key Features
+          System Features
         </Typography>
       </Grid>
+
+  
 
       {/* Left Column */}
       <Grid item xs={12} md={6}>
@@ -47,13 +89,13 @@ const AboutSystem = () => {
                 <Typography variant="h5" align="left" color="primary">
                   Wood Source Transparency (Verified Stock)
                 </Typography>
-                <Typography variant="body1" align="left" color="textSecondary">
-                  Follow the lifecycle of your stock from tree to plank,
-                  ensuring traceability and transparency.
-                </Typography>
               </Box>
             </AccordionSummary>
             <AccordionDetails>
+              <Typography variant="body1" align="left" color="textSecondary">
+                Follow the lifecycle of your stock from tree to plank, ensuring
+                traceability and transparency.
+              </Typography>
               <List>
                 <ListItem>
                   <ListItemIcon>
@@ -110,13 +152,13 @@ const AboutSystem = () => {
                 <Typography variant="h5" align="left" color="primary">
                   Track Sawmill Stock
                 </Typography>
-                <Typography variant="body1" align="left" color="textSecondary">
-                  Categorize and manage stock into three types: Trees, Logs, and
-                  Planks.
-                </Typography>
               </Box>
             </AccordionSummary>
             <AccordionDetails>
+              <Typography variant="body1" align="left" color="textSecondary">
+                Categorize and manage stock into three types: Trees, Logs, and
+                Planks.
+              </Typography>
               <List>
                 <ListItem>
                   <ListItemIcon>
@@ -174,12 +216,12 @@ const AboutSystem = () => {
                 <Typography variant="h5" align="left" color="primary">
                   Stock Locations
                 </Typography>
-                <Typography variant="body1" align="left" color="textSecondary">
-                  Create custom locations to keep track of stock.
-                </Typography>
               </Box>
             </AccordionSummary>
             <AccordionDetails>
+              <Typography variant="body1" align="left" color="textSecondary">
+                Create custom locations to keep track of stock.
+              </Typography>
               <List>
                 <ListItem>
                   <ListItemIcon>
@@ -224,13 +266,12 @@ const AboutSystem = () => {
                 <Typography variant="h5" align="left" color="primary">
                   Moisture Content Monitoring
                 </Typography>
-                <Typography variant="body1" align="left" color="textSecondary">
-                  Add moisture checks to your stock to monitor the drying
-                  process.
-                </Typography>
               </Box>
             </AccordionSummary>
             <AccordionDetails>
+              <Typography variant="body1" align="left" color="textSecondary">
+                Add moisture checks to your stock to monitor the drying process.
+              </Typography>
               <List>
                 <ListItem>
                   <ListItemIcon>
@@ -280,13 +321,13 @@ const AboutSystem = () => {
                 <Typography variant="h5" align="left" color="primary">
                   Project Management
                 </Typography>
-                <Typography variant="body1" align="left" color="textSecondary">
-                  Allocate your stock to different projects and keep track of
-                  their progress.
-                </Typography>
               </Box>
             </AccordionSummary>
             <AccordionDetails>
+              <Typography variant="body1" align="left" color="textSecondary">
+                Allocate your stock to different projects and keep track of
+                their progress.
+              </Typography>
               <List>
                 <ListItem>
                   <ListItemIcon>
@@ -325,13 +366,13 @@ const AboutSystem = () => {
                 <Typography variant="h5" align="left" color="primary">
                   Collaborate with Creators
                 </Typography>
-                <Typography variant="body1" align="left" color="textSecondary">
-                  Work with wood product creators by providing them their own
-                  logins and tracking their process.
-                </Typography>
               </Box>
             </AccordionSummary>
             <AccordionDetails>
+              <Typography variant="body1" align="left" color="textSecondary">
+                Work with wood product creators by providing them their own
+                logins and tracking their process.
+              </Typography>
               <List>
                 <ListItem>
                   <ListItemIcon>
@@ -370,13 +411,13 @@ const AboutSystem = () => {
                 <Typography variant="h5" align="left" color="primary">
                   Interactive End Reports
                 </Typography>
-                <Typography variant="body1" align="left" color="textSecondary">
-                  Provide customers with interactive reports that show the
-                  entire journey of the wood.
-                </Typography>
               </Box>
             </AccordionSummary>
             <AccordionDetails>
+              <Typography variant="body1" align="left" color="textSecondary">
+                Provide customers with interactive reports that show the entire
+                journey of the wood.
+              </Typography>
               <List>
                 <ListItem>
                   <ListItemIcon>
@@ -395,6 +436,8 @@ const AboutSystem = () => {
           </Accordion>
         </Box>
       </Grid>
+
+     
     </Grid>
   );
 };
