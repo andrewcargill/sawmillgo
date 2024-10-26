@@ -1,6 +1,13 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+
+const mailgun = require('mailgun-js');
+
 admin.initializeApp();
+
+const mg = mailgun({ apiKey: process.env.MAILGUN_API_KEY, domain: 'sandbox0360972323c44c8998c81d7320e0c80f.mailgun.org' });
+
+
 
 async function generateUniqueRefId(db) {
   const chars = ["E", "F", "H", "L", "N", "T", "V", "X", "Z", "I"];
@@ -1017,3 +1024,31 @@ exports.initializeSawmillSubcollections = functions.firestore
 
     return null;
   });
+
+
+
+// Cloud Function to send email
+exports.sendEmail = functions.https.onRequest((req, res) => {
+    // Check if request method is POST
+    if (req.method !== 'POST') {
+        return res.status(405).send({ error: 'Method Not Allowed' });
+    }
+
+    // Prepare the email data
+    const data = {
+        from: 'Excited User <mailgun@sandbox0360972323c44c8998c81d7320e0c80f.mailgun.org>',
+        to: 'andycargill1@gmail.com', // Change this to your desired recipient email or use req.body.to for dynamic
+        subject: req.body.subject,
+        text: req.body.message,
+    };
+
+    // Send the email
+    mg.messages().send(data, (error, body) => {
+        if (error) {
+            console.error('Error sending email:', error);
+            return res.status(500).send({ error: 'Error sending email', details: error });
+        }
+        console.log('Email sent successfully:', body);
+        res.status(200).send({ message: 'Email sent successfully', body });
+    });
+});
