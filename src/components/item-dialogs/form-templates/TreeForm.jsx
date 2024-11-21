@@ -61,7 +61,7 @@ const TreeForm = ({
 
   const renderViewLayout = () => (
     <>
-    <Grid Container display={'flex'} justifyContent={'space-between'}  sx={{border: 'solid', borderColor: 'secondary.main', borderRadius: '15px'}}>
+    <Grid Container display={'flex'} justifyContent={'space-between'}  >
     <Grid
     item
     xs={6}

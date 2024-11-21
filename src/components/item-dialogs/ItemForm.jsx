@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { getFirestore } from "firebase/firestore";
 import { fetchLocationsForSawmill, fetchProjectsForSawmill, fetchSpeciesForSawmill } from "../../utils/filestoreOperations";
-import { CircularProgress, Typography } from "@mui/material";
+import { CircularProgress, Typography, Box } from "@mui/material";
 import PlankForm from "./form-templates/PlankForm";
 import TreeForm from "./form-templates/TreeForm";
 import LogForm from "./form-templates/LogForm";
+
 
 const ItemForm = ({ type, itemDetails, onChange, onSave, mode }) => {
   const [species, setSpecies] = useState([]);
@@ -75,6 +76,8 @@ const ItemForm = ({ type, itemDetails, onChange, onSave, mode }) => {
   switch (type) {
     case "tree":
       return (
+       
+
         <TreeForm
           tree={itemDetails}
           species={species}
@@ -82,9 +85,11 @@ const ItemForm = ({ type, itemDetails, onChange, onSave, mode }) => {
           projects={projects}
           {...commonProps}
         />
+  
       );
     case "log":
       return (
+      
         <LogForm
           log={itemDetails}
           species={species}
@@ -92,6 +97,7 @@ const ItemForm = ({ type, itemDetails, onChange, onSave, mode }) => {
           projects={projects}
           {...commonProps}
         />
+  
       );
     case "plank":
       return (

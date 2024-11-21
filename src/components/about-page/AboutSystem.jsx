@@ -59,18 +59,7 @@ const AboutSystem = () => {
       <Grid container spacing={4} sx={{ mb: 4 }}>
         <Grid item xs={12} sx={{ mt: 4 }}>
           {/* Heading */}
-          <Typography
-            variant="h4"
-            align="left"
-            color="primary"
-            sx={{
-              borderColor: "primary.main",
-              display: "inline-block",
-              pb: 1,
-            }}
-          >
-            Our Vision
-          </Typography>
+    
 
           {/* Card with Text */}
           <Card
@@ -83,6 +72,18 @@ const AboutSystem = () => {
             }}
           >
             <CardContent>
+            <Typography
+            variant="h4"
+            align="left"
+            color="primary"
+            sx={{
+              borderColor: "primary.main",
+              display: "inline-block",
+              pb: 1,
+            }}
+          >
+            Our Vision
+          </Typography>
               <Typography
                 variant="body1"
                 sx={{
@@ -356,7 +357,7 @@ const AboutSystem = () => {
             >
               <Box display="flex" flexDirection="column">
                 <Typography variant="h5" align="left" color="primary">
-                  Stock Management
+                  Stock handling
                 </Typography>
               </Box>
             </AccordionSummary>
@@ -401,7 +402,7 @@ const AboutSystem = () => {
             >
               <Box display="flex" flexDirection="column">
                 <Typography variant="h5" align="left" color="primary">
-                  Project Management
+                  Customer management
                 </Typography>
               </Box>
             </AccordionSummary>

@@ -5,6 +5,7 @@ import {
   DialogActions,
   Button,
   CircularProgress,
+  useTheme,
 } from "@mui/material";
 import ItemForm from "./ItemForm"; // Ensure this is correctly imported
 import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
@@ -19,11 +20,14 @@ const ItemDialog = ({
   type,
   onSave,
 }) => {
+
   const [itemData, setItemData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState(initialMode || "view");
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
+
+  const theme = useTheme();
 
   useEffect(() => {
     const fetchItemData = async () => {
@@ -96,7 +100,13 @@ const ItemDialog = ({
   };
 
   return (
-    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm"  sx={{
+      "& .MuiPaper-root": {
+        border: `5px solid ${theme.palette.secondary.main}`, // Use secondary.main
+        borderRadius: "12px", // Optional: round the corners
+        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)", // Optional: add a shadow
+      },
+    }}>
       <DialogContent>
         {loading ? (
           <CircularProgress />
