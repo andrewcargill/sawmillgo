@@ -15,9 +15,15 @@ import {
   Card,
   CardContent,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import imageSmall from "../../media/images/screen_shots.jpg";
+import imageMedium from "../../media/images/screens_medium.jpg";
+import imageLarge from "../../media/images/screens_large.jpg";
+
 
 const AboutSystem = () => {
   const [expanded, setExpanded] = useState(false); // State to track which accordion is expanded
+  const theme = useTheme();
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false); // Only allow one accordion to be open
@@ -25,51 +31,91 @@ const AboutSystem = () => {
 
   return (
     <Grid container>
+ <Box
+  sx={{
+    backgroundImage: `url(${imageSmall})`, // Default for small screens
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    height: "26vh",
+   
+  
+    width: "100%",
+    borderRadius: "10px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    [theme.breakpoints.up("sm")]: {
+      backgroundImage: `url(${imageLarge})`,
+      height: "26vh",
+    },
+    [theme.breakpoints.up("md")]: {
+      backgroundImage: `url(${imageLarge})`,
+     height: "24vh",
+      backgroundSize: "contain",
+      position: "top",
+    },
+  }}
+></Box>
 
-       {/* Our Vision */}
-       <Grid container spacing={4} sx={{ mb: 4 }}>
-        <Grid item xs={12}>
-          <Typography variant="h4" align="left" color="primary">
-            Our Vision
-          </Typography>
-          <Card elevation={3} sx={{ mt: 2 }}>
-            <CardContent>
-              <Typography variant="body1">
-                At SawmillGo, our vision is to connect small-scale forest
-                owners, sawmills, and creators by providing transparency and
-                traceability for sustainably sourced wood. By empowering end
-                customers with detailed information about the wood’s journey
-                from tree to final product, we aim to create a high-end market
-                for sustainably sourced wood products.
-              </Typography>
-              <Typography variant="body1" sx={{ mt: 2 }}>
-                Through our system, forest owners and sawmills can benefit from
-                increased profitability by promoting sustainability as a core
-                value. This not only boosts local economies but also promotes
-                environmental stewardship and sustainable forest management
-                practices. Our vision is to make sustainable forest management
-                competitive with large-scale operations while emphasizing the
-                importance of environmental responsibility.
-              </Typography>
-              <Typography variant="body1" sx={{ mt: 2 }}>
-                By linking our software with established forestry certification
-                bodies, we aspire to further strengthen the credibility and
-                marketability of sustainably sourced wood, fostering a network
-                of ethically conscious consumers and suppliers.
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
+      {/* Our Vision */}
+      <Grid container spacing={4} sx={{ mb: 4 }}>
     
-      <Grid item xs={12} sx={{ mb: 2 }}>
-        <Typography variant="h4" align="left" color="primary">
-          System Features
-        </Typography>
+     
+
+      <Grid item xs={12} sx={{ mt: 4 }}>
+  {/* Heading */}
+  <Typography
+    variant="h4"
+    align="left"
+    color="primary"
+    sx={{
+      borderBottom: "3px solid",
+      borderColor: "primary.main",
+      display: "inline-block",
+      pb: 1,
+    }}
+  >
+    Our Vision
+  </Typography>
+
+  {/* Card with Text */}
+  <Card
+    elevation={3}
+    sx={{
+      mt: 2,
+      p: 2,
+      backgroundColor: "background.paper",
+      borderRadius: 2,
+    }}
+  >
+    <CardContent>
+      <Typography
+        variant="body1"
+        sx={{
+          color: "text.secondary",
+          lineHeight: 1.7,
+          fontWeight: 800,
+         
+        }}
+      >
+        At SawmillGo, we envision a world where sustainably sourced wood becomes
+        the standard. By empowering small-scale forest owners and creators, we
+        not only drive environmental stewardship but also help build stronger,
+        more connected communities that value the journey of every tree.
+      </Typography>
+    </CardContent>
+  </Card>
+</Grid>
+
       </Grid>
 
   
+
+      {/* <Grid item xs={12} sx={{ mb: 2 }}>
+        <Typography variant="h4" align="center" color="primary">
+          System Features
+        </Typography>
+      </Grid> */}
 
       {/* Left Column */}
       <Grid item xs={12} md={6}>
@@ -307,6 +353,50 @@ const AboutSystem = () => {
       <Grid item xs={12} md={6}>
         <Box sx={{ paddingLeft: { xs: "0px", md: "20px" } }}>
           <Accordion
+            expanded={expanded === "panel8"}
+            onChange={handleChange("panel8")}
+            sx={{ mb: 2 }}
+            className="fade-in-1"
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Box display="flex" flexDirection="column">
+                <Typography variant="h5" align="left" color="primary">
+                 Stock Management
+                </Typography>
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography variant="body1" align="left" color="textSecondary">
+              Handle both normal and transparent stock seamlessly in one system, offering flexibility for all operations.
+              </Typography>
+              <List>
+                <ListItem>
+                  <ListItemIcon>
+                    <CheckCircleIcon color="primary" />
+                  </ListItemIcon>
+                  <ListItemText primary="Status levels (avaliable, reserved, sold)" />
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <CheckCircleIcon color="primary" />
+                  </ListItemIcon>
+                  <ListItemText primary="Assign stock to projects" />
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <CheckCircleIcon color="primary" />
+                  </ListItemIcon>
+                  <ListItemText primary="Manage locations and moisture history" />
+                </ListItem>
+              </List>
+            </AccordionDetails>
+          </Accordion>
+
+          <Accordion
             expanded={expanded === "panel5"}
             onChange={handleChange("panel5")}
             sx={{ mb: 2 }}
@@ -364,7 +454,7 @@ const AboutSystem = () => {
             >
               <Box display="flex" flexDirection="column">
                 <Typography variant="h5" align="left" color="primary">
-                  Collaborate with Creators
+                  Collaborate with Carpenters
                 </Typography>
               </Box>
             </AccordionSummary>
@@ -436,8 +526,6 @@ const AboutSystem = () => {
           </Accordion>
         </Box>
       </Grid>
-
-     
     </Grid>
   );
 };
