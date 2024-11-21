@@ -1,51 +1,30 @@
-import React, { useState, useEffect } from "react";
-import {
-  getFirestore,
-  collection,
-  doc,
-  getDoc,
-  updateDoc,
-  addDoc,
-} from "firebase/firestore";
-import {
-  fetchLocationsForSawmill,
-  fetchProjectsForSawmill,
-  fetchSpeciesForSawmill,
-} from "../../utils/filestoreOperations";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { app } from "../../firebase-config";
+import React, { useEffect, useState } from "react";
+import { getFirestore } from "firebase/firestore";
+import { fetchLocationsForSawmill, fetchProjectsForSawmill, fetchSpeciesForSawmill } from "../../utils/filestoreOperations";
+import { CircularProgress, Typography } from "@mui/material";
 import PlankForm from "./form-templates/PlankForm";
 import TreeForm from "./form-templates/TreeForm";
 import LogForm from "./form-templates/LogForm";
-import { CircularProgress, Typography } from "@mui/material";
 
 const ItemForm = ({ type, itemDetails, onChange, onSave, mode }) => {
-  const [itemData, setItemData] = useState(itemDetails || {});
   const [species, setSpecies] = useState([]);
   const [locations, setLocations] = useState([]);
   const [projects, setProjects] = useState([]);
-  const [imageFiles, setImageFiles] = useState({
-    image1: null,
-    image2: null,
-  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const db = getFirestore(app);
+  const db = getFirestore();
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const [fetchedSpecies, fetchedLocations, fetchedProjects] =
           await Promise.all([
             fetchSpeciesForSawmill(db, sawmillId),
             fetchLocationsForSawmill(db, sawmillId),
-            fetchProjectsForSawmill(
-              db,
-              sawmillId,
-              itemDetails?.verified || false
-            ),
+            fetchProjectsForSawmill(db, sawmillId, itemDetails?.verified || false),
           ]);
 
         setSpecies(fetchedSpecies);
@@ -56,11 +35,10 @@ const ItemForm = ({ type, itemDetails, onChange, onSave, mode }) => {
             name: project.projectName,
           }))
         );
-
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
         setError("Failed to load additional data.");
+      } finally {
         setLoading(false);
       }
     };
@@ -69,114 +47,6 @@ const ItemForm = ({ type, itemDetails, onChange, onSave, mode }) => {
       fetchData();
     }
   }, [db, sawmillId, itemDetails?.verified]);
-
-  const handleInputChange = (event) => {
-    if (!event) return;
-
-    const target = event.target || event.currentTarget;
-
-    // Handle the case when the target is missing
-    if (!target) {
-      console.error("The event target is missing. Event data:", event);
-      return;
-    }
-
-    const { name, value, checked, type } = target;
-
-    // Use console.log to debug the target object
-    console.log("Target", { name, value, checked, type });
-
-    let actualValue;
-
-    switch (type) {
-      case "checkbox":
-        actualValue = checked;
-        break;
-      case "number":
-        actualValue = value === "" ? "" : parseFloat(value);
-        if (isNaN(actualValue)) {
-          actualValue = value;
-        }
-        break;
-      default:
-        actualValue = value;
-        break;
-    }
-
-    setItemData((prev) => ({
-      ...prev,
-      [name]: actualValue,
-    }));
-
-    onChange({ name, value: actualValue });
-  };
-
-  const handleSelectChange = (event, data) => {
-    const target = event.target || event.currentTarget;
-
-    if (!target) {
-      console.error("The event target is missing. Event data:", event);
-      return;
-    }
-
-    const { name, value } = target;
-    const baseName = name.slice(0, -2);
-    const selectedItem = data.find((item) => item.id === value);
-
-    setItemData((prev) => ({
-      ...prev,
-      [name]: value,
-      [`${baseName}Name`]: selectedItem ? selectedItem.name : "",
-    }));
-  };
-
-  const handleFileChange = (name, file) => {
-    setImageFiles((prev) => ({ ...prev, [name]: file }));
-  };
-
-  const uploadImage = async (file) => {
-    if (!file) return null;
-    const storage = getStorage(app);
-    const storageRef = ref(
-      storage,
-      `${type}s/${sawmillId}/${file.name}_${new Date().getTime()}`
-    );
-    await uploadBytes(storageRef, file);
-    return getDownloadURL(storageRef);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const newImage1Url = imageFiles.image1
-        ? await uploadImage(imageFiles.image1)
-        : null;
-      const newImage2Url = imageFiles.image2
-        ? await uploadImage(imageFiles.image2)
-        : null;
-
-      const updateData = {
-        ...itemData,
-        ...(newImage1Url ? { image1: newImage1Url } : {}),
-        ...(newImage2Url ? { image2: newImage2Url } : {}),
-      };
-
-      if (mode === "edit") {
-        const itemRef = doc(db, `sawmill/${sawmillId}/${type}s`, itemData.id);
-        await updateDoc(itemRef, updateData);
-        alert(`${type} updated successfully!`);
-      } else if (mode === "add") {
-        const collectionRef = collection(db, `sawmill/${sawmillId}/${type}s`);
-        await addDoc(collectionRef, updateData);
-        alert(`${type} added successfully!`);
-      }
-      onSave(updateData);
-    } catch (error) {
-      console.error(`Failed to ${mode} ${type}:`, error);
-      alert(`Error ${mode}ing ${type}.`);
-    }
-  };
 
   if (loading) {
     return <CircularProgress />;
@@ -191,18 +61,32 @@ const ItemForm = ({ type, itemDetails, onChange, onSave, mode }) => {
   }
 
   const commonProps = {
-    onChange: handleInputChange,
-    onSelectChange: handleSelectChange,
-    onFileChange: handleFileChange,
-    onSubmit: handleSubmit,
-    mode: mode,
+    onChange,
+    onSelectChange: (event, data) => {
+      const { name, value } = event.target || {};
+      const baseName = name.slice(0, -2);
+      const selectedItem = data.find((item) => item.id === value);
+      onChange({
+        name,
+        value,
+        [`${baseName}Name`]: selectedItem ? selectedItem.name : "",
+      });
+    },
+    onFileChange: (name, file) => {
+      onChange({ name, value: file });
+    },
+    onSubmit: (e) => {
+      e.preventDefault();
+      onSave(itemDetails);
+    },
+    mode,
   };
 
   switch (type) {
     case "tree":
       return (
         <TreeForm
-          tree={itemData}
+          tree={itemDetails}
           species={species}
           locations={locations}
           projects={projects}
@@ -212,7 +96,7 @@ const ItemForm = ({ type, itemDetails, onChange, onSave, mode }) => {
     case "log":
       return (
         <LogForm
-          log={itemData}
+          log={itemDetails}
           species={species}
           locations={locations}
           projects={projects}
@@ -222,7 +106,7 @@ const ItemForm = ({ type, itemDetails, onChange, onSave, mode }) => {
     case "plank":
       return (
         <PlankForm
-          plank={itemData}
+          plank={itemDetails}
           species={species}
           locations={locations}
           projects={projects}
@@ -230,7 +114,7 @@ const ItemForm = ({ type, itemDetails, onChange, onSave, mode }) => {
         />
       );
     default:
-      return <p>Unknown item type</p>;
+      return <Typography>Unknown item type</Typography>;
   }
 };
 

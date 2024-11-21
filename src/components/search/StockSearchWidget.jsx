@@ -42,6 +42,8 @@ const StockSearchWidget = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [dialogMode, setDialogMode] = useState('view');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0); 
+
 
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem('user'))?.sawmillId;
@@ -50,13 +52,25 @@ const StockSearchWidget = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
+
   useEffect(() => {
-    // Fetch initial data when the component mounts or when selectedType changes
-    setStockData([]);
-    setLastDoc(null);
-    setHasMore(true);
-    fetchStockData(true); 
-  }, [selectedType]);
+    const loadStockData = async () => {
+      setLoading(true);
+      setStockData([]); 
+      setLastDoc(null); 
+  
+      try {
+        await fetchStockData(true); 
+      } catch (error) {
+        console.error("Error refreshing stock data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    loadStockData();
+  }, [selectedType, refreshTrigger]); 
+  
 
   // Function to fetch data from Firestore
   const fetchStockData = useCallback(async (isNewType = false) => {
@@ -209,10 +223,13 @@ const StockSearchWidget = () => {
   };
 
   const handleSaveItem = (updatedItem) => {
-    // Logic to save the updated or new item
-    console.log('Save item:', updatedItem);
-    setIsDialogOpen(false);
-    fetchStockData(); // Refresh the list after saving
+    console.log("Updated item:", updatedItem);
+  
+    // Increment refreshTrigger to re-trigger useEffect
+    setStockData([]); // Clear current data explicitly
+    setLastDoc(null); // Reset pagination state
+    setHasMore(true); // Reset pagination availability
+    setRefreshTrigger((prev) => prev + 1); // Trigger refresh
   };
 
   // Filter stock data based on search query

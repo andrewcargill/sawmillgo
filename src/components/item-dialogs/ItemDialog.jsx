@@ -1,71 +1,77 @@
 import React, { useEffect, useState } from "react";
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
   DialogActions,
   Button,
   CircularProgress,
 } from "@mui/material";
 import ItemForm from "./ItemForm"; // Ensure this is correctly imported
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
 import { app } from "../../firebase-config";
-import { useNavigate } from "react-router-dom";
 
 const ItemDialog = ({
   isOpen,
   onClose,
   itemDetails,
   refId,
-  mode,
+  mode: initialMode,
   type,
   onSave,
 }) => {
-  const [itemData, setItemData] = useState(itemDetails || null);
+  const [itemData, setItemData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState(initialMode || "view");
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
-  const navigate = useNavigate();
-
 
   useEffect(() => {
     const fetchItemData = async () => {
-      console.log("refId: ", refId);
-      console.log("itemDetails: ", itemDetails);
-      if (refId && !itemDetails) {
+      if (itemDetails) {
+        // Use provided itemDetails immediately
+        setItemData(itemDetails);
+        setLoading(false);
+        return;
+      }
+
+      if (refId) {
         setLoading(true);
         try {
           const itemRef = doc(db, `sawmill/${sawmillId}/${type}s`, refId);
           const itemSnap = await getDoc(itemRef);
 
           if (itemSnap.exists()) {
-            setItemData({ id: itemSnap.id, ...itemSnap.data() });
+            const data = itemSnap.data();
+
+            // Prefetch related logs and images (if applicable)
+            const logs = data.logIds
+              ? await Promise.all(
+                  data.logIds.map(async (logId) => {
+                    const logSnap = await getDoc(doc(db, `sawmill/${sawmillId}/logs`, logId));
+                    return logSnap.exists() ? { id: logId, ...logSnap.data() } : null;
+                  })
+                )
+              : [];
+
+            setItemData({ id: itemSnap.id, ...data, logs });
           } else {
-            alert(`${type} not found!`);
-            onClose();
+            alert(`${type} not found.`);
           }
         } catch (error) {
           console.error(`Error fetching ${type} data:`, error);
-          alert(`Failed to load ${type} details.`);
+          alert("Failed to load item details. Please try again.");
+        } finally {
+          setLoading(false);
         }
-        setLoading(false);
       }
     };
 
-    fetchItemData();
-
-    if (mode === "add") {
-      setItemData({
-        refId: "",
-        speciesName: "",
-        // Add default fields as necessary for each type
-      });
+    if (isOpen) {
+      setMode(initialMode || "view"); // Reset to view mode on open
+      setItemData(null); // Clear stale data
+      fetchItemData(); // Fetch or use provided data
     }
-  }, [refId, itemDetails, mode, type, db, onClose]);
-
-  useEffect(() => {
-    setItemData(itemDetails); // Reset itemData when itemDetails change
-  }, [itemDetails]);
+  }, [isOpen, refId, itemDetails, initialMode, type, db, sawmillId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -75,30 +81,22 @@ const ItemDialog = ({
     }));
   };
 
-  const handleSave = (updatedItemData) => {
-    // Logic to save or update the item
-    onSave(updatedItemData);
-  };
-
-  const handlePlankEditClick = () => {
-    onClose();
-    navigate(`/editplank/${itemData.id}`);
-  };
-
-  const handleLogEditClick = () => {
-    onClose();
-    navigate(`/editlog/${itemData.id}`);
+  const handleSave = async () => {
+    try {
+      const updateData = { ...itemData }; // `itemData` contains the latest state
+      const itemRef = doc(db, `sawmill/${sawmillId}/${type}s`, itemData.id);
+      await updateDoc(itemRef, updateData); // Update the document in Firestore
+      alert(`${type} updated successfully!`);
+      setMode("view"); // Switch back to view mode
+      onSave(updateData); // Optionally pass updated data to parent
+    } catch (error) {
+      console.error(`Error saving ${type}:`, error);
+      alert(`Failed to save ${type}.`);
+    }
   };
 
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm">
-      {/* <DialogTitle>
-        {mode === "view"
-          ? `View ${type}`
-          : mode === "edit"
-          ? `Edit ${type}`
-          : `Add New ${type}`}
-      </DialogTitle> */}
       <DialogContent>
         {loading ? (
           <CircularProgress />
@@ -116,19 +114,18 @@ const ItemDialog = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        {mode !== "view" && (
-          <Button color="primary" onClick={() => handleSave(itemData)}>
+        {mode === "view" && (
+          <Button color="primary" onClick={() => setMode("edit")}>
+            Edit
+          </Button>
+        )}
+        {mode === "edit" && (
+          <Button
+            color="primary"
+            onClick={handleSave}
+            disabled={!itemData}
+          >
             Save
-          </Button>
-        )}
-        {type == "plank" && (
-          <Button color="primary" onClick={handlePlankEditClick}>
-            Edit
-          </Button>
-        )}
-        {type == "log" && (
-          <Button color="primary" onClick={handleLogEditClick}>
-            Edit
           </Button>
         )}
       </DialogActions>
