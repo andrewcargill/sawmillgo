@@ -12,7 +12,6 @@ import {
 const LogForm = ({
   log,
   onChange,
-  onSelectChange,
   projects,
   species,
   locations,
@@ -20,6 +19,29 @@ const LogForm = ({
   onSubmit,
   disabled,
 }) => {
+
+  const handleSelectChange = (event, data) => {
+    const { name, value } = event.target;
+    const selectedItem = data.find((item) => item.id === value);
+
+    // Update the corresponding tree field directly
+    onChange({
+      target: {
+        name,
+        value,
+      },
+    });
+
+    if (selectedItem) {
+      onChange({
+        target: {
+          name: `${name.slice(0, -2)}Name`,
+          value: selectedItem.name,
+        },
+      });
+    }
+  };
+
   return (
     <>
        <Grid item xs={12} pb={3}>
@@ -49,7 +71,7 @@ const LogForm = ({
         "projectId",
         "Project",
         projects,
-        (event) => onSelectChange(event, projects),
+        (event) => handleSelectChange(event, projects),
         log.projectId,
         mode === "view"
       )}
@@ -57,7 +79,7 @@ const LogForm = ({
         "speciesId",
         "Species",
         species,
-        (event) => onSelectChange(event, species),
+        (event) => handleSelectChange(event, species),
         log.speciesId,
         mode === "view"
       )}
@@ -65,7 +87,7 @@ const LogForm = ({
         "locationId",
         "Location",
         locations,
-        (event) => onSelectChange(event, locations),
+        (event) => handleSelectChange(event, locations),
         log.locationId,
         mode === "view"
       )}
@@ -100,23 +122,21 @@ function renderSelect(name, label, options, onChange, value, disabled = false) {
   return (
     <Grid item xs={12} sm={6}>
       <FormControl fullWidth>
-        <InputLabel id={`${name}-label`}>{label}</InputLabel>
-        <Select
-          labelId={`${name}-label`}
-          id={name}
-          name={name}
-          value={value || ""}
-          label={label}
-          onChange={onChange}
-          disabled={disabled}
-        >
-          {label === "Project" && <MenuItem value="">No Project</MenuItem>}
-          {options.map((option) => (
-            <MenuItem key={option.id} value={option.id}>
-              {option.name}
-            </MenuItem>
-          ))}
-        </Select>
+      <InputLabel id={`${name}-label`}>{label}</InputLabel>
+    <Select
+      labelId={`${name}-label`}
+      id={name}
+      name={name}
+      value={value || ""}
+      onChange={onChange}
+    >
+      <MenuItem value="">None</MenuItem>
+      {options.map((option) => (
+        <MenuItem key={option.id} value={option.id}>
+          {option.name}
+        </MenuItem>
+      ))}
+    </Select>
       </FormControl>
     </Grid>
   );

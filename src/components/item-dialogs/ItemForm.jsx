@@ -62,16 +62,6 @@ const ItemForm = ({ type, itemDetails, onChange, onSave, mode }) => {
 
   const commonProps = {
     onChange,
-    onSelectChange: (event, data) => {
-      const { name, value } = event.target || {};
-      const baseName = name.slice(0, -2);
-      const selectedItem = data.find((item) => item.id === value);
-      onChange({
-        name,
-        value,
-        [`${baseName}Name`]: selectedItem ? selectedItem.name : "",
-      });
-    },
     onFileChange: (name, file) => {
       onChange({ name, value: file });
     },
