@@ -20,7 +20,6 @@ import imageSmall from "../../media/images/screen_shots.jpg";
 import imageMedium from "../../media/images/screens_medium.jpg";
 import imageLarge from "../../media/images/screens_large.jpg";
 
-
 const AboutSystem = () => {
   const [expanded, setExpanded] = useState(false); // State to track which accordion is expanded
   const theme = useTheme();
@@ -31,85 +30,77 @@ const AboutSystem = () => {
 
   return (
     <Grid container>
- <Box
-  sx={{
-    backgroundImage: `url(${imageSmall})`, // Default for small screens
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    height: "26vh",
-   
-  
-    width: "100%",
-    borderRadius: "10px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    [theme.breakpoints.up("sm")]: {
-      backgroundImage: `url(${imageLarge})`,
-      height: "26vh",
-    },
-    [theme.breakpoints.up("md")]: {
-      backgroundImage: `url(${imageLarge})`,
-     height: "24vh",
-      backgroundSize: "contain",
-      position: "top",
-    },
-  }}
-></Box>
+      <Box
+        sx={{
+          backgroundImage: `url(${imageSmall})`, // Default for small screens
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          height: "26vh",
+
+          width: "100%",
+          borderRadius: "10px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          [theme.breakpoints.up("sm")]: {
+            backgroundImage: `url(${imageLarge})`,
+            height: "26vh",
+          },
+          [theme.breakpoints.up("md")]: {
+            backgroundImage: `url(${imageLarge})`,
+            height: "24vh",
+            backgroundSize: "contain",
+            position: "top",
+          },
+        }}
+      ></Box>
 
       {/* Our Vision */}
       <Grid container spacing={4} sx={{ mb: 4 }}>
-    
-     
+        <Grid item xs={12} sx={{ mt: 4 }}>
+          {/* Heading */}
+          <Typography
+            variant="h4"
+            align="left"
+            color="primary"
+            sx={{
+              borderColor: "primary.main",
+              display: "inline-block",
+              pb: 1,
+            }}
+          >
+            Our Vision
+          </Typography>
 
-      <Grid item xs={12} sx={{ mt: 4 }}>
-  {/* Heading */}
-  <Typography
-    variant="h4"
-    align="left"
-    color="primary"
-    sx={{
-      borderBottom: "3px solid",
-      borderColor: "primary.main",
-      display: "inline-block",
-      pb: 1,
-    }}
-  >
-    Our Vision
-  </Typography>
-
-  {/* Card with Text */}
-  <Card
-    elevation={3}
-    sx={{
-      mt: 2,
-      p: 2,
-      backgroundColor: "background.paper",
-      borderRadius: 2,
-    }}
-  >
-    <CardContent>
-      <Typography
-        variant="body1"
-        sx={{
-          color: "text.secondary",
-          lineHeight: 1.7,
-          fontWeight: 800,
-         
-        }}
-      >
-        At SawmillGo, we envision a world where sustainably sourced wood becomes
-        the standard. By empowering small-scale forest owners and creators, we
-        not only drive environmental stewardship but also help build stronger,
-        more connected communities that value the journey of every tree.
-      </Typography>
-    </CardContent>
-  </Card>
-</Grid>
-
+          {/* Card with Text */}
+          <Card
+            elevation={3}
+            sx={{
+              mt: 2,
+              p: 2,
+              backgroundColor: "background.paper",
+              borderRadius: 2,
+            }}
+          >
+            <CardContent>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "text.secondary",
+                  lineHeight: 1.7,
+                  fontWeight: 800,
+                }}
+              >
+                At SawmillGo, we envision a world where sustainably sourced wood
+                becomes the standard. By empowering small-scale forest owners
+                and creators, we not only drive environmental stewardship but
+                also help build stronger, more connected communities that value
+                the journey of every tree.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
-
-  
 
       {/* <Grid item xs={12} sx={{ mb: 2 }}>
         <Typography variant="h4" align="center" color="primary">
@@ -365,13 +356,14 @@ const AboutSystem = () => {
             >
               <Box display="flex" flexDirection="column">
                 <Typography variant="h5" align="left" color="primary">
-                 Stock Management
+                  Stock Management
                 </Typography>
               </Box>
             </AccordionSummary>
             <AccordionDetails>
               <Typography variant="body1" align="left" color="textSecondary">
-              Handle both normal and transparent stock seamlessly in one system, offering flexibility for all operations.
+                Handle both normal and transparent stock seamlessly in one
+                system, offering flexibility for all operations.
               </Typography>
               <List>
                 <ListItem>

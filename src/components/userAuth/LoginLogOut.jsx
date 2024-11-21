@@ -44,7 +44,7 @@ const Login = () => {
         const sawmillName = await fetchSawmillName(userProfileData.sawmillId);
         userProfileData.sawmillName = sawmillName; // Add the sawmill name to the user profile object
       }
-     
+
       return userProfileData;
     } else {
       console.log("No user profile found!");
@@ -94,7 +94,7 @@ const Login = () => {
         role: userProfile.role,
         country: userProfile.country,
       };
-      localStorage.setItem('user', JSON.stringify(dataToStore));
+      localStorage.setItem("user", JSON.stringify(dataToStore));
       setLoading(false);
 
       navigate("/home"); // Navigate after the userProfile is set
@@ -106,41 +106,48 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <Grid container pt={4}></Grid>
-      <CustomFormHeading title="Log In" />
-      <FormBoxMain>
-        <form onSubmit={submit}>
-          <Grid item xs={12}>
-            <CustomInput
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <CustomInput
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </Grid>
-          <Grid item xs={12} sx={{ mt: 2 }}>
-            <Button variant="contained" color="primary" fullWidth type="submit">
-              {loading ? <CircularProgress size={24} /> : "Submit"}
-            </Button>
-            {loginError && <div style={{ color: "red" }}>{loginError}</div>}
-          </Grid>
-        </form>
-      </FormBoxMain>
-    </div>
+    <>
+      <Grid container flexDirection={"row"} justifyContent={"center"}>
+        <Grid item xs={12} sm={6} md={4} lg={3} pt={6}>
+          <CustomFormHeading title="Log In" />
+          <FormBoxMain>
+            <form onSubmit={submit}>
+              <Grid item xs={12}>
+                <CustomInput
+                  label="Email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <CustomInput
+                  label="Password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sx={{ mt: 2 }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  type="submit"
+                >
+                  {loading ? <CircularProgress size={24} /> : "Submit"}
+                </Button>
+                {loginError && <div style={{ color: "red" }}>{loginError}</div>}
+              </Grid>
+            </form>
+          </FormBoxMain>
+        </Grid>
+      </Grid>
+    </>
   );
 };
-
 
 const CreatorLogin = () => {
   const [email, setEmail] = useState("");
@@ -174,7 +181,7 @@ const CreatorLogin = () => {
         const sawmillName = await fetchSawmillName(userProfileData.sawmillId);
         userProfileData.sawmillName = sawmillName; // Add the sawmill name to the user profile object
       }
-     
+
       return userProfileData;
     } else {
       console.log("No user profile found!");
@@ -224,7 +231,7 @@ const CreatorLogin = () => {
         role: userProfile.role,
         country: userProfile.country,
       };
-      localStorage.setItem('user', JSON.stringify(dataToStore));
+      localStorage.setItem("user", JSON.stringify(dataToStore));
       setLoading(false);
 
       navigate("/creatorhome"); // Navigate after the userProfile is set
@@ -236,38 +243,44 @@ const CreatorLogin = () => {
   };
 
   return (
-    <div>
-      <Grid container pt={4}></Grid>
-      <CustomFormHeading title="Creator Log In" />
-      <FormBoxMain>
-        <form onSubmit={submit}>
-          <Grid item xs={12}>
-            <CustomInput
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <CustomInput
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </Grid>
-          <Grid item xs={12} sx={{ mt: 2 }}>
-            <Button variant="contained" color="primary" fullWidth type="submit">
-              {loading ? <CircularProgress size={24} /> : "Submit"}
-            </Button>
-            {loginError && <div style={{ color: "red" }}>{loginError}</div>}
-          </Grid>
-        </form>
-      </FormBoxMain>
-    </div>
+    <Grid container flexDirection={"row"} justifyContent={"center"}>
+        <Grid item xs={12} sm={7} md={5} lg={4} pt={6}>
+          <CustomFormHeading title="Creator Log In" />
+          <FormBoxMain>
+            <form onSubmit={submit}>
+              <Grid item xs={12}>
+                <CustomInput
+                  label="Email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <CustomInput
+                  label="Password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sx={{ mt: 2 }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  type="submit"
+                >
+                  {loading ? <CircularProgress size={24} /> : "Submit"}
+                </Button>
+                {loginError && <div style={{ color: "red" }}>{loginError}</div>}
+              </Grid>
+            </form>
+          </FormBoxMain>
+        </Grid>
+      </Grid>
   );
 };
 
