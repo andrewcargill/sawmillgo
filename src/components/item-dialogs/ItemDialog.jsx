@@ -102,7 +102,7 @@ const ItemDialog = ({
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm"  sx={{
       "& .MuiPaper-root": {
-        border: `5px solid ${theme.palette.secondary.main}`, // Use secondary.main
+        border: `5px solid ${theme.palette.primary.main}`, // Use secondary.main
         borderRadius: "12px", // Optional: round the corners
         boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)", // Optional: add a shadow
       },
