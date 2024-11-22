@@ -8,6 +8,8 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
+import CustomFormHeading from "../../customForms/CustomFormHeading";
+import CustomViewItem from "../../customForms/CustomViewItem";
 
 const LogForm = ({
   log,
@@ -19,12 +21,11 @@ const LogForm = ({
   onSubmit,
   disabled,
 }) => {
-
   const handleSelectChange = (event, data) => {
     const { name, value } = event.target;
     const selectedItem = data.find((item) => item.id === value);
 
-    // Update the corresponding tree field directly
+    // Update the corresponding log field directly
     onChange({
       target: {
         name,
@@ -42,38 +43,44 @@ const LogForm = ({
     }
   };
 
-  return (
-    <>
-       <Grid item xs={12} pb={3}>
-        <Typography variant="h6">
-          {mode === "view"
-            ? `Log: ${log?.refId}`
-            : `${mode === "edit" ? "Edit" : "Add"} Log: ${log?.refId}`}
-        </Typography>
-        <Typography>Status: {log?.status}</Typography>
-      </Grid>
+  const renderViewLayout = () => (
+    <Grid container padding={2}>
+      <CustomFormHeading title={`Log: ${log?.refId}`} />
+      <CustomViewItem title="Date Logged" data={log?.date || "N/A"} />
+      <CustomViewItem title="Species" data={getSpeciesName(log.speciesId)} />
+      <CustomViewItem title="Location" data={getLocationName(log.locationId)} />
+      <CustomViewItem title="Project" data={getProjectName(log.speciesId)} />
+      <CustomViewItem title="Diameter" data={log?.diameter || "N/A"} />
+      <CustomViewItem title="Length" data={log?.length || "N/A"} />
+    </Grid>
+  );
 
+  const renderEditAddLayout = () => (
     <Grid container spacing={2}>
+      <Grid item xs={12} pb={3}>
+        <Typography variant="h6">
+          {mode === "edit" ? `Edit Log: ${log?.refId}` : "Add Log"}
+        </Typography>
+      </Grid>
       <Grid item xs={6}>
         <TextField
           fullWidth
           label="Date Logged"
           type="date"
           name="date"
-          value={log.date}
+          value={log.date || ""}
           onChange={onChange}
           required
-          disabled={mode === "view"}
+          disabled={disabled}
         />
       </Grid>
-
       {renderSelect(
         "projectId",
         "Project",
         projects,
         (event) => handleSelectChange(event, projects),
         log.projectId,
-        mode === "view"
+        disabled
       )}
       {renderSelect(
         "speciesId",
@@ -81,7 +88,7 @@ const LogForm = ({
         species,
         (event) => handleSelectChange(event, species),
         log.speciesId,
-        mode === "view"
+        disabled
       )}
       {renderSelect(
         "locationId",
@@ -89,10 +96,9 @@ const LogForm = ({
         locations,
         (event) => handleSelectChange(event, locations),
         log.locationId,
-        mode === "view"
+        disabled
       )}
-
-      <Grid item xs={3}>
+      <Grid item xs={6}>
         <TextField
           fullWidth
           label="Diameter"
@@ -102,7 +108,7 @@ const LogForm = ({
           disabled={disabled}
         />
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={6}>
         <TextField
           fullWidth
           label="Length"
@@ -112,9 +118,20 @@ const LogForm = ({
           disabled={disabled}
         />
       </Grid>
-    
     </Grid>
-    </>
+  );
+
+  const getProjectName = (id) =>
+    projects.find((item) => item.id === id)?.name || "Unknown";
+  const getSpeciesName = (id) =>
+    species.find((item) => item.id === id)?.name || "Unknown";
+  const getLocationName = (id) =>
+    locations.find((item) => item.id === id)?.name || "Unknown";
+
+  return (
+    <form onSubmit={onSubmit}>
+      {mode === "view" ? renderViewLayout() : renderEditAddLayout()}
+    </form>
   );
 };
 
@@ -122,23 +139,25 @@ function renderSelect(name, label, options, onChange, value, disabled = false) {
   return (
     <Grid item xs={12} sm={6}>
       <FormControl fullWidth>
-      <InputLabel id={`${name}-label`}>{label}</InputLabel>
-    <Select
-      labelId={`${name}-label`}
-      id={name}
-      name={name}
-      value={value || ""}
-      onChange={onChange}
-    >
-      <MenuItem value="">None</MenuItem>
-      {options.map((option) => (
-        <MenuItem key={option.id} value={option.id}>
-          {option.name}
-        </MenuItem>
-      ))}
-    </Select>
+        <InputLabel id={`${name}-label`}>{label}</InputLabel>
+        <Select
+          labelId={`${name}-label`}
+          id={name}
+          name={name}
+          value={value || ""}
+          onChange={onChange}
+          disabled={disabled}
+        >
+          <MenuItem value="">None</MenuItem>
+          {options.map((option) => (
+            <MenuItem key={option.id} value={option.id}>
+              {option.name}
+            </MenuItem>
+          ))}
+        </Select>
       </FormControl>
     </Grid>
   );
 }
+
 export default LogForm;

@@ -5,6 +5,9 @@ const CustomTypography = {
   heading: ({ color, ...rest }) => (
     <Typography sx={{ textAlign: 'left', lineHeight: 1, fontWeight: 800, textTransform: 'uppercase', fontSize: '2.125rem', color}} {...rest} />
   ),
+  dialogHeading: ({ color, ...rest }) => (
+    <Typography sx={{ textAlign: 'left', lineHeight: 1, fontWeight: 800, textTransform: 'uppercase', fontSize: '1.5rem', color}} {...rest} />
+  ),
   navHeading: ({ color, ...rest }) => (
     <Typography sx={{ textAlign: 'left', lineHeight: 1, fontWeight: 800, textTransform: 'uppercase', fontSize: '2.125rem', color: 'dark.contrastText'}} {...rest} />
   ),
@@ -12,10 +15,10 @@ const CustomTypography = {
     <Typography sx={{ textAlign: 'left', lineHeight: 1, fontWeight: 800, textTransform: 'uppercase', fontSize: '1.125rem', color}} {...rest} />
   ),
   dialogItemTitle: ({ color, ...rest }) => (
-    <Typography sx={{ textAlign: 'left', lineHeight: 1, fontWeight: 800,  fontSize: '1rem', color}} {...rest} />
+    <Typography sx={{ textAlign: 'left', lineHeight: 1, fontWeight: 800,  fontSize: '0.9rem', color}} {...rest} />
   ),
   dialogItemData: ({ color, ...rest }) => (
-    <Typography sx={{ textAlign: 'left', lineHeight: 1, fontWeight: 500,  fontSize: '0.9rem', color}} {...rest} />
+    <Typography sx={{ textAlign: 'left', lineHeight: 1,   fontSize: '0.9rem', color}} {...rest} />
   ),
   subheading: ({ color, ...rest }) => (
     <Typography sx={{ textAlign: 'left', lineHeight: 1.3, fontSize: '0.9rem', fontWeight: 'bold', color }} {...rest} />

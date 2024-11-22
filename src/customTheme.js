@@ -24,6 +24,16 @@ const customTheme = createTheme({
         black: {
             main: '#efefef', 
             contrastText: '#efefef',
+        },
+
+        lightgrey: {
+            main: '#e8e8e8', 
+            contrastText: '#000000',
+        },
+
+        darkgrey: {
+            main: '#d3d3d3', 
+            contrastText: '#000000',
         }
 
     },

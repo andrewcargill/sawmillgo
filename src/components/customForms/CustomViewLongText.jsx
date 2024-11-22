@@ -6,15 +6,15 @@ import CustomBoxSimple from "../customContainers/CustomBoxSimple";
 
 const CustomViewLongText = ({ title, data }) => {
   return (
-    <Grid container>
+    <Grid container >
       <Grid item xs={6}>
-        <CustomBox variant="dark" >
+        <CustomBoxSimple variant="lightgrey" sx={{padding: '15px, 2px', borderRadius: '5px'}} >
           <Grid container spacing={1}>
             <CustomTypography.dialogItemTitle>
-              {title}
+            {`${title}:`}
             </CustomTypography.dialogItemTitle>
           </Grid>
-        </CustomBox>
+        </CustomBoxSimple>
       </Grid>
       <Grid item xs={12}>
         <CustomBoxSimple>

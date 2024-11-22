@@ -71,6 +71,7 @@ const TreeForm = ({
          <CustomViewItem title="Date Felled" data={tree.date} />
          <CustomViewItem title="Location" data={getLocationName(tree.locationId)} />
          <CustomViewItem title="Species" data={getSpeciesName(tree.speciesId)} />
+         <CustomViewItem title="Project" data={getProjectName(tree.projectId)} />
          <CustomViewItem title="Age" data={tree.age} />
          <CustomViewItem title="Lumberjack" data={tree.lumberjackName} />
          <CustomViewLongText title="Reason" data={tree.reason} />
@@ -243,6 +244,8 @@ const TreeForm = ({
     species.find((item) => item.id === id)?.name || "Unknown";
   const getLocationName = (id) =>
     locations.find((item) => item.id === id)?.name || "Unknown";
+  const getProjectName = (id) =>
+    projects.find((item) => item.id === id)?.name || "Unknown";
 
   return (
     <form onSubmit={onSubmit}>

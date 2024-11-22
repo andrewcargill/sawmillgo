@@ -8,13 +8,13 @@ const CustomViewItem = ({ title, data }) => {
   return (
     <Grid container>
       <Grid item xs={6}>
-        <CustomBox variant="dark" >
+        <CustomBoxSimple variant="lightgrey" sx={{borderRadius: '5px'}}>
           <Grid container spacing={1}>
             <CustomTypography.dialogItemTitle>
-              {title}
+             {`${title}:`}
             </CustomTypography.dialogItemTitle>
           </Grid>
-        </CustomBox>
+        </CustomBoxSimple>
       </Grid>
       <Grid item xs={6}>
         <CustomBoxSimple>
