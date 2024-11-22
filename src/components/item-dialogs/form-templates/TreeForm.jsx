@@ -74,7 +74,7 @@ const TreeForm = ({
          <CustomViewItem title="Age" data={tree.age} />
          <CustomViewItem title="Lumberjack" data={tree.lumberjackName} />
          <CustomViewLongText title="Reason" data={tree.reason} />
-         <CustomViewItem title="GPS" data={tree.reason} />
+         <CustomViewLongText title="GPS" data="223.33445 23040506.560" />
          
           {hasLogs ? renderLogs() : "Tree is not logged"}
         </Grid>

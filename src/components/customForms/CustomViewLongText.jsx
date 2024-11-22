@@ -8,7 +8,7 @@ const CustomViewLongText = ({ title, data }) => {
   return (
     <Grid container>
       <Grid item xs={6}>
-        <CustomBox variant="primary" >
+        <CustomBox variant="dark" >
           <Grid container spacing={1}>
             <CustomTypography.dialogItemTitle>
               {title}
