@@ -93,43 +93,50 @@ const PlankForm = ({
 
   const renderViewLayout = () => (
     <Grid container spacing={2} padding={2}>
-       <CustomFormHeading title={`Plank: ${plank?.refId}`} />
-       <CustomViewItem title="Date Milled" data={plank?.date || "N/A"} />
-       <CustomViewItem title="Location" data={getLocationName(plank?.locationId)} />
-         <CustomViewItem title="Species" data={getSpeciesName(plank?.speciesId)} />
-         <CustomViewItem title="Project" data={getProjectName(plank?.projectId)} />
-         <CustomViewItem title="Grade" data={plank?.grade || "N/A"} />
-         <CustomViewItem title="Length" data={plank?.length || "N/A"} />
-         <CustomViewItem title="Depth" data={plank?.depth || "N/A"} />
-         <CustomViewItem title="Width" data={plank?.width || "N/A"} />
-    <CustomViewLongText title="notes" data={plank?.notes || "N/A"} />
- 
-    
-    
+      <Grid item xs={12}>
+      <CustomFormHeading title={`Plank - ${plank?.refId}`} />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+      <CustomViewItem title="Date Milled" data={plank?.date || "N/A"} />
+      <CustomViewItem
+        title="Location"
+        data={getLocationName(plank?.locationId)}
+      />
+      <CustomViewItem title="Species" data={getSpeciesName(plank?.speciesId)} />
+      <CustomViewItem title="Project" data={getProjectName(plank?.projectId)} />
+      <CustomViewItem title="Grade" data={plank?.grade || "N/A"} />
+      <CustomViewItem title="Length" data={plank?.length || "N/A"} />
+      <CustomViewItem title="Depth" data={plank?.depth || "N/A"} />
+      <CustomViewItem title="Width" data={plank?.width || "N/A"} />
+      <CustomViewLongText title="notes" data={plank?.notes || "N/A"} />
+</Grid>
+<Grid item container xs={12} sm={6}>
       {plank?.image1 && (
-        <Grid item xs={6}>
+        <Grid item xs={6} sm={10}>
           <img
             src={plank.image1}
             alt="Plank Image 1"
-            style={{ width: "100%", objectFit: "contain" }}
+            style={{ width: "100%", maxHeight: '200px', objectFit: "contain" }}
           />
         </Grid>
       )}
       {plank?.image2 && (
-        <Grid item xs={6}>
+        <Grid item xs={6} sm={10}>
           <img
             src={plank.image2}
             alt="Plank Image 2"
-            style={{ width: "100%", objectFit: "contain" }}
+            style={{ width: "100%", maxHeight: '200px', objectFit: "contain" }}
           />
         </Grid>
       )}
+    </Grid>
     </Grid>
   );
 
   const renderEditAddLayout = () => (
     <Grid container spacing={2}>
       <Grid item xs={12}>
+      <CustomFormHeading title= {mode === "edit" ? `Edit Plank - ${plank?.refId}` : "Add Plank"} />
         <Typography variant="h6">
           {mode === "edit" ? `Edit Plank: ${plank?.refId}` : "Add Plank"}
         </Typography>
@@ -290,7 +297,11 @@ function ImageUpload({ name, file, handleFileChange }) {
         startIcon={<CloudUploadIcon />}
       >
         Upload {name}
-        <VisuallyHiddenInput name={name} type="file" onChange={handleFileChange} />
+        <VisuallyHiddenInput
+          name={name}
+          type="file"
+          onChange={handleFileChange}
+        />
       </Button>
       {file && <Typography>{file.name}</Typography>}
     </Grid>

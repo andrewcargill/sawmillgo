@@ -55,6 +55,9 @@ const TreeForm = ({
   const renderViewLayout = () => (
     <>
       <Grid container display={"flex"} justifyContent={"space-between"}>
+      <Grid  item xs={12}>
+          <CustomFormHeading title={`Tree - ${tree?.refId}`} />
+          </Grid>
         <Grid
           item
           xs={12}
@@ -67,7 +70,7 @@ const TreeForm = ({
           }}
         >
           {" "}
-          <CustomFormHeading title={`Tree: ${tree?.refId}`} />
+        
          <CustomViewItem title="Date Felled" data={tree.date} />
          <CustomViewItem title="Location" data={getLocationName(tree.locationId)} />
          <CustomViewItem title="Species" data={getSpeciesName(tree.speciesId)} />
@@ -148,6 +151,10 @@ const TreeForm = ({
 
   const renderEditAddLayout = () => (
     <Grid container spacing={2}>
+            <Grid  item xs={12}>
+          <CustomFormHeading title={`Edit Tree - ${tree?.refId}`} />
+          </Grid>
+      
       <Grid item xs={6}>
         <TextField
           fullWidth
@@ -219,11 +226,11 @@ const TreeForm = ({
           </Grid>
         </Grid>
       )}
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <Button type="submit" variant="contained" color="primary">
           Save
         </Button>
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 

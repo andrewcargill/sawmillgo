@@ -6,7 +6,7 @@ import CustomBoxDialog from '../customContainers/CustomBoxDialog';
 
 const CustomFormHeading = ({ title }) => {
   return (
-    <CustomBoxDialog variant="darkgrey" sx={{ marginBottom: '32px' }}>
+    <CustomBoxDialog variant="primary" sx={{ marginBottom: '32px' }}>
       <Grid container spacing={1}>
         <Grid item xs={12}>
           <CustomTypography.dialogHeading>

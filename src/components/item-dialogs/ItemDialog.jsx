@@ -102,7 +102,7 @@ const ItemDialog = ({
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm"  sx={{
       "& .MuiPaper-root": {
-        border: `5px solid ${theme.palette.primary.main}`, // Use secondary.main
+        border: `2px solid`, // Use secondary.main
         borderRadius: "12px", // Optional: round the corners
         boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)", // Optional: add a shadow
       },
@@ -125,7 +125,7 @@ const ItemDialog = ({
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
         {mode === "view" && (
-          <Button color="primary" onClick={() => setMode("edit")}>
+          <Button color="primary" variant="contained" onClick={() => setMode("edit")}>
             Edit
           </Button>
         )}
@@ -134,6 +134,7 @@ const ItemDialog = ({
             color="primary"
             onClick={handleSave}
             disabled={!itemData}
+            variant="contained"
           >
             Save
           </Button>

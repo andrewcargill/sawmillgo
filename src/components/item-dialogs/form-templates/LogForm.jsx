@@ -45,7 +45,9 @@ const LogForm = ({
 
   const renderViewLayout = () => (
     <Grid container padding={2}>
-      <CustomFormHeading title={`Log: ${log?.refId}`} />
+      <Grid item xs={12}>
+      <CustomFormHeading title={`Log - ${log?.refId}`} />
+      </Grid>
       <CustomViewItem title="Date Logged" data={log?.date || "N/A"} />
       <CustomViewItem title="Species" data={getSpeciesName(log.speciesId)} />
       <CustomViewItem title="Location" data={getLocationName(log.locationId)} />
@@ -58,9 +60,10 @@ const LogForm = ({
   const renderEditAddLayout = () => (
     <Grid container spacing={2}>
       <Grid item xs={12} pb={3}>
-        <Typography variant="h6">
-          {mode === "edit" ? `Edit Log: ${log?.refId}` : "Add Log"}
-        </Typography>
+ 
+      <CustomFormHeading title= {mode === "edit" ? `Edit Log - ${log?.refId}` : "Add Log"} />
+     
+     
       </Grid>
       <Grid item xs={6}>
         <TextField
