@@ -201,6 +201,63 @@ The data is live, meaning that all updates to trees, logs, planks, sawmill and c
 
 
 
+## Routes
 
+### Authentication
+- `/login`: Renders `Login` component
+- `/creatorlogin`: Renders `CreatorLogin` component
+- `/signup`: Renders `SignUpComponent` component
+
+### User Pages
+- `/home`: Renders `UserHomePage` component
+- `/creatorhome`: Renders `CreatorHomePage` component
+- `/loggedoutpage`: Renders `LoggedOutPage` component
+- `/profile`: Renders `UserProfilePage` component
+- `/creatorprofile/:creatorId`: Renders `CreatorProfile` component
+
+### Product Management
+- `/product/:projectId`: Renders `ProductForm` component
+
+### Sawmill Management
+- `/addsawmill`: Renders `AddSawmillForm` component
+- `/edit-sawmill`: Renders `EditSawmillForm` component
+- `/sawmill-details`: Renders `SawmillDetails` component
+
+### Tree Management
+- `/addtree`: Renders `AddTreeForm` component
+- `/trees`: Renders `TreesPage` component
+
+### Log Management
+- `/logs`: Renders `LogsPage` component
+- `/log/:logId`: Renders `LogDetails` component
+- `/editlog/:logId`: Renders `EditLog` component
+- `/addlog`: Renders `AddLog` component
+
+### Plank Management
+- `/planks`: Renders `PlanksPage` component
+- `/plank/:plankId`: Renders `PlankDetails` component
+- `/editplank/:plankId`: Renders `EditPlank` component
+- `/addplank`: Renders `AddPlank` component
+- `/monitorplank/:plankId`: Renders `AddMoistureCheck` component
+
+## Component Relationships
+
+### Stock Management - Dev
+
+#### StockSearchWidget:
+- Displays a list of stock items (trees, logs, planks).
+- Opens `ItemDialog` when an item is clicked.
+
+#### ItemDialog:
+- Displays a dialog with `ItemForm` for viewing, editing, or adding items.
+- Passes the item details and type to `ItemForm`.
+
+#### ItemForm:
+- Renders the appropriate form (`LogForm`, `TreeForm`, `PlankForm`) based on the item type.
+- Passes the item details and other props to the specific form component.
+
+#### LogForm:
+- The form component for editing or adding log details.
+- Receives props from `ItemForm`.
 
 
