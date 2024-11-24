@@ -5,57 +5,115 @@ import {
   getDocs,
   query,
   orderBy,
+  limit,
+  startAfter,
 } from "firebase/firestore";
 import { app } from "../../firebase-config";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
-import { Tooltip } from "@mui/material";
-import CarpenterIcon from "@mui/icons-material/Carpenter";
-import BlockIcon from "@mui/icons-material/Block";
-import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
-import { useNavigate } from "react-router-dom";
-import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import ListIcon from "@mui/icons-material/List";
+import GridOnIcon from "@mui/icons-material/GridOn";
+import IconButton from "@mui/material/IconButton";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import ItemDialog from "../item-dialogs/ItemDialog";
-import AllLogsMap from "./sub-conponents/AllLogsMap";
+
+import { useNavigate } from "react-router-dom";
+import AllLogsMap from "./sub-components/AllLogsMap";
+import BasicView from "./sub-components/LogsBasicView";
+import ListView from "./sub-components/LogsListView";
+
 
 const ListAllLogs = () => {
   const [logs, setLogs] = useState([]);
+  const [dynamicView, setDynamicView] = useState("basic");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState("view");
   const [selectedLog, setSelectedLog] = useState(null);
+  const [page, setPage] = useState(0);
+const [rowsPerPage, setRowsPerPage] = useState(10);
+const [lastVisible, setLastVisible] = useState(null);
+const [hasMoreLogs, setHasMoreLogs] = useState(true);
 
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
   const navigate = useNavigate();
 
-  const fetchLogs = async () => {
+  const views = [
+    { view: "basic", icon: <GridOnIcon /> },
+    { view: "list", icon: <ListIcon /> },
+  ];
+
+  const handleDynamicViewClick = () => {
+    const currentIndex = views.findIndex((v) => v.view === dynamicView);
+    const nextIndex = (currentIndex + 1) % views.length;
+    setDynamicView(views[nextIndex].view);
+  };
+
+  // const fetchLogs = async () => {
+  //   if (!sawmillId) {
+  //     console.log("Sawmill ID not found. Cannot fetch logs.");
+  //     return;
+  //   }
+  //   const q = query(
+  //     collection(db, `sawmill/${sawmillId}/logs`),
+  //     orderBy("createdAt", "desc")
+  //   );
+  //   const snapshot = await getDocs(q);
+  //   const logsList = snapshot.docs.map((doc) => ({
+  //     id: doc.id,
+  //     ...doc.data(),
+  //   }));
+  //   setLogs(logsList);
+  // };
+
+  const fetchLogs = async (isNextPage = false) => {
     if (!sawmillId) {
       console.log("Sawmill ID not found. Cannot fetch logs.");
       return;
     }
-    const q = query(
+
+    const queryLimit = rowsPerPage;
+    const baseQuery = query(
       collection(db, `sawmill/${sawmillId}/logs`),
-      orderBy("createdAt", "desc")
+      orderBy("createdAt", "desc"),
+      limit(queryLimit)
     );
-    const snapshot = await getDocs(q);
+
+    let paginatedQuery = baseQuery;
+    if (isNextPage && lastVisible) {
+      paginatedQuery = query(baseQuery, startAfter(lastVisible));
+    }
+
+    const snapshot = await getDocs(paginatedQuery);
     const logsList = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
-    setLogs(logsList);
+
+    setLogs(isNextPage ? [...logs, ...logsList] : logsList);
+    setLastVisible(snapshot.docs[snapshot.docs.length - 1]);
   };
 
   useEffect(() => {
     fetchLogs();
   }, [sawmillId]);
 
-  // const handleAddLogClick = () => {
-  //   setModalMode('add');
-  //   setSelectedLog(null); // Clear selected log for adding
-  //   setIsModalOpen(true);
-  // };
+  const handleChangePage = (event, newPage) => {
+    if (newPage > page) {
+      // Fetch the next page when moving forward
+      fetchLogs(true);
+    }
+    setPage(newPage);
+  };
+  
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); // Reset to the first page
+    fetchLogs(); // Fetch the first page with new rows per page
+  };
+  
 
   const handleAddLogClick = () => {
     navigate("/addlog");
@@ -68,115 +126,92 @@ const ListAllLogs = () => {
   };
 
   const handleSaveLog = (updatedLog) => {
-    // Logic to save the updated or new log
     console.log("Save log:", updatedLog);
     setIsModalOpen(false);
-    fetchLogs(); // Refresh the list after saving
+    fetchLogs();
   };
 
   const handleCloseDialog = () => {
     setIsModalOpen(false);
-    setSelectedLog(null); // Clear selected log to ensure fresh state
-    console.log("Dialog closed");
+    setSelectedLog(null);
   };
 
+  const renderLogView = () => {
+    switch (dynamicView) {
+      case "basic":
+        return <BasicView logs={logs} onLogClick={handleLogClick} />;
+      case "list":
+        return <ListView 
+        logs={logs}
+        onLogClick={handleLogClick}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        handleChangePage={handleChangePage}
+        handleChangeRowsPerPage={handleChangeRowsPerPage}
+        hasMoreLogs={hasMoreLogs}
+        />;
+      default:
+        return null;
+    }
+  };
+
+  const currentViewIcon =
+    views.find((v) => v.view === dynamicView)?.icon || <AddIcon />;
+
   return (
-    <Grid container spacing={2} p={2}>
-      <Grid container item xs={12}>
-        <Grid xs={6} sm={10} container item justifyContent={"start"}>
-          <Typography variant="h4" color="initial">
-            Logs
+    <Grid container>
+      {/* Header */}
+      <Grid item xs={12} p={1} mb={2} borderRadius={3} spacing={1}>
+        <Grid
+          container
+          item
+          xs={12}
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Grid item container xs={4} alignContent={"flex-start"}>
+            <Typography variant="h4" color="initial">
+              Logs
+            </Typography>
+          </Grid>
+
+          <Grid item container justifyContent={"flex-end"} xs={6}>
+            <ButtonGroup variant="contained" color="primary">
+              <IconButton
+                size="small"
+                color="inherit"
+                onClick={handleDynamicViewClick}
+                aria-label="Change View"
+              >
+                {currentViewIcon}
+              </IconButton>
+              <Button color="white" onClick={handleAddLogClick}>
+                Add Log
+              </Button>
+            </ButtonGroup>
+          </Grid>
+        </Grid>
+
+        <Grid item container alignContent={"flex-start"} xs={12}>
+          <Typography variant="subtitle2">
+            Last added log: {logs.length > 0 ? logs[0].refId : "No logs available"}
           </Typography>
         </Grid>
-        <Grid container item xs={6} sm={2} justifyContent={"end"}>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={handleAddLogClick}
-            startIcon={<AddIcon />}
-          >
-            Add
-          </Button>
-        </Grid>
       </Grid>
+
+      {/* Log View */}
       <Grid item xs={12}>
-        Last added log: {logs.length > 0 ? logs[0].refId : "No logs available"}
-      </Grid>
-
-      <Grid
-        container
-        sx={{ justifyContent: { xs: "center", sm: "flex-start" } }}
-        alignContent={"center"}
-      >
         {logs.length > 0 ? (
-          logs.map((log) => (
-            <Grid
-              item
-              xs={3}
-              sm={2}
-              lg={2}
-              key={log.id}
-              m={1}
-              border={1}
-              borderRadius={3}
-              p={2}
-              boxShadow={2}
-              bgcolor={"white.main"}
-              textAlign="center"
-              style={{
-                position: "relative",
-              }}
-              sx={{
-                cursor: "pointer",
-                "&:hover": {
-                  backgroundColor: "primary.main",
-                },
-                transition: "background-color 0.5s",
-              }}
-              onClick={() => handleLogClick(log)}
-            >
-              <Grid item>
-                <h3>{log.refId}</h3>
-              </Grid>
-              <Grid item>
-                <p>{log.speciesName}</p>
-              </Grid>
-              {/* Position the icon absolutely within its parent Grid container */}
-              <div style={{ position: "absolute", top: "8px", right: "8px" }}>
-                {log.plankIds && log.plankIds.length > 0 && (
-                  <Tooltip title={`${log.plankIds.length} Planks`} arrow>
-                    <CarpenterIcon color="dark" fontSize="small" />
-                  </Tooltip>
-                )}
-
-                {log.planked && (
-                  <Tooltip title="Planked" arrow>
-                    <BlockIcon color="dark" fontSize="small" />
-                  </Tooltip>
-                )}
-
-                {log.projectId && (
-                  <Tooltip title={`Project: ${log.projectName}`} arrow>
-                    <LocalOfferIcon color="dark" fontSize="small" />
-                  </Tooltip>
-                )}
-                {log.verified && (
-                  <Tooltip title="Verified" arrow>
-                    <WorkspacePremiumIcon color="primary" fontSize="small" />
-                  </Tooltip>
-                )}
-              </div>
-            </Grid>
-          ))
+          renderLogView()
         ) : (
-          <Grid item xs={12}>
-            <Typography variant="body1">No logs found.</Typography>
-          </Grid>
+          <Typography variant="body1">No logs found.</Typography>
         )}
       </Grid>
-      
+
+      {/* Map */}
       <AllLogsMap />
 
+      {/* Item Dialog */}
       <ItemDialog
         isOpen={isModalOpen}
         onClose={handleCloseDialog}

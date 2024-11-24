@@ -14,7 +14,7 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
-import LogFromTree from "./sub-conponents/LogFromTree";
+import LogFromTree from "./sub-components/LogFromTree";
 import {
   fetchLocationsForSawmill,
   fetchProjectsForSawmill,
