@@ -8,8 +8,9 @@ import {
   useTheme,
 } from "@mui/material";
 import ItemForm from "./ItemForm"; // Ensure this is correctly imported
-import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
 import { app } from "../../firebase-config";
+import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 
 const ItemDialog = ({
   isOpen,
@@ -77,14 +78,113 @@ const ItemDialog = ({
     }
   }, [isOpen, refId, itemDetails, initialMode, type, db, sawmillId]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setItemData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setItemData((prevData) => ({
+  //     ...prevData,
+  //     [name]: value,
+  //   }));
+  // };
 
+
+const deleteImage = async (imageUrl) => {
+  if (!imageUrl) return;
+
+  try {
+    const storage = getStorage(app);
+    const fileRef = ref(storage, imageUrl);
+    await deleteObject(fileRef);
+    console.log("Image deleted successfully from storage.");
+  } catch (error) {
+    console.error("Error deleting image from storage:", error);
+  }
+};
+
+  
+  const uploadImage = async (file) => {
+    if (!file) return null;
+    const storage = getStorage(app);
+    const storageRef = ref(
+      storage,
+      `${type === "plank" ? "planks" : "trees"}/${sawmillId}/${file.name}_${new Date().getTime()}`
+    );
+  
+    await uploadBytes(storageRef, file);
+    return getDownloadURL(storageRef);
+  };
+  
+  
+  // const handleInputChange = async (e) => {
+  //   const { name, value, files } = e.target;
+  
+  //   if (files && files[0]) {
+  //     try {
+  //       const fileUrl = await uploadImage(files[0]);
+  //       if (fileUrl) {
+  //         setItemData((prevData) => ({
+  //           ...prevData,
+  //           [name]: fileUrl, // Update state with the uploaded image URL
+  //         }));
+  //         alert(`Image ${name} uploaded successfully!`);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error uploading image:", error);
+  //       alert("Failed to upload image. Please try again.");
+  //     }
+  //   } else {
+  //     setItemData((prevData) => ({
+  //       ...prevData,
+  //       [name]: value, // Handle text input updates
+  //     }));
+  //   }
+  // };
+  
+  const handleInputChange = async (e) => {
+    const { name, value, files } = e.target;
+  
+    if (files && files[0]) {
+      // Handle image upload
+      try {
+        const currentImageUrl = itemData[name]; // Check current image URL
+        if (currentImageUrl) {
+          await deleteImage(currentImageUrl); // Delete the old image
+        }
+  
+        const fileUrl = await uploadImage(files[0]); // Upload new image
+        if (fileUrl) {
+          setItemData((prevData) => ({
+            ...prevData,
+            [name]: fileUrl, // Update state with the new image URL
+          }));
+          alert(`Image ${name} uploaded successfully!`);
+        }
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        alert("Failed to upload image. Please try again.");
+      }
+    } else if (value === "" && name.startsWith("image")) {
+      // Handle image deletion (only for image fields)
+      const currentImageUrl = itemData[name];
+      if (currentImageUrl) {
+        await deleteImage(currentImageUrl); // Delete the file from storage
+      }
+  
+      setItemData((prevData) => ({
+        ...prevData,
+        [name]: null, // Remove the image URL
+      }));
+      alert(`Image ${name} deleted successfully!`);
+    } else {
+      // Handle text input updates
+      setItemData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+  };
+  
+  
+  
   const handleSave = async () => {
     try {
       const updateData = { ...itemData }; // `itemData` contains the latest state

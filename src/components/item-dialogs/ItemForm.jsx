@@ -63,9 +63,6 @@ const ItemForm = ({ type, itemDetails, onChange, onSave, mode }) => {
 
   const commonProps = {
     onChange,
-    onFileChange: (name, file) => {
-      onChange({ name, value: file });
-    },
     onSubmit: (e) => {
       e.preventDefault();
       onSave(itemDetails);

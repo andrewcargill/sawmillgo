@@ -11,11 +11,25 @@ import {
   MenuItem,
   Typography,
   Chip,
- Box,
+  Box,
+  styled,
 } from "@mui/material";
 import CustomFormHeading from "../../customForms/CustomFormHeading";
 import CustomViewItem from "../../customForms/CustomViewItem";
 import CustomViewLongText from "../../customForms/CustomViewLongText";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 const TreeForm = ({
   tree,
@@ -55,9 +69,9 @@ const TreeForm = ({
   const renderViewLayout = () => (
     <>
       <Grid container display={"flex"} justifyContent={"space-between"}>
-      <Grid  item xs={12}>
+        <Grid item xs={12}>
           <CustomFormHeading title={`Tree - ${tree?.refId}`} />
-          </Grid>
+        </Grid>
         <Grid
           item
           xs={12}
@@ -70,16 +84,23 @@ const TreeForm = ({
           }}
         >
           {" "}
-        
-         <CustomViewItem title="Date Felled" data={tree.date} />
-         <CustomViewItem title="Location" data={getLocationName(tree.locationId)} />
-         <CustomViewItem title="Species" data={getSpeciesName(tree.speciesId)} />
-         <CustomViewItem title="Project" data={getProjectName(tree.projectId)} />
-         <CustomViewItem title="Age" data={tree.age} />
-         <CustomViewItem title="Lumberjack" data={tree.lumberjackName} />
-         <CustomViewLongText title="Reason" data={tree.reason} />
-         <CustomViewLongText title="GPS" data="223.33445 23040506.560" />
-         
+          <CustomViewItem title="Date Felled" data={tree.date} />
+          <CustomViewItem
+            title="Location"
+            data={getLocationName(tree.locationId)}
+          />
+          <CustomViewItem
+            title="Species"
+            data={getSpeciesName(tree.speciesId)}
+          />
+          <CustomViewItem
+            title="Project"
+            data={getProjectName(tree.projectId)}
+          />
+          <CustomViewItem title="Age" data={tree.age} />
+          <CustomViewItem title="Lumberjack" data={tree.lumberjackName} />
+          <CustomViewLongText title="Reason" data={tree.reason} />
+          <CustomViewLongText title="GPS" data="223.33445 23040506.560" />
           {hasLogs ? renderLogs() : "Tree is not logged"}
         </Grid>
         <Grid
@@ -89,60 +110,29 @@ const TreeForm = ({
           sx={{
             padding: 2,
             display: "flex",
-            justifyContent: "center", // Centers the image
+            justifyContent: "center", 
             alignItems: "center",
           }}
         >
           {hasImage && (
-            // <img
-            //   src={tree.image}
-            //   alt="Tree"
-            //   style={{
-            //     maxHeight: "100%",
-            //     maxWidth: "100%",
-            //     objectFit: "contain", // Ensures the entire image is visible
-            //   }}
-            // />
             <Box
-            component="img"
-            src={tree.image}
-            alt="Tree"
-            sx={{
-              width: {
-                xs: "20vw", // Smaller size for extra small screens
-                sm: "20vw", // Slightly larger for small screens
-                md: "100%", // Full size for medium screens and larger
-              },
-              maxHeight: {
-                xs: "100%",
-                sm: "100%",
-                md: "100%",
-              },
-              objectFit: "contain",
-            }}
-          />
-    //         <img
-    //   src={tree.image}
-    //   alt="Tree"
-    //   style={{
-    //     objectFit: "contain",
-    //     maxHeight: "100%",
-    //     maxWidth: "100%",
-    //   }}
-    //   sx={{
-    //     width: {
-    //       xs: "100%", // Smaller size for extra small screens
-    //       sm: "20vw", // Slightly larger for small screens
-    //       md: "100%", // Full size for medium screens and larger
-    //     },
-    //     maxHeight: {
-    //       xs: "100%",
-    //       sm: "100%",
-    //       md: "100%",
-    //     },
-    //   }}
-    // />
-   
+              component="img"
+              src={tree.image}
+              alt="Tree"
+              sx={{
+                width: {
+                  xs: "20vw", 
+                  sm: "20vw", 
+                  md: "100%", 
+                },
+                maxHeight: {
+                  xs: "100%",
+                  sm: "100%",
+                  md: "100%",
+                },
+                objectFit: "contain",
+              }}
+            />
           )}
         </Grid>
       </Grid>
@@ -151,10 +141,10 @@ const TreeForm = ({
 
   const renderEditAddLayout = () => (
     <Grid container spacing={2}>
-            <Grid  item xs={12}>
-          <CustomFormHeading title={`Edit Tree - ${tree?.refId}`} />
-          </Grid>
-      
+      <Grid item xs={12}>
+        <CustomFormHeading title={`Edit Tree - ${tree?.refId}`} />
+      </Grid>
+
       <Grid item xs={6}>
         <TextField
           fullWidth
@@ -219,18 +209,48 @@ const TreeForm = ({
           required
         />
       </Grid>
-      {hasImage && (
-        <Grid container spacing={2} p={2}>
-          <Grid item xs={6}>
-            <img src={tree.image} alt="Tree Image" style={{ width: "50%" }} />
-          </Grid>
-        </Grid>
-      )}
-      {/* <Grid item xs={12}>
-        <Button type="submit" variant="contained" color="primary">
-          Save
-        </Button>
-      </Grid> */}
+
+      <Grid item xs={12}>
+        <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
+          {tree.image ? (
+            <Box textAlign="center">
+              <img
+                src={tree.image}
+                alt="Current Image"
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  objectFit: "cover",
+                  borderRadius: "8px",
+                  border: "1px solid #ddd",
+                }}
+              />
+              <Typography variant="body2">Current Image</Typography>
+              <Button
+                variant="outlined"
+                color="error"
+                size="small"
+                onClick={() =>
+                  onChange({ target: { name: "image", value: "" } })
+                }
+              >
+                Delete Image
+              </Button>
+            </Box>
+          ) : (
+            <Typography variant="body2">No Image</Typography>
+          )}
+          <Button
+            component="label"
+            variant="contained"
+            startIcon={<CloudUploadIcon />}
+          >
+            Upload Image
+            <VisuallyHiddenInput name="image" type="file" onChange={onChange} />
+          </Button>
+        </Box>
+      </Grid>
+
     </Grid>
   );
 
@@ -261,31 +281,7 @@ const TreeForm = ({
   );
 };
 
-// function renderSelect(name, label, options, onChange, value, disabled = false) {
-//   return (
-//     <Grid item xs={12} sm={6}>
-//       <FormControl fullWidth>
-//         <InputLabel id={`${name}-label`}>{label}</InputLabel>
-//         <Select
-//           labelId={`${name}-label`}
-//           id={name}
-//           name={name} // Properly set the name attribute
-//           value={value || ""}
-//           label={label}
-//           onChange={(event) => onChange(event, options)} // Pass event and options correctly
-//           disabled={disabled}
-//         >
-//           {label === "Project" && <MenuItem value="">No Project</MenuItem>}
-//           {options.map((option) => (
-//             <MenuItem key={option.id} value={option.id}>
-//               {option.name}
-//             </MenuItem>
-//           ))}
-//         </Select>
-//       </FormControl>
-//     </Grid>
-//   );
-// }
+
 const renderSelect = (name, label, options, onChange, value) => (
   <Grid item xs={12} sm={6}>
     <FormControl fullWidth>

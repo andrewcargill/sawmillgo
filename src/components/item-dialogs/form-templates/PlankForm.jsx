@@ -10,6 +10,7 @@ import {
   Button,
   styled,
   CircularProgress,
+  Box,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CustomFormHeading from "../../customForms/CustomFormHeading";
@@ -38,10 +39,7 @@ const PlankForm = ({
   onSubmit,
   mode,
 }) => {
-  const [imageFiles, setImageFiles] = useState({
-    image1: null,
-    image2: null,
-  });
+
 
   const [loading, setLoading] = useState(true);
 
@@ -77,12 +75,9 @@ const PlankForm = ({
     }
   };
 
-  const handleFileChange = (event) => {
-    const { name, files } = event.target;
-    setImageFiles((prev) => ({ ...prev, [name]: files[0] }));
-    onFileChange(name, files[0]);
-  };
 
+
+ 
   if (loading) {
     return (
       <Grid container justifyContent="center" alignItems="center">
@@ -94,49 +89,65 @@ const PlankForm = ({
   const renderViewLayout = () => (
     <Grid container spacing={2} padding={2}>
       <Grid item xs={12}>
-      <CustomFormHeading title={`Plank - ${plank?.refId}`} />
+        <CustomFormHeading title={`Plank - ${plank?.refId}`} />
       </Grid>
       <Grid item xs={12} sm={6}>
-      <CustomViewItem title="Date Milled" data={plank?.date || "N/A"} />
-      <CustomViewItem
-        title="Location"
-        data={getLocationName(plank?.locationId)}
-      />
-      <CustomViewItem title="Species" data={getSpeciesName(plank?.speciesId)} />
-      <CustomViewItem title="Project" data={getProjectName(plank?.projectId)} />
-      <CustomViewItem title="Grade" data={plank?.grade || "N/A"} />
-      <CustomViewItem title="Length" data={plank?.length || "N/A"} />
-      <CustomViewItem title="Depth" data={plank?.depth || "N/A"} />
-      <CustomViewItem title="Width" data={plank?.width || "N/A"} />
-      <CustomViewLongText title="notes" data={plank?.notes || "N/A"} />
-</Grid>
-<Grid item container xs={12} sm={6}>
-      {plank?.image1 && (
-        <Grid item xs={6} sm={10}>
-          <img
-            src={plank.image1}
-            alt="Plank Image 1"
-            style={{ width: "100%", maxHeight: '200px', objectFit: "contain" }}
-          />
-        </Grid>
-      )}
-      {plank?.image2 && (
-        <Grid item xs={6} sm={10}>
-          <img
-            src={plank.image2}
-            alt="Plank Image 2"
-            style={{ width: "100%", maxHeight: '200px', objectFit: "contain" }}
-          />
-        </Grid>
-      )}
-    </Grid>
+        <CustomViewItem title="Date Milled" data={plank?.date || "N/A"} />
+        <CustomViewItem
+          title="Location"
+          data={getLocationName(plank?.locationId)}
+        />
+        <CustomViewItem
+          title="Species"
+          data={getSpeciesName(plank?.speciesId)}
+        />
+        <CustomViewItem
+          title="Project"
+          data={getProjectName(plank?.projectId)}
+        />
+        <CustomViewItem title="Grade" data={plank?.grade || "N/A"} />
+        <CustomViewItem title="Length" data={plank?.length || "N/A"} />
+        <CustomViewItem title="Depth" data={plank?.depth || "N/A"} />
+        <CustomViewItem title="Width" data={plank?.width || "N/A"} />
+        <CustomViewLongText title="notes" data={plank?.notes || "N/A"} />
+      </Grid>
+      <Grid item container xs={12} sm={6}>
+        {plank?.image1 && (
+          <Grid item xs={6} sm={10}>
+            <img
+              src={plank.image1}
+              alt="Plank Image 1"
+              style={{
+                width: "100%",
+                maxHeight: "200px",
+                objectFit: "contain",
+              }}
+            />
+          </Grid>
+        )}
+        {plank?.image2 && (
+          <Grid item xs={6} sm={10}>
+            <img
+              src={plank.image2}
+              alt="Plank Image 2"
+              style={{
+                width: "100%",
+                maxHeight: "200px",
+                objectFit: "contain",
+              }}
+            />
+          </Grid>
+        )}
+      </Grid>
     </Grid>
   );
 
   const renderEditAddLayout = () => (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-      <CustomFormHeading title= {mode === "edit" ? `Edit Plank - ${plank?.refId}` : "Add Plank"} />
+        <CustomFormHeading
+          title={mode === "edit" ? `Edit Plank - ${plank?.refId}` : "Add Plank"}
+        />
         <Typography variant="h6">
           {mode === "edit" ? `Edit Plank: ${plank?.refId}` : "Add Plank"}
         </Typography>
@@ -203,17 +214,109 @@ const PlankForm = ({
         onChange={onChange}
         multiline
       />
+
       <Grid container spacing={2}>
-        <ImageUpload
-          name="image1"
-          file={imageFiles.image1}
-          handleFileChange={handleFileChange}
-        />
-        <ImageUpload
-          name="image2"
-          file={imageFiles.image2}
-          handleFileChange={handleFileChange}
-        />
+        <Grid item xs={6}>
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            gap={2}
+          >
+            {plank.image1 ? (
+              <Box textAlign="center">
+                <img
+                  src={plank.image1}
+                  alt="Current Image 1"
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    objectFit: "cover",
+                    borderRadius: "8px",
+                    border: "1px solid #ddd",
+                  }}
+                />
+                <Typography variant="body2">Current Image 1</Typography>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  size="small"
+                  onClick={() =>
+                    onChange({ target: { name: "image1", value: "" } })
+                  }
+                >
+                  Delete Image
+                </Button>
+              </Box>
+            ) : (
+              <Typography variant="body2">No Image 1</Typography>
+            )}
+            <Button
+              component="label"
+              variant="contained"
+              startIcon={<CloudUploadIcon />}
+            >
+              Upload Image 1
+              <VisuallyHiddenInput
+                name="image1"
+                type="file"
+                onChange={onChange}
+              />
+            </Button>
+          </Box>
+        </Grid>
+
+        <Grid item xs={6}>
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            gap={2}
+          >
+            {plank.image2 ? (
+              <Box textAlign="center">
+                <img
+                  src={plank.image2}
+                  alt="Current Image 2"
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    objectFit: "cover",
+                    borderRadius: "8px",
+                    border: "1px solid #ddd",
+                  }}
+                />
+                <Typography variant="body2">Current Image 2</Typography>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  size="small"
+                  onClick={() =>
+                    onChange({ target: { name: "image2", value: "" } })
+                  }
+                >
+                  Delete Image
+                </Button>
+              </Box>
+            ) : (
+              <Typography variant="body2">No Image 2</Typography>
+            )}
+            <Button
+              component="label"
+              variant="contained"
+              startIcon={<CloudUploadIcon />}
+            >
+              Upload Image 2
+              <VisuallyHiddenInput
+                name="image2"
+                type="file"
+                onChange={onChange}
+              />
+            </Button>
+          </Box>
+        </Grid>
+
+       
       </Grid>
     </Grid>
   );
