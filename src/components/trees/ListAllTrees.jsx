@@ -6,7 +6,7 @@ import {
   where,
   query,
 } from "firebase/firestore";
-import { app } from "../../firebase-config"; 
+import { app } from "../../firebase-config";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
@@ -16,10 +16,10 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import TextField from "@mui/material/TextField";
-import TreeListModal from "./TreeListModal";
 import { fetchSpeciesForSawmill } from "../../utils/filestoreOperations";
 import CarpenterIcon from "@mui/icons-material/Carpenter";
 import BlockIcon from "@mui/icons-material/Block";
+import ItemDialog from "../item-dialogs/ItemDialog";
 
 const ListAllTrees = () => {
   const [trees, setTrees] = useState([]);
@@ -94,7 +94,7 @@ const ListAllTrees = () => {
   const handleTreeClick = (treeId) => {
     const tree = trees.find((t) => t.id === treeId);
     setSelectedTreeDetails(tree);
-    setModalMode("view"); 
+    setModalMode("view");
     setIsModalOpen(true);
   };
 
@@ -106,6 +106,19 @@ const ListAllTrees = () => {
   function refreshTreeList() {
     fetchTrees(statusFilter);
   }
+
+  const handleSaveLog = (updatedLog) => {
+    // Logic to save the updated or new log
+    console.log("Save log:", updatedLog);
+    setIsModalOpen(false);
+    fetchTrees(); // Refresh the list after saving
+  };
+
+  const handleCloseDialog = () => {
+    setIsModalOpen(false);
+    setSelectedTreeDetails(null); // Clear selected log to ensure fresh state
+    console.log("Dialog closed");
+  };
 
   return (
     <Grid container spacing={2} p={2}>
@@ -203,31 +216,30 @@ const ListAllTrees = () => {
         {trees.length > 0 ? (
           trees.map((tree) => (
             <Grid
-            item
-            xs={3}
+              item
+              xs={3}
               sm={2}
               lg={2}
               key={tree.id}
               m={1}
-            border={1}
-            borderRadius={3}
-            p={2}
-            boxShadow={2}
-            bgcolor={"white.main"}
-            textAlign="center"
-            style={{
-               position: "relative",
-            }}
-           
-            sx={{
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "primary.main",
-              },
-              transition: "background-color 0.5s",
-            }}
-            onClick={() => handleTreeClick(tree.id)}
-          >
+              border={1}
+              borderRadius={3}
+              p={2}
+              boxShadow={2}
+              bgcolor={"white.main"}
+              textAlign="center"
+              style={{
+                position: "relative",
+              }}
+              sx={{
+                cursor: "pointer",
+                "&:hover": {
+                  backgroundColor: "primary.main",
+                },
+                transition: "background-color 0.5s",
+              }}
+              onClick={() => handleTreeClick(tree.id)}
+            >
               <Grid item>
                 <h3>{tree.refId}</h3>
               </Grid>
@@ -250,19 +262,13 @@ const ListAllTrees = () => {
           </Grid>
         )}
       </Grid>
-      
-      <TreeListModal
+
+      <ItemDialog
         isOpen={isModalOpen}
-        onClose={(edited) => {
-          setIsModalOpen(false);
-          refreshTreeList();
-          if (edited) {
-            refreshTreeList();
-          }
-        }}
-        treeDetails={selectedTreeDetails}
+        onClose={handleCloseDialog}
+        itemDetails={selectedTreeDetails}
         mode={modalMode}
-        setMode={setModalMode}
+        type="tree"
       />
     </Grid>
   );
