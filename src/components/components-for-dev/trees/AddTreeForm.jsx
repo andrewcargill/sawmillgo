@@ -8,6 +8,18 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
+import {
+  Grid,
+  Typography,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  IconButton,
+  CircularProgress,
+} from "@mui/material";
+import CancelIcon from "@mui/icons-material/Cancel";
 import { app } from "../../../firebase-config";
 import { getAuth } from "firebase/auth";
 import ListEditTree from "./ListEditTrees"; // Make sure this is correctly imported
@@ -74,7 +86,7 @@ const AddTreeForm = () => {
           alert(error.message);
         });
 
-      fetchProjectsForSawmill(db, sawmillId)
+      fetchProjectsForSawmill(db, sawmillId, true)
         .then((fetchedProjects) => {
           setProjects(fetchedProjects);
         })
@@ -239,164 +251,124 @@ const AddTreeForm = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <h3>Add New Tree</h3>
-        <label>Longitude</label>
-        <input
-          type="text"
-          placeholder=""
-          value={latitude}
-          onChange={(e) => setLatitude(e.target.value)}
+    <Grid container spacing={2} padding={2}>
+      <Grid item xs={12}>
+        <Typography variant="h6">Add New Tree</Typography>
+      </Grid>
+
+      <Grid item xs={6}>
+        <TextField
+          fullWidth
+          label="Date Felled"
+          type="date"
+          name="date"
+          value={treeData.date}
+          onChange={handleChange}
+          required
         />
-        <br />
-        <label>Latitude</label>
-        <input
-          type="text"
-          placeholder=""
-          value={longitude}
-          onChange={(e) => setLongitude(e.target.value)}
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          fullWidth
+          label="Age"
+          name="age"
+          value={treeData.age}
+          onChange={handleChange}
+          required
         />
-        <br />
-        <Button
-          variant="contained"
-          onClick={handleGetLocation}
-        >
-          Get Location
-        </Button>
-        <br />
-  
+      </Grid>
 
-        {/* Date Planted */}
-        <label>
-          Date Felled:
-          <input
-            type="date"
-            name="date"
-            value={treeData.date}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <br />
-
-        {/* Location ID */}
-
-        <br />
-
-        {/* Lumberjack (User UID) */}
-        <label>
-          Lumberjack (User UID):
-          <input
-            type="text"
-            name="lumberjack"
-            value={treeData.lumberjack}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <br />
-
-        {/* Reason for Planting */}
-        <label>
-          Reason:
-          <input
-            type="text"
-            name="reason"
-            value={treeData.reason}
-            onChange={handleChange}
-          />
-        </label>
-        <br />
-
-        {/* Age */}
-        <label>
-          Age:
-          <input
-            type="text"
-            name="age"
-            value={treeData.age}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <br />
-
-        {/* Status */}
-        <label>
-          Status:
-          <select name="status" value={treeData.status} onChange={handleChange}>
-            <option value="available">Available</option>
-            <option value="reserved">Reserved</option>
-            <option value="sold">Sold</option>
-          </select>
-        </label>
-        <br />
-
-        {/* Location ID Dropdown */}
-        <label>
-          Location:
-          <select
+      <Grid item xs={6}>
+        <FormControl fullWidth>
+          <InputLabel id="location-label">Location</InputLabel>
+          <Select
+            labelId="location-label"
             name="locationId"
             value={treeData.locationId}
             onChange={handleChange}
-            required
           >
-            <option value="">Select a Location</option>
+            <MenuItem value="">Select a Location</MenuItem>
             {locations.map((location) => (
-              <option key={location.id} value={location.id}>
+              <MenuItem key={location.id} value={location.id}>
                 {location.name}
-              </option>
+              </MenuItem>
             ))}
-          </select>
-        </label>
-        <br />
-        <label>
-          Species:
-          <select
+          </Select>
+        </FormControl>
+      </Grid>
+
+      <Grid item xs={6}>
+        <FormControl fullWidth>
+          <InputLabel id="species-label">Species</InputLabel>
+          <Select
+            labelId="species-label"
             name="speciesId"
             value={treeData.speciesId}
             onChange={handleChange}
-            required
           >
-            <option value="">Select a Species</option>
-            {species.map((species) => (
-              <option key={species.id} value={species.id}>
-                {species.name}
-              </option>
+            <MenuItem value="">Select a Species</MenuItem>
+            {species.map((spec) => (
+              <MenuItem key={spec.id} value={spec.id}>
+                {spec.name}
+              </MenuItem>
             ))}
-          </select>
-        </label>
-        <br />
-        {/* Image Upload */}
-        <label>
-          Image:
-          <input type="file" onChange={handleImageChange} />
-        </label>
-        <br />
+          </Select>
+        </FormControl>
+      </Grid>
 
-        {/* Project ID Dropdown */}
-        <label>
-          Project:
-          <select
-            name="projectId"
-            value={treeData.projectId}
-            onChange={handleChange}
-          >
-            <option value="">Select a Project</option>
-            {projects.map((project) => (
-              <option key={project.id} value={project.id}>
-                {project.projectName}
-              </option>
-            ))}
-          </select>
-        </label>
-        <br />
-        {isLoading && <p>Loading...</p>}
-        <button type="submit">Add Tree</button>
-      </form>
-      <ListEditTree />
-    </div>
+      <Grid item xs={12}>
+        <TextField
+          fullWidth
+          label="Reason"
+          name="reason"
+          value={treeData.reason}
+          onChange={handleChange}
+          multiline
+          rows={3}
+        />
+      </Grid>
+
+      <Grid item xs={6}>
+        <TextField
+          fullWidth
+          label="Longitude"
+          value={longitude}
+          onChange={(e) => setLongitude(e.target.value)}
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          fullWidth
+          label="Latitude"
+          value={latitude}
+          onChange={(e) => setLatitude(e.target.value)}
+        />
+      </Grid>
+
+      <Grid item xs={12}>
+        <Button variant="contained" onClick={handleGetLocation}>
+          Get Location
+        </Button>
+      </Grid>
+
+      <Grid item xs={12}>
+        <TextField
+          fullWidth
+          type="file"
+          onChange={handleImageChange}
+        />
+      </Grid>
+
+      <Grid item xs={12} display="flex" justifyContent="space-between">
+        <Button variant="contained" onClick={handleSubmit}>
+          {isLoading ? <CircularProgress size={24} /> : "Save"}
+        </Button>
+        <IconButton 
+        >
+          <CancelIcon />
+        </IconButton>
+      </Grid>
+    </Grid>
   );
 };
 

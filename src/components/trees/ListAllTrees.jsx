@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   Grid,
   Typography,
@@ -23,7 +25,7 @@ import { fetchSpeciesForSawmill } from "../../utils/filestoreOperations";
 
 const ListAllTrees = () => {
   const [trees, setTrees] = useState([]);
-  const [dynamicView, setDynamicView] = useState("basic");
+  const [dynamicView, setDynamicView] = useState("list");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTreeDetails, setSelectedTreeDetails] = useState(null);
   const [modalMode, setModalMode] = useState("view");
@@ -37,6 +39,7 @@ const ListAllTrees = () => {
 
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
+  const navigate = useNavigate();
 
   const views = [
     { view: "basic", icon: <GridOnIcon /> },
@@ -161,7 +164,7 @@ const ListAllTrees = () => {
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={handleAddTreeClick}
+            onClick={() => navigate("/addtree")}
           >
             Add Tree
           </Button>
