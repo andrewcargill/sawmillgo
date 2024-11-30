@@ -1,79 +1,92 @@
 import React, { useState, useEffect } from "react";
 import {
-  getFirestore,
-  collection,
-  getDocs,
-  where,
-  query,
-} from "firebase/firestore";
-import { app } from "../../firebase-config";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
+  Grid,
+  Typography,
+  ButtonGroup,
+  IconButton,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextField,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import FormControl from "@mui/material/FormControl";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
-import TextField from "@mui/material/TextField";
-import { fetchSpeciesForSawmill } from "../../utils/filestoreOperations";
-import CarpenterIcon from "@mui/icons-material/Carpenter";
-import BlockIcon from "@mui/icons-material/Block";
+import ListIcon from "@mui/icons-material/List";
+import GridOnIcon from "@mui/icons-material/GridOn";
+import { getFirestore, collection, getDocs, addDoc, query, where } from "firebase/firestore";
+import { app } from "../../firebase-config";
 import ItemDialog from "../item-dialogs/ItemDialog";
+import TreesBasicView from "./sub-components/TreesBasicView";
+import TreesListView from "./sub-components/TreesListView";
+import { fetchSpeciesForSawmill } from "../../utils/filestoreOperations";
 
 const ListAllTrees = () => {
   const [trees, setTrees] = useState([]);
-  const [modalMode, setModalMode] = useState("view");
-  const [loggingFilter, setLoggingFilter] = useState("all");
-  const [speciesFilter, setSpeciesFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("available");
-  const [refIdFilter, setRefIdFilter] = useState("");
-
+  const [dynamicView, setDynamicView] = useState("basic");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTreeDetails, setSelectedTreeDetails] = useState(null);
+  const [modalMode, setModalMode] = useState("view");
+
+  // Filters
+  const [statusFilter, setStatusFilter] = useState("available");
+  const [loggingFilter, setLoggingFilter] = useState("all");
+  const [speciesFilter, setSpeciesFilter] = useState("all");
+  const [refIdFilter, setRefIdFilter] = useState("");
   const [species, setSpecies] = useState([]);
+
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
 
-  const fetchTrees = async (statusFilter) => {
-    if (!sawmillId) {
-      console.log("Sawmill ID not found. Cannot fetch trees.");
-      return;
-    }
+  const views = [
+    { view: "basic", icon: <GridOnIcon /> },
+    { view: "list", icon: <ListIcon /> },
+  ];
 
-    let q = collection(db, `sawmill/${sawmillId}/trees`);
+  const handleDynamicViewClick = () => {
+    const currentIndex = views.findIndex((v) => v.view === dynamicView);
+    const nextIndex = (currentIndex + 1) % views.length;
+    setDynamicView(views[nextIndex].view);
+  };
 
-    let conditions = []; // Array to hold query conditions
-    // Add condition for logging status
+  const fetchTrees = async () => {
+    if (!sawmillId) return;
 
-    if (statusFilter) {
-      conditions.push(where("status", "==", statusFilter));
-    }
+    try {
+      let treesRef = collection(db, `sawmill/${sawmillId}/trees`);
+      let conditions = [];
 
-    if (refIdFilter.trim()) {
-      // Filter by refId if it is provided
-      q = query(q, where("refId", "==", refIdFilter.trim()));
-    } else {
+      // Apply filters
+      if (statusFilter) {
+        conditions.push(where("status", "==", statusFilter));
+      }
+
       if (loggingFilter === "logged") {
-        q = query(q, where("logged", "==", true));
+        conditions.push(where("logged", "==", true));
       } else if (loggingFilter === "unlogged") {
-        q = query(q, where("logged", "==", false));
+        conditions.push(where("logged", "==", false));
       }
 
       if (speciesFilter !== "all") {
         conditions.push(where("speciesId", "==", speciesFilter));
       }
 
-      if (conditions.length > 0) {
-        q = query(q, ...conditions);
+      if (refIdFilter.trim()) {
+        conditions.push(where("refId", "==", refIdFilter.trim()));
       }
+
+      const treesQuery = conditions.length > 0 ? query(treesRef, ...conditions) : treesRef;
+      const snapshot = await getDocs(treesQuery);
+
+      const treesList = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setTrees(treesList);
+    } catch (error) {
+      console.error("Error fetching trees:", error);
     }
-    const snapshot = await getDocs(q);
-    const treesList = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setTrees(treesList);
   };
 
   useEffect(() => {
@@ -82,193 +95,157 @@ const ListAllTrees = () => {
         setSpecies(fetchedSpecies);
       })
       .catch((error) => {
-        console.error("Error fetching projects:", error);
-        alert("Failed to fetch projects: " + error.message);
+        console.error("Error fetching species:", error);
+        alert("Failed to fetch species.");
       });
-  }, []);
+  }, [db, sawmillId]);
 
   useEffect(() => {
-    fetchTrees(statusFilter);
-  }, [loggingFilter, speciesFilter, refIdFilter, statusFilter]); // Re-run fetchTrees when filter changes
-
-  const handleTreeClick = (treeId) => {
-    const tree = trees.find((t) => t.id === treeId);
-    setSelectedTreeDetails(tree);
-    setModalMode("view");
-    setIsModalOpen(true);
-  };
+    fetchTrees();
+  }, [statusFilter, loggingFilter, speciesFilter, refIdFilter, sawmillId]);
 
   const handleAddTreeClick = () => {
-    setModalMode("add");
+    setModalMode("add"); // Set mode to 'add'
+    setSelectedTreeDetails(null); // Clear existing details
     setIsModalOpen(true);
   };
 
-  function refreshTreeList() {
-    fetchTrees(statusFilter);
-  }
+  const handleTreeClick = (tree) => {
+    setModalMode("view"); // Set mode to 'view'
+    setSelectedTreeDetails(tree);
+    setIsModalOpen(true);
+  };
 
-  const handleSaveLog = (updatedLog) => {
-    // Logic to save the updated or new log
-    console.log("Save log:", updatedLog);
-    setIsModalOpen(false);
-    fetchTrees(); // Refresh the list after saving
+  const handleSaveTree = async (treeData) => {
+    try {
+      const treesRef = collection(db, `sawmill/${sawmillId}/trees`);
+      await addDoc(treesRef, {
+        ...treeData,
+        createdAt: new Date(),
+      });
+      alert("Tree added successfully!");
+      setIsModalOpen(false);
+      fetchTrees(); // Refresh list
+    } catch (error) {
+      console.error("Error adding tree:", error);
+      alert("Failed to add tree.");
+    }
   };
 
   const handleCloseDialog = () => {
     setIsModalOpen(false);
-    setSelectedTreeDetails(null); // Clear selected log to ensure fresh state
-    console.log("Dialog closed");
+    setSelectedTreeDetails(null);
   };
+
+  const renderTreeView = () => {
+    switch (dynamicView) {
+      case "basic":
+        return <TreesBasicView trees={trees} onTreeClick={handleTreeClick} />;
+      case "list":
+        return <TreesListView trees={trees} onTreeClick={handleTreeClick} />;
+      default:
+        return null;
+    }
+  };
+
+  const currentViewIcon =
+    views.find((v) => v.view === dynamicView)?.icon || <AddIcon />;
 
   return (
     <Grid container spacing={2} p={2}>
-      <Grid container item xs={12}>
-        <Grid xs={6} sm={10} container item justifyContent={"start"}>
-          <Typography variant="h4" color="initial">
-            Trees
-          </Typography>
-        </Grid>
-        <Grid container item xs={6} sm={2} justifyContent={"end"}>
+      {/* Header */}
+      <Grid container item xs={12} justifyContent="space-between" alignItems="center">
+        <Typography variant="h4">Trees</Typography>
+        <ButtonGroup>
+          <IconButton onClick={handleDynamicViewClick}>{currentViewIcon}</IconButton>
           <Button
-            variant="outlined"
-            color="primary"
-            onClick={handleAddTreeClick}
+            variant="contained"
             startIcon={<AddIcon />}
+            onClick={handleAddTreeClick}
           >
-            add
+            Add Tree
           </Button>
-        </Grid>
-      </Grid>
-      <Grid item xs={6} md={3}>
-        <FormControl fullWidth>
-          <InputLabel id="status-filter-select-label">Availability</InputLabel>
-          <Select
-            size="small"
-            labelId="status-filter-select-label"
-            id="status-filter-select"
-            value={statusFilter}
-            label="avaliability"
-            onChange={(e) => setStatusFilter(e.target.value)}
-          >
-            <MenuItem value="available">Available</MenuItem>
-            <MenuItem value="reserved">Reserved</MenuItem>
-            <MenuItem value="sold">Sold</MenuItem>
-          </Select>
-        </FormControl>
+        </ButtonGroup>
       </Grid>
 
-      <Grid item xs={6} md={3}>
-        <FormControl fullWidth>
-          <InputLabel id="logging-filter-select-label">
-            Logging Status
-          </InputLabel>
-          <Select
-            size="small"
-            labelId="logging-filter-select-label"
-            id="logging-filter-select"
-            value={loggingFilter}
-            label="Logging Status"
-            onChange={(e) => setLoggingFilter(e.target.value)}
-          >
-            <MenuItem value="all">All</MenuItem>
-            <MenuItem value="logged">Logged</MenuItem>
-            <MenuItem value="unlogged">Unlogged</MenuItem>
-          </Select>
-        </FormControl>
-      </Grid>
-      <Grid item xs={6} md={3}>
-        <FormControl fullWidth>
-          <InputLabel id="species-filter-select-label">Species</InputLabel>
-          <Select
-            size="small"
-            labelId="species-filter-select-label"
-            id="species-filter-select"
-            value={speciesFilter}
-            label="Species"
-            onChange={(e) => setSpeciesFilter(e.target.value)}
-          >
-            <MenuItem value="all">All</MenuItem>
-            {species.map((specie) => (
-              <MenuItem key={specie.id} value={specie.id}>
-                {specie.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Grid>
-      <Grid item xs={6} md={3}>
-        <FormControl fullWidth>
-          <TextField
-            size="small"
-            label="Tree ID"
-            variant="outlined"
-            value={refIdFilter}
-            onChange={(e) => setRefIdFilter(e.target.value.toUpperCase())}
-            // helperText="Enter a Ref ID to filter by specific tree"
-          />
-        </FormControl>
-      </Grid>
-      <Grid
-        container
-        sx={{ justifyContent: { xs: "center", sm: "flex-start" } }}
-        alignContent={"center"}
-      >
-        {trees.length > 0 ? (
-          trees.map((tree) => (
-            <Grid
-              item
-              xs={3}
-              sm={2}
-              lg={2}
-              key={tree.id}
-              m={1}
-              border={1}
-              borderRadius={3}
-              p={2}
-              boxShadow={2}
-              bgcolor={"white.main"}
-              textAlign="center"
-              style={{
-                position: "relative",
-              }}
-              sx={{
-                cursor: "pointer",
-                "&:hover": {
-                  backgroundColor: "primary.main",
-                },
-                transition: "background-color 0.5s",
-              }}
-              onClick={() => handleTreeClick(tree.id)}
+      {/* Filters */}
+      <Grid container item xs={12} spacing={2}>
+        <Grid item xs={6} md={3}>
+          <FormControl fullWidth>
+            <InputLabel>Status</InputLabel>
+            <Select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              size="small"
             >
-              <Grid item>
-                <h3>{tree.refId}</h3>
-              </Grid>
-              <Grid item>
-                <p>{tree.speciesName}</p>
-              </Grid>
-              <div style={{ position: "absolute", top: "8px", right: "8px" }}>
-                {tree.logIds && tree.logIds.length > 0 && (
-                  <CarpenterIcon color="dark" fontSize="small" />
-                )}
-                {tree.logged && (
-                  <BlockIcon color="secondary" fontSize="small" />
-                )}
-              </div>
-            </Grid>
-          ))
+              <MenuItem value="available">Available</MenuItem>
+              <MenuItem value="reserved">Reserved</MenuItem>
+              <MenuItem value="sold">Sold</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+
+        <Grid item xs={6} md={3}>
+          <FormControl fullWidth>
+            <InputLabel>Logging Status</InputLabel>
+            <Select
+              value={loggingFilter}
+              onChange={(e) => setLoggingFilter(e.target.value)}
+              size="small"
+            >
+              <MenuItem value="all">All</MenuItem>
+              <MenuItem value="logged">Logged</MenuItem>
+              <MenuItem value="unlogged">Unlogged</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+
+        <Grid item xs={6} md={3}>
+          <FormControl fullWidth>
+            <InputLabel>Species</InputLabel>
+            <Select
+              value={speciesFilter}
+              onChange={(e) => setSpeciesFilter(e.target.value)}
+              size="small"
+            >
+              <MenuItem value="all">All</MenuItem>
+              {species.map((specie) => (
+                <MenuItem key={specie.id} value={specie.id}>
+                  {specie.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+
+        <Grid item xs={6} md={3}>
+          <TextField
+            label="Tree ID"
+            value={refIdFilter}
+            onChange={(e) => setRefIdFilter(e.target.value)}
+            size="small"
+            fullWidth
+          />
+        </Grid>
+      </Grid>
+
+      {/* Render Tree View */}
+      <Grid item xs={12}>
+        {trees.length > 0 ? (
+          renderTreeView()
         ) : (
-          <Grid item xs={12}>
-            <Typography variant="body1">No trees found.</Typography>
-          </Grid>
+          <Typography variant="body1">No trees found.</Typography>
         )}
       </Grid>
 
+      {/* Item Dialog */}
       <ItemDialog
         isOpen={isModalOpen}
         onClose={handleCloseDialog}
-        itemDetails={selectedTreeDetails}
-        mode={modalMode}
+        mode={modalMode} // Dynamically set mode
         type="tree"
+        itemDetails={selectedTreeDetails}
+        onSave={handleSaveTree} // Save handler for adding/editing
       />
     </Grid>
   );

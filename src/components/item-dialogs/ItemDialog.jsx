@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import ItemForm from "./ItemForm"; // Ensure this is correctly imported
 import { app } from "../../firebase-config";
-import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, updateDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 
 const ItemDialog = ({
@@ -38,16 +38,21 @@ const ItemDialog = ({
         setLoading(false);
         return;
       }
-
+  
       if (refId) {
         setLoading(true);
         try {
-          const itemRef = doc(db, `sawmill/${sawmillId}/${type}s`, refId);
-          const itemSnap = await getDoc(itemRef);
-
-          if (itemSnap.exists()) {
+          // Query to find the document by the "refId" field
+          console.log("Fetching item data...", refId);
+          const collectionRef = collection(db, `sawmill/${sawmillId}/${type}s`);
+          const queryRef = query(collectionRef, where("refId", "==", refId));
+          const querySnap = await getDocs(queryRef);
+  
+          if (!querySnap.empty) {
+            // Assuming "refId" is unique, we take the first document
+            const itemSnap = querySnap.docs[0];
             const data = itemSnap.data();
-
+  
             // Prefetch related logs and images (if applicable)
             const logs = data.logIds
               ? await Promise.all(
@@ -57,10 +62,10 @@ const ItemDialog = ({
                   })
                 )
               : [];
-
+  
             setItemData({ id: itemSnap.id, ...data, logs });
           } else {
-            alert(`${type} not found.`);
+            alert(`${type} not found using refId: ${refId}`);
           }
         } catch (error) {
           console.error(`Error fetching ${type} data:`, error);
@@ -70,21 +75,15 @@ const ItemDialog = ({
         }
       }
     };
-
+  
     if (isOpen) {
       setMode(initialMode || "view"); // Reset to view mode on open
       setItemData(null); // Clear stale data
       fetchItemData(); // Fetch or use provided data
     }
   }, [isOpen, refId, itemDetails, initialMode, type, db, sawmillId]);
+  
 
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setItemData((prevData) => ({
-  //     ...prevData,
-  //     [name]: value,
-  //   }));
-  // };
 
 
 const deleteImage = async (imageUrl) => {
@@ -114,30 +113,7 @@ const deleteImage = async (imageUrl) => {
   };
   
   
-  // const handleInputChange = async (e) => {
-  //   const { name, value, files } = e.target;
-  
-  //   if (files && files[0]) {
-  //     try {
-  //       const fileUrl = await uploadImage(files[0]);
-  //       if (fileUrl) {
-  //         setItemData((prevData) => ({
-  //           ...prevData,
-  //           [name]: fileUrl, // Update state with the uploaded image URL
-  //         }));
-  //         alert(`Image ${name} uploaded successfully!`);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error uploading image:", error);
-  //       alert("Failed to upload image. Please try again.");
-  //     }
-  //   } else {
-  //     setItemData((prevData) => ({
-  //       ...prevData,
-  //       [name]: value, // Handle text input updates
-  //     }));
-  //   }
-  // };
+
   
   const handleInputChange = async (e) => {
     const { name, value, files } = e.target;

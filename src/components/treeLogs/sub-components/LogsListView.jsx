@@ -1,57 +1,86 @@
 import React from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import TablePagination from "@mui/material/TablePagination";
+import {
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableContainer,
+  Paper,
+  TableBody,
+} from "@mui/material";
 
-const ListView = ({
-  logs,
-  onLogClick,
-  page,
-  rowsPerPage,
-  handleChangePage,
-  handleChangeRowsPerPage,
-}) => {
+const LogListView = ({ logs, onLogClick }) => {
   return (
     <TableContainer component={Paper}>
-      <Table>
+      <Table aria-label="log table" sx={{ minWidth: 800 }}>
         <TableHead>
-          <TableRow>
-            <TableCell>Ref ID</TableCell>
-            <TableCell>Species</TableCell>
+          <TableRow sx={{ backgroundColor: "primary.main", boxShadow: 2 }}>
+            <TableCell
+              sx={{
+                position: "sticky",
+                left: 0,
+                background: "white",
+                backgroundColor: "primary.main",
+                boxShadow: 2,
+                zIndex: 1,
+                borderRight: "1px solid lightgrey",
+              }}
+            >
+              Ref ID
+            </TableCell>
             <TableCell>Verified</TableCell>
+            <TableCell>Status</TableCell>
+            <TableCell>Parent Tree</TableCell>
+            <TableCell>Planks</TableCell>
+            <TableCell>Date</TableCell>
+            <TableCell>Species</TableCell>
+            <TableCell>Location</TableCell>
+            <TableCell>Lumberjack</TableCell>
+            <TableCell>Length</TableCell>
+            <TableCell>Width</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {logs.map((log) => (
             <TableRow
               key={log.id}
-              hover
+              sx={{
+                "&:nth-of-type(odd)": { backgroundColor: "action.hover" },
+                "&:hover": { backgroundColor: "action.selected" },
+              }}
               onClick={() => onLogClick(log)}
-              sx={{ cursor: "pointer" }}
+              style={{ cursor: "pointer" }}
             >
-              <TableCell>{log.refId}</TableCell>
-              <TableCell>{log.speciesName}</TableCell>
+              <TableCell
+                component="th"
+                scope="row"
+                sx={{
+                  position: "sticky",
+                  left: 0,
+                  "&:hover": { backgroundColor: "lightgray" },
+                  background: "white",
+                  borderRight: "1px solid lightgrey",
+                  zIndex: 2,
+                }}
+              >
+                {log.refId}
+              </TableCell>
               <TableCell>{log.verified ? "Yes" : "No"}</TableCell>
+              <TableCell>{log.status}</TableCell>
+              <TableCell>{log.treeId}</TableCell>
+              <TableCell>{log.planked ? "Yes" : "No"}</TableCell>
+              <TableCell>{log.date}</TableCell>
+              <TableCell>{log.speciesName}</TableCell>
+              <TableCell>{log.locationName}</TableCell>
+              <TableCell>{log.lumberjackName}</TableCell>
+              <TableCell>{log.length}</TableCell>
+              <TableCell>{log.width}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={logs.length} // Update if you know the total count of logs
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
     </TableContainer>
   );
 };
 
-export default ListView;
+export default LogListView;
