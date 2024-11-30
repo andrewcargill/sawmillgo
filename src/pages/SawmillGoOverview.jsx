@@ -136,60 +136,8 @@ const SawmillGoOverview = () => {
         </Grid>
       </Grid>
 
-      {/* Environmental & Financial Benefits */}
-      <Grid
-        className="fade-in-3"
-        container
-        spacing={4}
-        style={{ marginBottom: "40px" }}
-      >
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardMedia
-              component="img"
-              height="200"
-              image={ecoThumbImage} // Image representing eco-friendly practices
-              alt="Eco-friendly forestry"
-            />
-
-            <CardContent>
-              <Typography variant="h4" component="h2" gutterBottom>
-                Environmental Benefits
-              </Typography>
-              <Typography variant="body1">
-                Our system encourages sustainable forestry by verifying and
-                promoting eco-friendly practices. Supporters can choose to
-                purchase wood from forests that use responsible cutting methods,
-                contributing to a healthier planet.
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardMedia
-              component="img"
-              height="200"
-              image={financeImage}
-              alt="Financial Benefits"
-            />
-            <CardContent>
-              <Typography variant="h4" component="h2" gutterBottom>
-                Financial Benefits
-              </Typography>
-              <Typography variant="body1">
-                By adding transparency and authenticity to the product's origin,
-                forest owners and sawmills can charge more for their sustainable
-                wood. This premium can be passed on through the value chain,
-                benefiting the entire ecosystem.
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
-      {/* How It Works Section */}
-      <Typography
+       {/* How It Works Section */}
+       <Typography
         className="fade-in-4"
         variant="h4"
         component="h2"
@@ -266,6 +214,60 @@ const SawmillGoOverview = () => {
           </Grid>
         ))}
       </Grid>
+
+      {/* Environmental & Financial Benefits */}
+      <Grid
+        className="fade-in-3"
+        container
+        spacing={4}
+        style={{ marginBottom: "40px" }}
+      >
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardMedia
+              component="img"
+              height="200"
+              image={ecoThumbImage} // Image representing eco-friendly practices
+              alt="Eco-friendly forestry"
+            />
+
+            <CardContent>
+              <Typography variant="h4" component="h2" gutterBottom>
+                Environmental Benefits
+              </Typography>
+              <Typography variant="body1">
+                Our system encourages sustainable forestry by verifying and
+                promoting eco-friendly practices. Supporters can choose to
+                purchase wood from forests that use responsible cutting methods,
+                contributing to a healthier planet.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardMedia
+              component="img"
+              height="200"
+              image={financeImage}
+              alt="Financial Benefits"
+            />
+            <CardContent>
+              <Typography variant="h4" component="h2" gutterBottom>
+                Financial Benefits
+              </Typography>
+              <Typography variant="body1">
+                By adding transparency and authenticity to the product's origin,
+                forest owners and sawmills can charge more for their sustainable
+                wood. This premium can be passed on through the value chain,
+                benefiting the entire ecosystem.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+     
 
       {/* Testimonials Section */}
       <Typography

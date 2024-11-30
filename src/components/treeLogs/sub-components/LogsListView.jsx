@@ -37,7 +37,7 @@ const LogListView = ({ logs, onLogClick }) => {
             <TableCell>Location</TableCell>
             <TableCell>Lumberjack</TableCell>
             <TableCell>Length</TableCell>
-            <TableCell>Width</TableCell>
+            <TableCell>Diameter</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -74,7 +74,7 @@ const LogListView = ({ logs, onLogClick }) => {
               <TableCell>{log.locationName}</TableCell>
               <TableCell>{log.lumberjackName}</TableCell>
               <TableCell>{log.length}</TableCell>
-              <TableCell>{log.width}</TableCell>
+              <TableCell>{log.diameter}</TableCell>
             </TableRow>
           ))}
         </TableBody>
