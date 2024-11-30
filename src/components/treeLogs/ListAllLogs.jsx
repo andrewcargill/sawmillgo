@@ -16,6 +16,7 @@ import BasicView from "./sub-components/LogsBasicView";
 import ListView from "./sub-components/LogsListView";
 import ItemDialog from "../item-dialogs/ItemDialog";
 import AllLogsMap from "./sub-components/AllLogsMap";
+import { useNavigate } from "react-router-dom";
 
 const ListAllLogs = () => {
   const [logs, setLogs] = useState([]);
@@ -26,6 +27,7 @@ const ListAllLogs = () => {
 
   const db = getFirestore(app);
   const sawmillId = JSON.parse(localStorage.getItem("user"))?.sawmillId;
+  const navigate = useNavigate();
 
   const views = [
     { view: "basic", icon: <GridOnIcon /> },
@@ -96,7 +98,7 @@ const ListAllLogs = () => {
           <Typography variant="h4">Logs</Typography>
           <ButtonGroup>
             <IconButton onClick={handleDynamicViewClick}>{currentViewIcon}</IconButton>
-            <Button variant="contained" startIcon={<AddIcon />}>
+            <Button  onClick={() => navigate("/addlog")} variant="contained" startIcon={<AddIcon />}>
               Add Log
             </Button>
           </ButtonGroup>
