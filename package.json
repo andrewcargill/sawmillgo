@@ -10,7 +10,6 @@
     "@mui/lab": "^5.0.0-alpha.122",
     "@mui/material": "^5.15.15",
     "@react-google-maps/api": "^2.19.3",
-    "@testing-library/jest-dom": "^5.17.0",
     "country-flag-icons": "^1.5.11",
     "d3": "^7.9.0",
     "firebase": "^10.10.0",
@@ -55,7 +54,8 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/react": "^14.2.2",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^14.3.1",
     "@testing-library/user-event": "^14.5.2",
     "jest": "^27.5.1"
   }

@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HomePage Tests matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="MuiContainer-root MuiContainer-maxWidthLg css-1oqqzyl-MuiContainer-root"
+    style="padding: 20px;"
+  >
+    <div
+      class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-4 css-xtlx1y-MuiGrid-root"
+      style="margin-bottom: 40px;"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-6 css-1fyyp8j-MuiGrid-root"
+      >
+        <h1
+          class="MuiTypography-root MuiTypography-h2 MuiTypography-gutterBottom fade-in-2 css-i1hrn3-MuiTypography-root"
+        >
+          Welcome to SawmillGo
+        </h1>
+        <p
+          class="MuiTypography-root MuiTypography-h6 MuiTypography-paragraph fade-in-5 css-1mo68eo-MuiTypography-root"
+        >
+          Data-driven forestry for a sustainable future.
+        </p>
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-paragraph fade-in-3 css-z2eky3-MuiTypography-root"
+        >
+          SawmillGo empowers forest owners, sawmills, and creators to enhance transparency and authenticity through verified data. Our system supports sustainable practices, giving stakeholders the tools they need to increase both environmental impact and profitability.
+        </p>
+        <a
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorPrimary fade-in-4 css-jh47zj-MuiButtonBase-root-MuiButton-root"
+          href="/concept"
+          tabindex="0"
+        >
+          discover more
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </a>
+      </div>
+      <div
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-6 css-1fyyp8j-MuiGrid-root"
+      >
+        <img
+          alt="SawmillGo Overview"
+          class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img fade-in-1 css-o69gx8-MuiCardMedia-root"
+          src="home_hero2.webp"
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
