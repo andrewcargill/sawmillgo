@@ -2,6 +2,7 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom"; // For routing tests
 import HomePage from "../../pages/HomePage";
+import userEvent from "@testing-library/user-event";
 
 describe("HomePage Tests", () => {
   test("renders homepage elements correctly", () => {
@@ -57,3 +58,20 @@ describe("HomePage Tests", () => {
     expect(asFragment()).toMatchSnapshot();
   });
 });
+
+test("navigates to /concept when the button is clicked", async () => {
+    render(
+      <MemoryRouter>
+        <HomePage />
+      </MemoryRouter>
+    );
+  
+    const buttonLink = screen.getByRole("link", { name: /discover more/i });
+    expect(buttonLink).toBeInTheDocument();
+  
+    // Simulate a click
+    userEvent.click(buttonLink);
+  
+    // Ensure the href points to the correct route
+    expect(buttonLink).toHaveAttribute("href", "/concept");
+  });
