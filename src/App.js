@@ -83,10 +83,11 @@ function App() {
         <Route path="/features" element={<FeaturesPage />} />
         <Route path="/sawmills" element={<AllSawmill />} />
         <Route path="/concept" element={<SawmillGoOverview />} />
-        <Route path="/status" element={<StatusPage />} />
+        <Route path="/roadmap" element={<StatusPage />} />
         <Route path="/videos" element={<VideoPage />} />
         <Route path="/roadmap" element={<RoadmapSection />} />
-        <Route path="/pitchpage" element={<PitchPage />} />
+        <Route path="/invest" element={<PitchPage />} />
+        <Route path="/investoroverview" element={<PitchPage />} />
        
         <Route path="/contact" element={<ContactForm />} />
         {/* <Route path="/productreport/:projectId" element={<ProductDocumentation /> } /> */}

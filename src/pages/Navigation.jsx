@@ -73,7 +73,7 @@ const Navigation = () => {
     setAnchorElUser(null);
   };
 
-  const pages = ["Concept", "Features", "Sawmills", "Status", "About", "Videos"];
+  const pages = ["Concept", "Features", "Roadmap", "Videos", "About", "Investor Overview", "Contact"];
   const sawmillPages = ["home", "Report"];
   //   const settings = ['home_secure', 'Quick_Add', 'Trees', 'Logs', 'Planks', 'water_crud', 'Logout'];
 
@@ -236,19 +236,19 @@ const Navigation = () => {
                     onClick={handleMenuClose}
                     sx={{
                       backgroundColor:
-                        location.pathname === `/${page.toLowerCase()}`
+                        location.pathname === `/${page.toLowerCase().replace(/\s+/g, '')}`
                           ? "primary.main"
                           : "transparent",
                       "&:hover": {
                         backgroundColor:
-                          location.pathname === `/${page.toLowerCase()}`
+                          location.pathname === `/${page.toLowerCase().replace(/\s+/g, '')}`
                             ? "primary.main"
                             : "rgba(0, 0, 0, 0.04)",
                       },
                     }}
                   >
                     <Link
-                      to={`/${page.toLowerCase()}`}
+                      to={`/${page.toLowerCase().replace(/\s+/g, '')}`}
                       style={{
                         textDecoration: "none",
                         display: "block",
@@ -258,13 +258,13 @@ const Navigation = () => {
                       <Typography
                         sx={{
                           color:
-                            location.pathname === `/${page.toLowerCase()}`
+                            location.pathname === `/${page.toLowerCase().replace(/\s+/g, '')}`
                               ? "primary.contrastText"
                               : "primary.main",
                           textAlign: "center",
                           "&:hover": {
                             color:
-                              location.pathname === `/${page.toLowerCase()}`
+                              location.pathname === `/${page.toLowerCase().replace(/\s+/g, '')}`
                                 ? "primary.contrastText"
                                 : "black",
                           },
@@ -395,26 +395,26 @@ const Navigation = () => {
                   <Button
                     key={page}
                     component={Link}
-                    to={`/${page.toLowerCase()}`}
+                    to={`/${page.toLowerCase().replace(/\s+/g, '')}`}
                     sx={{
                       my: 2,
                       color:
-                        location.pathname === `/${page.toLowerCase()}`
+                        location.pathname === `/${page.toLowerCase().replace(/\s+/g, '')}`
                           ? "primary.contrastText"
                           : "white",
                       backgroundColor:
-                        location.pathname === `/${page.toLowerCase()}`
+                        location.pathname === `/${page.toLowerCase().replace(/\s+/g, '')}`
                           ? "primary.main"
                           : "white",
                       display: "block",
                       textDecoration: "none",
                       "&:hover": {
                         backgroundColor:
-                          location.pathname === `/${page.toLowerCase()}`
+                          location.pathname === `/${page.toLowerCase().replace(/\s+/g, '')}`
                             ? "primary.main"
                             : "white", // Ensures no background color change on hover
                         color:
-                          location.pathname === `/${page.toLowerCase()}`
+                          location.pathname ===`/${page.toLowerCase().replace(/\s+/g, '')}`
                             ? "primary.contrastText"
                             : "white", // Ensures no text color change on hover
                         transition: "none", // Removes any transition effect

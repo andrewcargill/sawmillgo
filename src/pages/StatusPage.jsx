@@ -255,7 +255,15 @@ const StatusPage = () => {
     </Box>
 
     {/* Call to Action Button */}
-    <Box sx={{ textAlign: "center", mt: 4 }}>
+    <Box mt={3}>
+                    <Button variant="contained" color="primary" href="/contact">
+                        Get in Touch
+                    </Button>
+                    <Button variant="outlined" color="secondary" href="/invest" sx={{ ml: 2 }}>
+                        Learn More
+                    </Button>
+                </Box>
+    {/* <Box sx={{ textAlign: "center", mt: 4 }}>
       <Button
         variant="contained"
         color="secondary"
@@ -264,7 +272,7 @@ const StatusPage = () => {
       >
         Contact Us
       </Button>
-    </Box>
+    </Box> */}
   </CardContent>
 </Card>
 
