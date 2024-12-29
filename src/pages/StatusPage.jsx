@@ -66,12 +66,12 @@ const milestones = [
     details: "Preparing test data and demos for user groups to feedback.",
   },
   {
-    title: "Current Goal",
+    title: "Milestone completed",
     description: "Development of Styling and site design",
     date: "Nov 2024",
-    status: "IN PROGRESS",
+    status: "COMPLETED",
     details:
-      "Styling of various forms and creation of project information for website.",
+      "Styling of various forms and creation of project information for website. The adding of information pages for site visitors and introduction videos."
   },
   {
     title: "Milestone completed",

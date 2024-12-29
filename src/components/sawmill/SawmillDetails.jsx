@@ -67,7 +67,7 @@ const SawmillDetails = ({ sawmillId: propSawmillId }) => {
   };
 
   return (
-    <Box sx={{ p: 4 }}>
+    <Box sx={{ p: 0 }}>
       {sawmill ? (
         <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
           <Typography

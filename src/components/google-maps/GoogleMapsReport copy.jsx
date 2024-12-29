@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import loader from '../../utils/mapLoader';  
+import { Padding } from '@mui/icons-material';
 import treeLabelColors from '../project-report/treeLabelColors.json';
 
 

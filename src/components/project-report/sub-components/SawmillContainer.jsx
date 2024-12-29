@@ -31,8 +31,7 @@ const SawmillContainer = ({ sawmillId }) => {
         onClick={handleClickOpen}
         variant="outlined"
       />
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Sawmill Profile</DialogTitle>
+      <Dialog open={open} onClose={handleClose} maxWidth="lg">
         <DialogContent>
       <SawmillDetails sawmillId={sawmillId} />
         </DialogContent>

@@ -56,12 +56,9 @@ const AboutSystem = () => {
       ></Box>
 
       {/* Our Vision */}
-      <Grid container spacing={4} sx={{ mb: 4 }}>
+      {/* <Grid container spacing={4} sx={{ mb: 4 }}>
         <Grid item xs={12} sx={{ mt: 4 }}>
-          {/* Heading */}
-    
-
-          {/* Card with Text */}
+      
           <Card
             elevation={3}
             sx={{
@@ -101,7 +98,7 @@ const AboutSystem = () => {
             </CardContent>
           </Card>
         </Grid>
-      </Grid>
+      </Grid> */}
 
       {/* <Grid item xs={12} sx={{ mb: 2 }}>
         <Typography variant="h4" align="center" color="primary">

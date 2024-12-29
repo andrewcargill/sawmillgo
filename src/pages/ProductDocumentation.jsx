@@ -155,6 +155,7 @@ const ProductDocumentation = () => {
           "age",
           "reason",
           "lumberjackName",
+          "lumberjack",
           "latitude",
           "longitude",
           "image",

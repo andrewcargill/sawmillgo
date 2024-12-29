@@ -14,9 +14,9 @@ import {
   ListItemIcon,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ecoImage from "../media/images/trees.png"; 
+import ecoImage from "../media/images/trees.png";
 import ecoImage2 from "../media/images/tree_dead.png";
-import ecoThumbImage from "../media/images/env1.jpg"; 
+import ecoThumbImage from "../media/images/env1.jpg";
 import financeImage from "../media/images/finance2.jpg";
 import forestOwnerImage from "../media/images/forest_owner.jpg";
 import sawmillImage from "../media/images/sawmill.jpg";
@@ -41,7 +41,7 @@ const SawmillGoOverview = () => {
     <Container maxWidth="lg" style={{ padding: "40px 20px" }}>
       {/* Hero Section */}
 
-      <Box
+      {/* <Box
         className="cross-fade-image"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -56,10 +56,10 @@ const SawmillGoOverview = () => {
           justifyContent: "center",
           alignItems: "center",
         }}
-      ></Box>
+      ></Box> */}
 
       {/* Problem & Solution Section */}
-      <Grid
+      {/* <Grid
         className="fade-in-2"
         container
         spacing={4}
@@ -134,10 +134,110 @@ const SawmillGoOverview = () => {
             </CardContent>
           </Card>
         </Grid>
+      </Grid> */}
+
+       {/* Our Vision */}
+       <Grid container spacing={4} sx={{ mb: 4 }}>
+        <Grid item xs={12} sx={{ mt: 4 }}>
+          {/* Heading */}
+    
+
+          {/* Card with Text */}
+          <Card
+            elevation={3}
+            sx={{
+              mt: 2,
+              p: 2,
+              backgroundColor: "background.paper",
+              borderRadius: 2,
+            }}
+          >
+            <CardContent>
+            <Typography
+            variant="h4"
+            align="left"
+            color="primary"
+            sx={{
+              borderColor: "primary.main",
+              display: "inline-block",
+              pb: 1,
+            }}
+          >
+            Our Vision
+          </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "text.secondary",
+                  lineHeight: 1.7,
+                  fontWeight: 800,
+                }}
+              >
+                At SawmillGo, we envision a world where sustainably sourced wood
+                becomes the standard. By empowering small-scale forest owners
+                and creators, we not only drive environmental stewardship but
+                also help build stronger, more connected communities that value
+                the journey of every tree.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
 
-       {/* How It Works Section */}
-       <Typography
+        {/* Environmental & Financial Benefits */}
+        <Grid
+        className="fade-in-1"
+        container
+        spacing={4}
+        style={{ marginBottom: "40px" }}
+      >
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardMedia
+              component="img"
+              height="200"
+              image={ecoThumbImage} // Image representing eco-friendly practices
+              alt="Eco-friendly forestry"
+            />
+
+            <CardContent>
+              <Typography variant="h4" component="h2" gutterBottom>
+                Environmental Benefits
+              </Typography>
+              <Typography variant="body1">
+                Our system encourages sustainable forestry by verifying and
+                promoting eco-friendly practices. Supporters can choose to
+                purchase wood from forests that use responsible cutting methods,
+                contributing to a healthier planet.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardMedia
+              component="img"
+              height="200"
+              image={financeImage}
+              alt="Financial Benefits"
+            />
+            <CardContent>
+              <Typography variant="h4" component="h2" gutterBottom>
+                Financial Benefits
+              </Typography>
+              <Typography variant="body1">
+                By adding transparency and authenticity to the product's origin,
+                forest owners and sawmills can charge more for their sustainable
+                wood. This premium can be passed on through the value chain,
+                benefiting the entire ecosystem.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      {/* How It Works Section */}
+      <Typography
         className="fade-in-4"
         variant="h4"
         component="h2"
@@ -215,59 +315,7 @@ const SawmillGoOverview = () => {
         ))}
       </Grid>
 
-      {/* Environmental & Financial Benefits */}
-      <Grid
-        className="fade-in-3"
-        container
-        spacing={4}
-        style={{ marginBottom: "40px" }}
-      >
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardMedia
-              component="img"
-              height="200"
-              image={ecoThumbImage} // Image representing eco-friendly practices
-              alt="Eco-friendly forestry"
-            />
-
-            <CardContent>
-              <Typography variant="h4" component="h2" gutterBottom>
-                Environmental Benefits
-              </Typography>
-              <Typography variant="body1">
-                Our system encourages sustainable forestry by verifying and
-                promoting eco-friendly practices. Supporters can choose to
-                purchase wood from forests that use responsible cutting methods,
-                contributing to a healthier planet.
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardMedia
-              component="img"
-              height="200"
-              image={financeImage}
-              alt="Financial Benefits"
-            />
-            <CardContent>
-              <Typography variant="h4" component="h2" gutterBottom>
-                Financial Benefits
-              </Typography>
-              <Typography variant="body1">
-                By adding transparency and authenticity to the product's origin,
-                forest owners and sawmills can charge more for their sustainable
-                wood. This premium can be passed on through the value chain,
-                benefiting the entire ecosystem.
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
-     
+    
 
       {/* Testimonials Section */}
       <Typography

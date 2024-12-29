@@ -57,6 +57,7 @@ import SawmillGoOverview from "./pages/SawmillGoOverview";
 import StatusPage from "./pages/StatusPage";
 import FeaturesPage from "./pages/FeaturesPage";
 import ContactForm from "./pages/ContactForm";
+import VideoPage from "./pages/VideoPage";
 
 function App() {
  
@@ -81,6 +82,8 @@ function App() {
         <Route path="/sawmills" element={<AllSawmill />} />
         <Route path="/concept" element={<SawmillGoOverview />} />
         <Route path="/status" element={<StatusPage />} />
+        <Route path="/videos" element={<VideoPage />} />
+       
         <Route path="/contact" element={<ContactForm />} />
         {/* <Route path="/productreport/:projectId" element={<ProductDocumentation /> } /> */}
         <Route path="/productreport/:sawmillId/:projectId" element={<ProductDocumentation />} />

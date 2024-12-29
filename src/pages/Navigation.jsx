@@ -19,13 +19,11 @@ import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import UserContext from "../Contexts/UserContext";
 
-import ParkIcon from '@mui/icons-material/Park';
-import WorkspacesIcon from '@mui/icons-material/Workspaces';
-import TableRowsIcon from '@mui/icons-material/TableRows';
-import EventNoteIcon from '@mui/icons-material/EventNote';
-import HomeIcon from '@mui/icons-material/Home';
-
-
+import ParkIcon from "@mui/icons-material/Park";
+import WorkspacesIcon from "@mui/icons-material/Workspaces";
+import TableRowsIcon from "@mui/icons-material/TableRows";
+import EventNoteIcon from "@mui/icons-material/EventNote";
+import HomeIcon from "@mui/icons-material/Home";
 
 const Navigation = () => {
   const [isAuth, setIsAuth] = useState(false);
@@ -55,10 +53,9 @@ const Navigation = () => {
       }
       console.log("localUser: ", localUser);
     });
-  
+
     return () => unsubscribe();
   }, [auth, userProfile]);
-  
 
   const handleToggleMenu = () => {
     setAnchorElNav(!anchorElNav);
@@ -76,7 +73,7 @@ const Navigation = () => {
     setAnchorElUser(null);
   };
 
-  const pages = ["Concept", "Features", "Sawmills", "Status", "About" ];
+  const pages = ["Concept", "Features", "Sawmills", "Status", "About", "Videos"];
   const sawmillPages = ["home", "Report"];
   //   const settings = ['home_secure', 'Quick_Add', 'Trees', 'Logs', 'Planks', 'water_crud', 'Logout'];
 
@@ -157,82 +154,128 @@ const Navigation = () => {
                 boxShadow: "none",
               }}
             >
-     {isAuth && localUser ? (
-  localUser?.role === 'creator' ? (
-    <MenuItem onClick={handleMenuClose}>
-      <Link
-        to="/creatorhome"
-        style={{ textDecoration: "none", color: "inherit"}}
-      >
-        <Typography textAlign="center">Home</Typography>
-      </Link>
-    </MenuItem>
-  ) : (
-    // sawmillPages.map((page) => (
-    //   <MenuItem key={page} onClick={handleMenuClose}>
-    //     <Link
-    //       to={`/${page.toLowerCase()}`}
-    //       style={{ textDecoration: "none", color: "inherit" }}
-    //     >
-    //       <Typography textAlign="center">{page}</Typography>
-    //     </Link>
+              {isAuth && localUser ? (
+                localUser?.role === "creator" ? (
+                  <MenuItem onClick={handleMenuClose}>
+                    <Link
+                      to="/creatorhome"
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <Typography textAlign="center">Home</Typography>
+                    </Link>
+                  </MenuItem>
+                ) : (
+                  // sawmillPages.map((page) => (
+                  //   <MenuItem key={page} onClick={handleMenuClose}>
+                  //     <Link
+                  //       to={`/${page.toLowerCase()}`}
+                  //       style={{ textDecoration: "none", color: "inherit" }}
+                  //     >
+                  //       <Typography textAlign="center">{page}</Typography>
+                  //     </Link>
 
-        
-    //   </MenuItem>
-      
-      
-      
-    // ))  
-    <>
-    <MenuItem>
-   
-      <IconButton component={Link} to={'/home'} onClick={handleMenuClose}>
-       <HomeIcon sx={{ color: 'black' }} />
-      </IconButton>
+                  //   </MenuItem>
 
-      </MenuItem>
+                  // ))
+                  <>
+                    <MenuItem>
+                      <IconButton
+                        component={Link}
+                        to={"/home"}
+                        onClick={handleMenuClose}
+                      >
+                        <HomeIcon sx={{ color: "black" }} />
+                      </IconButton>
+                    </MenuItem>
 
-      <MenuItem>
-      <IconButton component={Link} to={'/trees'} onClick={handleMenuClose}>
-       <ParkIcon sx={{ color: 'primary.main' }} />
-      </IconButton>
-      </MenuItem>
+                    <MenuItem>
+                      <IconButton
+                        component={Link}
+                        to={"/trees"}
+                        onClick={handleMenuClose}
+                      >
+                        <ParkIcon sx={{ color: "primary.main" }} />
+                      </IconButton>
+                    </MenuItem>
 
-      <MenuItem>
-      <IconButton component={Link} to={'/logs'} onClick={handleMenuClose}>
-       <WorkspacesIcon sx={{ color: 'primary.main' }} />
-      </IconButton>
-      </MenuItem>
+                    <MenuItem>
+                      <IconButton
+                        component={Link}
+                        to={"/logs"}
+                        onClick={handleMenuClose}
+                      >
+                        <WorkspacesIcon sx={{ color: "primary.main" }} />
+                      </IconButton>
+                    </MenuItem>
 
-      <MenuItem>
-      <IconButton component={Link} to={'/planks'} onClick={handleMenuClose}>
-       <TableRowsIcon  sx={{ color: 'primary.main' }} />
-      </IconButton>
-      </MenuItem>
+                    <MenuItem>
+                      <IconButton
+                        component={Link}
+                        to={"/planks"}
+                        onClick={handleMenuClose}
+                      >
+                        <TableRowsIcon sx={{ color: "primary.main" }} />
+                      </IconButton>
+                    </MenuItem>
 
-      <MenuItem>
-      <IconButton component={Link} to={'/projects'} onClick={handleMenuClose}>
-      <EventNoteIcon sx={{ color: 'primary.main' }} />
-      </IconButton>
-      </MenuItem>
-    </>
-  )
-  
-) : (
-  pages.map((page) => (
-    <MenuItem key={page} onClick={handleMenuClose}>
-      <Link
-        to={`/${page.toLowerCase()}`}
-        style={{ 
-          textDecoration: "none", 
-        }}
-      >
-        <Typography textAlign="center">{page}</Typography>
-      </Link>
-    </MenuItem>
-  ))
-)}
-
+                    <MenuItem>
+                      <IconButton
+                        component={Link}
+                        to={"/projects"}
+                        onClick={handleMenuClose}
+                      >
+                        <EventNoteIcon sx={{ color: "primary.main" }} />
+                      </IconButton>
+                    </MenuItem>
+                  </>
+                )
+              ) : (
+                pages.map((page) => (
+                  <MenuItem
+                    key={page}
+                    onClick={handleMenuClose}
+                    sx={{
+                      backgroundColor:
+                        location.pathname === `/${page.toLowerCase()}`
+                          ? "primary.main"
+                          : "transparent",
+                      "&:hover": {
+                        backgroundColor:
+                          location.pathname === `/${page.toLowerCase()}`
+                            ? "primary.main"
+                            : "rgba(0, 0, 0, 0.04)",
+                      },
+                    }}
+                  >
+                    <Link
+                      to={`/${page.toLowerCase()}`}
+                      style={{
+                        textDecoration: "none",
+                        display: "block",
+                        width: "100%", 
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          color:
+                            location.pathname === `/${page.toLowerCase()}`
+                              ? "primary.contrastText"
+                              : "primary.main",
+                          textAlign: "center",
+                          "&:hover": {
+                            color:
+                              location.pathname === `/${page.toLowerCase()}`
+                                ? "primary.contrastText"
+                                : "black",
+                          },
+                        }}
+                      >
+                        {page}
+                      </Typography>
+                    </Link>
+                  </MenuItem>
+                ))
+              )}
             </Menu>
           </Box>
 
@@ -257,38 +300,37 @@ const Navigation = () => {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-          {isAuth ? (
-  localUser?.role === 'creator' ? (
-    <>
-      <Button
-        component={Link}
-        to="/creatorhome"
-        sx={{
-          my: 2,
-          color: "white",
-          display: "block",
-          textDecoration: "none",
-        }}
-      >
-        Home
-      </Button>
-      <Button
-        component={Link}
-        onClick={handleLogout}
-        sx={{
-          my: 2,
-          color: "white",
-          display: "block",
-          textDecoration: "none",
-        }}
-      >
-        Logout
-      </Button>
-      
-    </>
-  ) : (
-    <>
-      {/* {sawmillPages.map((page) => (
+            {isAuth ? (
+              localUser?.role === "creator" ? (
+                <>
+                  <Button
+                    component={Link}
+                    to="/creatorhome"
+                    sx={{
+                      my: 2,
+                      color: "white",
+                      display: "block",
+                      textDecoration: "none",
+                    }}
+                  >
+                    Home
+                  </Button>
+                  <Button
+                    component={Link}
+                    onClick={handleLogout}
+                    sx={{
+                      my: 2,
+                      color: "white",
+                      display: "block",
+                      textDecoration: "none",
+                    }}
+                  >
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <>
+                  {/* {sawmillPages.map((page) => (
         <Button
           key={page}
           component={Link}
@@ -304,7 +346,7 @@ const Navigation = () => {
         </Button>
   
       ))} */}
-      {/* <Button
+                  {/* <Button
         component={Link}
         onClick={handleLogout}
         sx={{
@@ -316,65 +358,74 @@ const Navigation = () => {
       >
         Logout
       </Button> */}
-      <Tooltip title="Home">
-      <IconButton component={Link} to={'/home'}>
-      <HomeIcon sx={{ color: 'black' }} />
-      </IconButton>
-      </Tooltip>
+                  <Tooltip title="Home">
+                    <IconButton component={Link} to={"/home"}>
+                      <HomeIcon sx={{ color: "black" }} />
+                    </IconButton>
+                  </Tooltip>
 
-      <Tooltip title="Trees">
-      <IconButton component={Link} to={'/trees'}>
-       <ParkIcon  sx={{ color: 'primary.main' }} />
-      </IconButton>
-      </Tooltip>
+                  <Tooltip title="Trees">
+                    <IconButton component={Link} to={"/trees"}>
+                      <ParkIcon sx={{ color: "primary.main" }} />
+                    </IconButton>
+                  </Tooltip>
 
-      <Tooltip title="Logs">
-      <IconButton component={Link} to={'/logs'}>
-       <WorkspacesIcon  sx={{ color: 'primary.main' }} />
-      </IconButton>
-      </Tooltip>
+                  <Tooltip title="Logs">
+                    <IconButton component={Link} to={"/logs"}>
+                      <WorkspacesIcon sx={{ color: "primary.main" }} />
+                    </IconButton>
+                  </Tooltip>
 
-      <Tooltip title="Planks">
-      <IconButton component={Link} to={'/planks'}>
-       <TableRowsIcon  sx={{ color: 'primary.main' }} />
-      </IconButton>
-      </Tooltip>
+                  <Tooltip title="Planks">
+                    <IconButton component={Link} to={"/planks"}>
+                      <TableRowsIcon sx={{ color: "primary.main" }} />
+                    </IconButton>
+                  </Tooltip>
 
-      <Tooltip title="Projects">
-      <IconButton component={Link} to={'/projects'}>
-      <EventNoteIcon sx={{ color: 'primary.main' }} />
-      </IconButton>
-      </Tooltip>
- 
-    </>
-  )
-) : (
-  <>
-    {pages.map((page) => (
-      <Button
-  key={page}
-  component={Link}
-  to={`/${page.toLowerCase()}`}
-  sx={{
-    my: 2,
-    color: location.pathname === `/${page.toLowerCase()}` ? "primary.contrastText" : "white",
-    backgroundColor: location.pathname === `/${page.toLowerCase()}` ? "primary.main" : "white",
-    display: "block",
-    textDecoration: "none",
-    "&:hover": {
-      backgroundColor: location.pathname === `/${page.toLowerCase()}` ? "primary.main" : "white", // Ensures no background color change on hover
-      color: location.pathname === `/${page.toLowerCase()}` ? "primary.contrastText" : "white", // Ensures no text color change on hover
-      transition: "none", // Removes any transition effect
-    },
-  }}
->
-  {page}
-</Button>
-
-    ))}
-  </>
-)}
-
+                  <Tooltip title="Projects">
+                    <IconButton component={Link} to={"/projects"}>
+                      <EventNoteIcon sx={{ color: "primary.main" }} />
+                    </IconButton>
+                  </Tooltip>
+                </>
+              )
+            ) : (
+              <>
+                {pages.map((page) => (
+                  <Button
+                    key={page}
+                    component={Link}
+                    to={`/${page.toLowerCase()}`}
+                    sx={{
+                      my: 2,
+                      color:
+                        location.pathname === `/${page.toLowerCase()}`
+                          ? "primary.contrastText"
+                          : "white",
+                      backgroundColor:
+                        location.pathname === `/${page.toLowerCase()}`
+                          ? "primary.main"
+                          : "white",
+                      display: "block",
+                      textDecoration: "none",
+                      "&:hover": {
+                        backgroundColor:
+                          location.pathname === `/${page.toLowerCase()}`
+                            ? "primary.main"
+                            : "white", // Ensures no background color change on hover
+                        color:
+                          location.pathname === `/${page.toLowerCase()}`
+                            ? "primary.contrastText"
+                            : "white", // Ensures no text color change on hover
+                        transition: "none", // Removes any transition effect
+                      },
+                    }}
+                  >
+                    {page}
+                  </Button>
+                ))}
+              </>
+            )}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
@@ -413,22 +464,21 @@ const Navigation = () => {
                 </>
               ) : (
                 <>
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <Link
-                    to="/login"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    <Typography textAlign="center">Sawmill Login</Typography>
-                  </Link>
-                 
-                </MenuItem>
-                <MenuItem onClick={handleCloseUserMenu}>
-                <Link
-                    to="/creatorlogin"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    <Typography textAlign="center">Creator Login</Typography>
-                  </Link>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Link
+                      to="/login"
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <Typography textAlign="center">Sawmill Login</Typography>
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Link
+                      to="/creatorlogin"
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <Typography textAlign="center">Creator Login</Typography>
+                    </Link>
                   </MenuItem>
                 </>
               )}

@@ -19,16 +19,17 @@ const AboutPage = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-  const introtext = "My name is Andy Cargill. I am a programmer, teacher, and woodworking enthusiast passionate about sustainable forestry. Originally from England, I built a successful music business before moving to Stockholm to run a recording studio and teach. Now in northern Sweden, my family and I live on a farm surrounded by forests."
-  const studytext = "After moving to northern Sweden, I studied woodwork for a year and bought a sawmill, immersing myself in Swedish forestry and sustainable practices. I realized the industry often prioritizes profit from clear-cutting over sustainability, leaving responsible methods undervalued. Frustrated but inspired by my love for woodworking, I developed SawmillGo to support forest owners and creators in promoting sustainable forestry. It empowers small communities to collaborate and gain real value from their forests."
-  const skillstext = "I transitioned into programming in 2020 when I studied at the Code Institute, where I developed my expertise in tools like React, Google Cloud, and Firestore. My background in running a business, teaching woodwork, and my passion for woodworking and craftsmanship have all contributed to my ability to build meaningful solutions like SawmillGo."
-  const whytext = "SawmillGo not only provides transparency in the wood industry but also encourages sustainable forestry practices. It helps forest owners and creators promote selective cutting and responsible land use to their customers, contributing to both environmental conservation and better economic outcomes for small communities."
+  const introtext = "My name is Andrew Cargill. I am a musician from Bristol, England that moved to Stockholm, Sweden 15 years ago."
+  const studytext = "In Stockholm I met my wife and six years we brought a farm in the north of Sweden. I studied carpentary and bought a sawmill, immersing myself in Swedish forestry. It was here that I saw the need for a platform like SawmillGo."
+  const skillstext = "I realized that providing a transparent way to share sustainable forestry practices with end customers was essential, and software would be the key to achieving this. In 2020, I pursued programming studies at the Code Institute."
+  const whytext = "Developing SawmillGo made me realize it could do more than provide transparency in the wood industry. It has the potential to protect endangered forests and unite local communities, promoting sustainable forestry."
   const personaltext= "Building cabins, stables, and barns around our farm has given me a deep appreciation for craftsmanship. I also enjoy carving and fine woodwork, and working as a woodwork teacher since 2024 has been incredibly rewarding. I want to share my vision for SawmillGo, which I believe can make a real difference to both the environment and the local economies of small communities."
 
 
   return (
     <Container maxWidth="md" style={{ padding: "40px 20px" }}>
-      <Typography variant="h4" component="h1" gutterBottom>
+       
+      <Typography variant="h4" component="h1" color="primary" gutterBottom>
         Passion, drive and the future.
       </Typography>
 
