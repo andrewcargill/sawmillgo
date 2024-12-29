@@ -58,6 +58,8 @@ import StatusPage from "./pages/StatusPage";
 import FeaturesPage from "./pages/FeaturesPage";
 import ContactForm from "./pages/ContactForm";
 import VideoPage from "./pages/VideoPage";
+import RoadmapSection from "./pages/sub-pages/RoadmapSection";
+import PitchPage from "./pages/sub-pages/PitchPage";
 
 function App() {
  
@@ -83,6 +85,8 @@ function App() {
         <Route path="/concept" element={<SawmillGoOverview />} />
         <Route path="/status" element={<StatusPage />} />
         <Route path="/videos" element={<VideoPage />} />
+        <Route path="/roadmap" element={<RoadmapSection />} />
+        <Route path="/pitchpage" element={<PitchPage />} />
        
         <Route path="/contact" element={<ContactForm />} />
         {/* <Route path="/productreport/:projectId" element={<ProductDocumentation /> } /> */}
