@@ -28,7 +28,7 @@ const HomePage = () => {
           </Typography>
           <Button
               component={Link}
-              to="/concept"
+              to="/project"
               variant="contained"
               color="primary"
               size="large"

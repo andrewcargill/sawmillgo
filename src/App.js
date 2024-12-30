@@ -79,14 +79,14 @@ function App() {
         <PageContentContainer>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/features" element={<FeaturesPage />} />
+        <Route path="/journey" element={<AboutPage />} />
+        <Route path="/systems" element={<FeaturesPage />} />
         <Route path="/sawmills" element={<AllSawmill />} />
-        <Route path="/concept" element={<SawmillGoOverview />} />
+        <Route path="/project" element={<SawmillGoOverview />} />
         <Route path="/roadmap" element={<StatusPage />} />
-        <Route path="/videos" element={<VideoPage />} />
+        <Route path="/demos" element={<VideoPage />} />
         <Route path="/roadmap" element={<RoadmapSection />} />
-        <Route path="/invest" element={<PitchPage />} />
+        <Route path="/investors" element={<PitchPage />} />
         <Route path="/investoroverview" element={<PitchPage />} />
        
         <Route path="/contact" element={<ContactForm />} />

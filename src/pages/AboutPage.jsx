@@ -22,7 +22,7 @@ const AboutPage = () => {
   const introtext = "My name is Andrew Cargill. I am a musician from Bristol, England that moved to Stockholm, Sweden 15 years ago."
   const studytext = "In Stockholm I met my wife and six years we brought a farm in the north of Sweden. I studied carpentary and bought a sawmill, immersing myself in Swedish forestry. It was here that I saw the need for a platform like SawmillGo."
   const skillstext = "I realized that providing a transparent way to share sustainable forestry practices with end customers was essential, and software would be the key to achieving this. In 2020, I pursued programming studies at the Code Institute."
-  const whytext = "Developing SawmillGo made me realize it could do more than provide transparency in the wood industry. It has the potential to protect endangered forests and unite local communities, promoting sustainable forestry."
+  const whytext = "While SawmillGo is still in development, each milestone brings us closer to launching a product that empowers forest owners and creators globally. This project is more than software—it's a movement toward sustainable forestry."
   const personaltext= "Building cabins, stables, and barns around our farm has given me a deep appreciation for craftsmanship. I also enjoy carving and fine woodwork, and working as a woodwork teacher since 2024 has been incredibly rewarding. I want to share my vision for SawmillGo, which I believe can make a real difference to both the environment and the local economies of small communities."
 
 
@@ -30,7 +30,7 @@ const AboutPage = () => {
     <Container maxWidth="md" style={{ padding: "40px 20px" }}>
        
       <Typography variant="h4" component="h1" color="primary" gutterBottom>
-        Passion, drive and the future.
+       The Road to SawmillGo
       </Typography>
 
 {/* Introduction */}

@@ -338,7 +338,7 @@ const SawmillGoOverview = () => {
           color="secondary"
           size="large"
           component={Link}
-          to="/features"
+          to="/systems"
         >
           System Features
         </Button>

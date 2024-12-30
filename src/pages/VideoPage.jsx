@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Typography, Box, Button, Grid, Card, CardContent } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const VideoPage = () => {
     const videos = [
@@ -15,7 +16,7 @@ const VideoPage = () => {
         <Container maxWidth="lg" sx={{ py: 6 }}>
             <Box textAlign="center" mb={6}>
             <Typography variant="h4" align="center" color="primary">
-          Information Videos
+          Demonstration Videos
         </Typography>
                 <Typography variant="subtitle1" color="text.secondary">
                     Explore the key elements of SawmillGo through a series of short videos.
@@ -59,10 +60,13 @@ const VideoPage = () => {
                     Reach out to us or get involved to see how you can contribute to the SawmillGo project.
                 </Typography>
                 <Box mt={3}>
-                    <Button variant="contained" color="primary" href="/contact">
+                    <Button variant="contained" color="primary" 
+                           component={Link}
+                           to="/contact">
                         Contact Us
                     </Button>
-                    <Button variant="outlined" color="secondary" href="/get-involved" sx={{ ml: 2 }}>
+                    <Button variant="outlined" color="secondary"        component={Link}
+                  to="/investoroverview" sx={{ ml: 2 }}>
                         Get Involved
                     </Button>
                 </Box>

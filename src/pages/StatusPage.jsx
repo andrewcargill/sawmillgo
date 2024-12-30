@@ -12,6 +12,7 @@ import {
   DialogActions,
   Box,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import Timeline from "@mui/lab/Timeline";
 import TimelineItem from "@mui/lab/TimelineItem";
 import TimelineSeparator from "@mui/lab/TimelineSeparator";
@@ -71,7 +72,7 @@ const milestones = [
     date: "Nov 2024",
     status: "COMPLETED",
     details:
-      "Styling of various forms and creation of project information for website. The adding of information pages for site visitors and introduction videos."
+      "Styling of various forms and creation of project information for website. The adding of information pages for site visitors and introduction videos.",
   },
   {
     title: "Milestone completed",
@@ -214,56 +215,72 @@ const StatusPage = () => {
             </Typography>
           </Grid> */}
           <Card elevation={4} sx={{ p: 3 }}>
-  <CardContent>
-    {/* Current Focus Section with Tree Icon */}
-    <Box sx={{ mb: 2, textAlign: "center" }}>
-      <TreeIcon sx={{ color: "#79c000", fontSize: 40, mb: 1 }} /> {/* Tree Icon above */}
-      <Typography variant="h6" color="text.primary" gutterBottom>
-        Current Focus
-      </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ pl: 4 }}>
-        Completing SawmillGo’s core software for investment and testing by early 2025.
-      </Typography>
-    </Box>
+            <CardContent>
+              {/* Current Focus Section with Tree Icon */}
+              <Box sx={{ mb: 2, textAlign: "center" }}>
+                <TreeIcon sx={{ color: "#79c000", fontSize: 40, mb: 1 }} />{" "}
+                {/* Tree Icon above */}
+                <Typography variant="h6" color="text.primary" gutterBottom>
+                  Current Focus
+                </Typography>
+                <Typography
+                  variant="body1"
+                  color="text.secondary"
+                  sx={{ pl: 4 }}
+                >
+               SawmillGo is in the final stages of development, with plans for MVP completion by early 2025. We are currently engaging with partners to refine the product and expand its impact.
+                </Typography>
+              </Box>
 
-    {/* Key 2025 Milestones */}
-    <Box sx={{ mb: 2 }}>
-      <Typography variant="h6" color="text.primary" gutterBottom>
-        Key 2025 Milestones
-      </Typography>
-      <Box sx={{ pl: 3 }}>
-        <Typography variant="body2" color="text.secondary">
-          Finalize MVP testing with user feedback.
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Implement essential product features based on user and market feedback.
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Begin pilot program with select sawmills and creators.
-        </Typography>
-      </Box>
-    </Box>
-
-    {/* Opportunities for Engagement */}
-    <Box sx={{ mb: 2 }}>
-      <Typography variant="h6" color="text.primary" gutterBottom>
-        Opportunities for Engagement
-      </Typography>
-      <Typography variant="body1" color="text.secondary">
-        We’re seeking partners interested in supporting sustainable forestry tech through funding or direct involvement in our pilot program.
-      </Typography>
-    </Box>
-
-    {/* Call to Action Button */}
-    <Box mt={3}>
-                    <Button variant="contained" color="primary" href="/contact">
-                        Get in Touch
-                    </Button>
-                    <Button variant="outlined" color="secondary" href="/invest" sx={{ ml: 2 }}>
-                        Learn More
-                    </Button>
+              {/* Key 2025 Milestones */}
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="h6" color="text.primary" gutterBottom>
+                  Key 2025 Milestones
+                </Typography>
+                <Box sx={{ pl: 3 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Finalize MVP testing with user feedback.
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Implement essential product features based on user and
+                    market feedback.
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Begin pilot program with select sawmills and creators.
+                  </Typography>
                 </Box>
-    {/* <Box sx={{ textAlign: "center", mt: 4 }}>
+              </Box>
+
+              {/* Opportunities for Engagement */}
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="h6" color="text.primary" gutterBottom>
+                  Opportunities for Engagement
+                </Typography>
+                <Typography variant="body1" color="text.secondary">
+                  We’re seeking partners interested in supporting sustainable
+                  forestry tech through funding or direct involvement in our
+                  pilot program.
+                </Typography>
+              </Box>
+
+              {/* Call to Action Button */}
+              <Box mt={3}>
+                <Button variant="contained" color="primary"        component={Link}
+                  to="/contact">
+                  Get in Touch
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  component={Link}
+                  to="/investors"
+            
+                  sx={{ ml: 2 }}
+                >
+                  Learn More
+                </Button>
+              </Box>
+              {/* <Box sx={{ textAlign: "center", mt: 4 }}>
       <Button
         variant="contained"
         color="secondary"
@@ -273,9 +290,8 @@ const StatusPage = () => {
         Contact Us
       </Button>
     </Box> */}
-  </CardContent>
-</Card>
-
+            </CardContent>
+          </Card>
         </Grid>
       </Grid>
 

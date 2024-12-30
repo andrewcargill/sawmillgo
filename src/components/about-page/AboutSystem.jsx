@@ -12,9 +12,11 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
+  Button,
   Card,
   CardContent,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import imageSmall from "../../media/images/screen_shots.jpg";
 import imageMedium from "../../media/images/screens_medium.jpg";
@@ -54,6 +56,29 @@ const AboutSystem = () => {
           },
         }}
       ></Box>
+
+      <Grid item xs={12} sx={{ mb: 6 }}>
+        {/* Call to Action Button */}
+        <Box mt={3}>
+          <Button
+            variant="outlined"
+            color="primary"
+            component={Link}
+            to="/demos"
+          >
+            System Demos
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            component={Link}
+            to="/investors"
+            sx={{ ml: 2 }}
+          >
+            Get Involved
+          </Button>
+        </Box>
+      </Grid>
 
       {/* Our Vision */}
       {/* <Grid container spacing={4} sx={{ mb: 4 }}>
