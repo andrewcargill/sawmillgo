@@ -48,8 +48,8 @@ const Navigation = () => {
       } else {
         // User is logged out
         setIsAuth(false);
-        setLocalUser(null); // Ensure local user state is cleared on logout
-        localStorage.removeItem("user"); // Optionally clear local storage here as well
+        setLocalUser(null);
+        localStorage.removeItem("user");
       }
       console.log("localUser: ", localUser);
     });
@@ -74,7 +74,15 @@ const Navigation = () => {
   };
 
   // const pages = ["Concept", "Features", "Roadmap", "Videos", "Investor Overview", "Contact", "About"];
-  const pages = ["Project", "Systems", "Roadmap", "Demos", "InvestorS", "Contact", "Journey"];
+  const pages = [
+    "Project",
+    "Systems",
+    "Roadmap",
+    "Demos",
+    "Investors",
+    "Contact",
+    "Journey",
+  ];
   const sawmillPages = ["home", "Report"];
   //   const settings = ['home_secure', 'Quick_Add', 'Trees', 'Logs', 'Planks', 'water_crud', 'Logout'];
 
@@ -82,9 +90,9 @@ const Navigation = () => {
     auth
       .signOut()
       .then(() => {
-        setIsAuth(false); // Update auth state on logout
+        setIsAuth(false);
         navigate("/loggedoutpage");
-        handleCloseUserMenu(); // Close user menu
+        handleCloseUserMenu();
         logoutUser();
       })
       .catch((error) => {
@@ -105,11 +113,25 @@ const Navigation = () => {
           <FingerprintIcon
             sx={{
               display: { xs: "none", md: "flex" },
-              mr: 1,
+
               color: "secondary.main",
             }}
           />
           <Typography
+            variant="h6"
+            noWrap
+            component={Link}
+            to="/"
+            sx={{
+              mr: 2,
+              display: { xs: "none", md: "flex" },
+              textDecoration: "none",
+              color: "secondary.main",
+            }}
+          >
+            <>{localUser?.sawmillName || "SawmillGo"}</>
+          </Typography>
+          {/* <Typography
             variant="h6"
             noWrap
             component={Link}
@@ -126,7 +148,7 @@ const Navigation = () => {
             }}
           >
             <>{localUser?.sawmillName || "SAWMILL GO"}</>
-          </Typography>
+          </Typography> */}
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -237,35 +259,39 @@ const Navigation = () => {
                     onClick={handleMenuClose}
                     sx={{
                       backgroundColor:
-                        location.pathname === `/${page.toLowerCase().replace(/\s+/g, '')}`
+                        location.pathname ===
+                        `/${page.toLowerCase().replace(/\s+/g, "")}`
                           ? "primary.main"
                           : "transparent",
                       "&:hover": {
                         backgroundColor:
-                          location.pathname === `/${page.toLowerCase().replace(/\s+/g, '')}`
+                          location.pathname ===
+                          `/${page.toLowerCase().replace(/\s+/g, "")}`
                             ? "primary.main"
                             : "rgba(0, 0, 0, 0.04)",
                       },
                     }}
                   >
                     <Link
-                      to={`/${page.toLowerCase().replace(/\s+/g, '')}`}
+                      to={`/${page.toLowerCase().replace(/\s+/g, "")}`}
                       style={{
                         textDecoration: "none",
                         display: "block",
-                        width: "100%", 
+                        width: "100%",
                       }}
                     >
                       <Typography
                         sx={{
                           color:
-                            location.pathname === `/${page.toLowerCase().replace(/\s+/g, '')}`
+                            location.pathname ===
+                            `/${page.toLowerCase().replace(/\s+/g, "")}`
                               ? "primary.contrastText"
                               : "primary.main",
                           textAlign: "center",
                           "&:hover": {
                             color:
-                              location.pathname === `/${page.toLowerCase().replace(/\s+/g, '')}`
+                              location.pathname ===
+                              `/${page.toLowerCase().replace(/\s+/g, "")}`
                                 ? "primary.contrastText"
                                 : "black",
                           },
@@ -279,8 +305,33 @@ const Navigation = () => {
               )}
             </Menu>
           </Box>
+          {location.pathname !== '/' && (
+  <>
+    <FingerprintIcon
 
-          <Typography
+      sx={{
+        display: { xs: 'flex', md: 'none' },
+        color: 'secondary.main',
+      }}
+    />
+    <Typography
+      variant="h6"
+      noWrap
+      component={Link}
+      to="/"
+      sx={{
+        mr: 2,
+        display: { xs: 'flex', md: 'none' },
+        flexGrow: 1,
+        textDecoration: 'none',
+        color: 'secondary.main',
+      }}
+    >
+      <>{localUser?.sawmillName || 'SawmillGo'}</>
+    </Typography>
+  </>
+)}
+          {/* <Typography
             variant="h5"
             noWrap
             component={Link}
@@ -298,9 +349,9 @@ const Navigation = () => {
             }}
           >
             <>{localUser?.sawmillName || "SAWMILL GO"}</>
-          </Typography>
+          </Typography> */}
 
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box pl={2} sx={{ justifyContent: 'left', flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {isAuth ? (
               localUser?.role === "creator" ? (
                 <>
@@ -311,6 +362,7 @@ const Navigation = () => {
                       my: 2,
                       color: "white",
                       display: "block",
+                      textTransform: "capitalize",
                       textDecoration: "none",
                     }}
                   >
@@ -323,6 +375,7 @@ const Navigation = () => {
                       my: 2,
                       color: "white",
                       display: "block",
+                      textTransform: "capitalize",
                       textDecoration: "none",
                     }}
                   >
@@ -396,26 +449,31 @@ const Navigation = () => {
                   <Button
                     key={page}
                     component={Link}
-                    to={`/${page.toLowerCase().replace(/\s+/g, '')}`}
+                    to={`/${page.toLowerCase().replace(/\s+/g, "")}`}
                     sx={{
                       my: 2,
                       color:
-                        location.pathname === `/${page.toLowerCase().replace(/\s+/g, '')}`
+                        location.pathname ===
+                        `/${page.toLowerCase().replace(/\s+/g, "")}`
                           ? "primary.contrastText"
                           : "white",
                       backgroundColor:
-                        location.pathname === `/${page.toLowerCase().replace(/\s+/g, '')}`
+                        location.pathname ===
+                        `/${page.toLowerCase().replace(/\s+/g, "")}`
                           ? "primary.main"
                           : "white",
                       display: "block",
+                      textTransform: "capitalize",
                       textDecoration: "none",
                       "&:hover": {
                         backgroundColor:
-                          location.pathname === `/${page.toLowerCase().replace(/\s+/g, '')}`
+                          location.pathname ===
+                          `/${page.toLowerCase().replace(/\s+/g, "")}`
                             ? "primary.main"
                             : "white", // Ensures no background color change on hover
                         color:
-                          location.pathname ===`/${page.toLowerCase().replace(/\s+/g, '')}`
+                          location.pathname ===
+                          `/${page.toLowerCase().replace(/\s+/g, "")}`
                             ? "primary.contrastText"
                             : "white", // Ensures no text color change on hover
                         transition: "none", // Removes any transition effect

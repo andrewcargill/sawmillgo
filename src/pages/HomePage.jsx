@@ -23,9 +23,12 @@ const HomePage = () => {
             Data-driven forestry for a sustainable future.
           </Typography>
           <Typography variant="body1" paragraph className="fade-in-3">
-            SawmillGo empowers forest owners, sawmills, and creators to enhance transparency and authenticity through verified data. 
-            Our system supports sustainable practices, giving stakeholders the tools they need to increase both environmental impact and profitability.
+          SawmillGo simplifies forestry and woodworking transparency by documenting the journey of wood from forest to final product. Our cloud-based platform tracks data at each stage, helping forest owners, sawmills, and creators showcase authenticity and sustainability.
           </Typography>
+          {/* <Typography variant="body1" paragraph className="fade-in-3">
+          SawmillGo is a cloud-based software platform that empowers forest owners, sawmills, and creators to enhance transparency and authenticity through verified data. 
+          Our system supports sustainable practices, providing the tools stakeholders need to increase both environmental impact and profitability.
+          </Typography> */}
           <Button
               component={Link}
               to="/project"

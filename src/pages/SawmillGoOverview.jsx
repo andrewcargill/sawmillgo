@@ -136,13 +136,10 @@ const SawmillGoOverview = () => {
         </Grid>
       </Grid> */}
 
-       {/* Our Vision */}
+       {/* Vision Section */}
        <Grid container spacing={4} sx={{ mb: 4 }}>
-        <Grid item xs={12} sx={{ mt: 4 }}>
-          {/* Heading */}
-    
-
-          {/* Card with Text */}
+        <Grid item xs={12}>
+        
           <Card
             elevation={3}
             sx={{
@@ -153,18 +150,50 @@ const SawmillGoOverview = () => {
             }}
           >
             <CardContent>
-            <Typography
-            variant="h4"
-            align="left"
-            color="primary"
+              <Typography
+                variant="h4"
+                gutterBottom
+              >
+                Our Vision
+              </Typography>
+              <Typography variant="body1" color="text.secondary" paragraph>
+                At SawmillGo, we envision a world where sustainably sourced wood
+                becomes the standard. By empowering small-scale forest owners
+                and creators, we not only drive environmental stewardship but
+                also help build stronger, more connected communities that value
+                the journey of every tree.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      {/* Our Vision */}
+      {/* <Grid container spacing={4} sx={{ mb: 4 }}>
+        <Grid item xs={12} sx={{ mt: 4 }}>
+        
+          <Card
+            elevation={3}
             sx={{
-              borderColor: "primary.main",
-              display: "inline-block",
-              pb: 1,
+              mt: 2,
+              p: 2,
+              backgroundColor: "background.paper",
+              borderRadius: 2,
             }}
           >
-            Our Vision
-          </Typography>
+            <CardContent>
+              <Typography
+                variant="h4"
+                align="left"
+                color="primary"
+                sx={{
+                  borderColor: "primary.main",
+                  display: "inline-block",
+                  pb: 1,
+                }}
+              >
+                Our Vision
+              </Typography>
               <Typography
                 variant="body1"
                 sx={{
@@ -182,10 +211,10 @@ const SawmillGoOverview = () => {
             </CardContent>
           </Card>
         </Grid>
-      </Grid>
+      </Grid> */}
 
-        {/* Environmental & Financial Benefits */}
-        <Grid
+      {/* Environmental & Financial Benefits */}
+      <Grid
         className="fade-in-1"
         container
         spacing={4}
@@ -314,8 +343,6 @@ const SawmillGoOverview = () => {
           </Grid>
         ))}
       </Grid>
-
-    
 
       {/* Testimonials Section */}
       <Typography

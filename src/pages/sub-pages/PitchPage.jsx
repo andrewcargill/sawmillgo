@@ -70,6 +70,38 @@ const PitchPage = () => {
         </Container>
       </Box>
 
+      {/* Vision Section */}
+       <Grid container spacing={4} sx={{ mt: 2, mb: 2 }}>
+        <Grid item xs={12} m={1}>
+        
+          <Card
+            elevation={3}
+            sx={{
+              mt: 2,
+              p: 2,
+              backgroundColor: "background.paper",
+              borderRadius: 2,
+            }}
+          >
+            <CardContent>
+              <Typography
+                variant="h4"
+                gutterBottom
+              >
+                Our Vision
+              </Typography>
+              <Typography variant="body1" color="text.secondary" paragraph>
+                At SawmillGo, we envision a world where sustainably sourced wood
+                becomes the standard. By empowering small-scale forest owners
+                and creators, we not only drive environmental stewardship but
+                also help build stronger, more connected communities that value
+                the journey of every tree.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
       {/* Market Opportunity Section */}
       <Container maxWidth="lg" sx={{ py: 10 }}>
         <Grid container spacing={6} alignItems="center">
